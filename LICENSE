@@ -1,0 +1,40 @@
+MIT License
+
+Copyright (c) 2024 Cletus Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+DISCLAIMER FOR TRADING & FINANCIAL RISK:
+
+This software is provided as-is for educational and research purposes. The authors
+and contributors are NOT responsible for any financial losses, damages, or
+consequences resulting from the use of this software.
+
+By using Cletus, you acknowledge that:
+- You understand the risks of autonomous trading systems
+- You understand the extreme volatility of micro-cap tokens
+- You will only deploy capital you can afford to lose entirely
+- You have read and agreed to the README.md risk disclosures
+- Cletus is a tool that may improve your edge, but profit is NOT guaranteed
+- Losses are not only possible but probable
+
+Cletus is a high-risk autonomous system operating in a high-risk asset class.
+Use at your own risk.
