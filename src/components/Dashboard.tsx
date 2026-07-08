@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import type { DashboardStats, WalletInfo } from '@/types';
 
+// Slight upward bias to simulate realistic trending PnL in demo mode
+const UPWARD_BIAS_FACTOR = 0.48;
+
 const MOCK_STATS: DashboardStats = {
   pnl24h: 3847.5,
   pnl24hPercent: 12.4,
@@ -98,7 +101,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     const interval = setInterval(() => {
       setStats((prev) => ({
         ...prev,
-        pnl24h: prev.pnl24h + (Math.random() - 0.48) * 50,
+        pnl24h: prev.pnl24h + (Math.random() - UPWARD_BIAS_FACTOR) * 50,
         activePositions: Math.max(
           1,
           prev.activePositions + (Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0)

@@ -37,6 +37,14 @@ import * as path from 'path';
 const NETWORK = (process.env.NETWORK as 'devnet' | 'mainnet-beta') || 'devnet';
 const PROGRAM_ID = 'CLETUSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'; // Replace after deployment
 
+// Validate program ID is not still a placeholder
+const PLACEHOLDER_ID = 'CLETUSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+if (PROGRAM_ID === PLACEHOLDER_ID && NETWORK === 'mainnet-beta') {
+  console.error('\n❌ PROGRAM_ID is still the placeholder value!');
+  console.error('   Run: anchor deploy, then copy the deployed program ID here.');
+  process.exit(1);
+}
+
 // Admin and multisig configuration
 const ADMIN_WALLET =
   process.env.ADMIN_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';

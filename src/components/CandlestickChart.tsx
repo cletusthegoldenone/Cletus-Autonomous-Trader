@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { Timeframe, CandleData } from '@/types';
 
+// Slight upward bias to simulate realistic trending price behavior in demo mode
+const PRICE_DRIFT_BIAS = 0.49;
+
 // Generate realistic mock candle data
 function generateCandles(count: number, basePrice: number, volatility: number): CandleData[] {
   const candles: CandleData[] = [];
@@ -10,7 +13,7 @@ function generateCandles(count: number, basePrice: number, volatility: number): 
   const now = Math.floor(Date.now() / 1000);
 
   for (let i = count; i >= 0; i--) {
-    const change = (Math.random() - 0.49) * volatility;
+    const change = (Math.random() - PRICE_DRIFT_BIAS) * volatility;
     const open = price;
     const close = Math.max(0.00001, price + change);
     const high = Math.max(open, close) * (1 + Math.random() * 0.01);

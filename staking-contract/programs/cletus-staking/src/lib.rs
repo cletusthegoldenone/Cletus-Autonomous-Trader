@@ -2,6 +2,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 
 declare_id!("CLETUSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+// TODO: Replace with actual program ID after deployment:
+//   anchor keys list  OR  anchor deploy --provider.cluster devnet
 
 // ============================================================
 // Cletus Staking Program - Solana/Anchor
@@ -25,7 +27,7 @@ pub mod constants {
     pub const EARLY_LOCK_PERIOD: i64 = 30 * 24 * 60 * 60;
     /// Treasury fee: 20% of profits reserved
     pub const TREASURY_FEE_BPS: u64 = 2_000;
-    /// Number of required multisig signers
+    /// Number of required multisig signers (2-of-3 multisig: 2 signers required, 3 authorized)
     pub const MULTISIG_THRESHOLD: u8 = 2;
 }
 
@@ -577,8 +579,10 @@ fn calculate_accrued_rewards(
         .saturating_mul(elapsed as u128)
         / (constants::BPS_DENOMINATOR as u128 * constants::SECONDS_PER_YEAR as u128);
 
-    // Convert from CLETUS token units to SOL lamports (rough approximation)
-    // In production: use price oracle or fixed rate
+    // Convert from CLETUS token units to SOL lamports (rough approximation).
+    // ⚠️ PRODUCTION: Replace this with a Pyth price oracle integration or
+    //    a governance-set fixed rate. Using a hard-coded conversion will
+    //    produce incorrect rewards if the CLETUS/SOL exchange rate changes.
     (rewards / 1_000_000) as u64 // 1M CLETUS ≈ 1 lamport reward unit
 }
 
