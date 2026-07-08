@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "nodeVersion": "18.x",
+  "env": {
+    "NEXT_PUBLIC_HELIUS_API_KEY": "@helius_api_key",
+    "NEXT_PUBLIC_GEMINI_API_KEY": "@gemini_api_key",
+    "NODE_ENV": "production"
+  }
+}
