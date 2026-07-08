@@ -1,12 +1,9 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: "Cletus - AI Trading System",
-  description: "Autonomous AI-powered trading on Solana",
+  title: 'Cletus PRO - Solana DeFi Command Center',
+  description: 'AI-powered autonomous trading system for Solana',
 };
 
 export default function RootLayout({
@@ -16,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-black text-white`}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

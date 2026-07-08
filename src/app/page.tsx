@@ -1,81 +1,46 @@
-"use client";
-
-import { useState } from "react";
-import Dashboard from "@/components/Dashboard";
-import CandlestickChart from "@/components/CandlestickChart";
-import TradingSignals from "@/components/TradingSignals";
-import StakingDashboard from "@/components/StakingDashboard";
-import AIBrainChat from "@/components/AIBrainChat";
+'use client';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"dashboard" | "chart" | "signals" | "staking" | "ai">("dashboard");
-
   return (
-    <main className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <header className="border-b border-gray-800 bg-gray-950 p-4">
-        <h1 className="text-2xl font-bold text-cyan-400">🦆 Cletus Autonomous Trader</h1>
-        <p className="text-sm text-gray-400">AI-powered micro-cap trading on Solana</p>
-      </header>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+      <div className="text-center max-w-2xl">
+        {/* Logo/Brand */}
+        <div className="mb-8">
+          <div className="text-6xl mb-4">🦆</div>
+          <h1 className="text-5xl font-bold mb-2">
+            Cletus <span className="text-cyan-400">PRO</span>
+          </h1>
+        </div>
 
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex border-b border-gray-800 bg-gray-950 overflow-x-auto">
-        {[
-          { id: "dashboard", label: "Dashboard" },
-          { id: "chart", label: "Chart" },
-          { id: "signals", label: "Signals" },
-          { id: "staking", label: "Staking" },
-          { id: "ai", label: "Ask Cletus" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`px-6 py-3 border-b-2 transition-colors ${
-              activeTab === tab.id
-                ? "border-cyan-400 text-cyan-400"
-                : "border-transparent text-gray-400 hover:text-white"
-            }`}
-          >
-            {tab.label}
+        {/* Hero Text */}
+        <h2 className="text-4xl font-bold mb-6 leading-tight">
+          The ultimate <br />
+          <span className="text-cyan-400">Solana DeFi</span>
+          <br />
+          command center.
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-gray-400 mb-8 text-lg">
+          Autonomous AI scanner • Real-time market briefings
+        </p>
+
+        {/* Status Badge */}
+        <div className="inline-block border border-gray-600 rounded-full px-6 py-3 mb-8">
+          <span className="inline-block w-2 h-2 bg-cyan-400 rounded-full mr-2"></span>
+          <span className="text-gray-300">Now in closed beta • 142 traders online</span>
+        </div>
+
+        {/* CTA Buttons */}
+        <div className="flex gap-4 justify-center flex-wrap">
+          <button className="border-2 border-gray-500 hover:border-gray-300 text-white px-8 py-3 rounded-lg transition">
+            Join Waitlist
           </button>
-        ))}
-      </nav>
-
-      {/* Main Content */}
-      <div className="p-4 md:p-8">
-        {activeTab === "dashboard" && <Dashboard />}
-        {activeTab === "chart" && <CandlestickChart />}
-        {activeTab === "signals" && <TradingSignals />}
-        {activeTab === "staking" && <StakingDashboard />}
-        {activeTab === "ai" && <AIBrainChat />}
+          <button className="bg-cyan-500 hover:bg-cyan-600 text-black font-bold px-8 py-3 rounded-lg transition">
+            Open Dashboard
+          </button>
+        </div>
       </div>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 md:hidden border-t border-gray-800 bg-gray-950 flex justify-around">
-        {[
-          { id: "dashboard", label: "📊", title: "Dashboard" },
-          { id: "chart", label: "📈", title: "Chart" },
-          { id: "signals", label: "⚡", title: "Signals" },
-          { id: "staking", label: "💰", title: "Staking" },
-          { id: "ai", label: "🤖", title: "AI" },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 py-3 text-center transition-colors ${
-              activeTab === tab.id
-                ? "text-cyan-400 bg-cyan-400/10"
-                : "text-gray-400 hover:text-white"
-            }`}
-            title={tab.title}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </nav>
-
-      {/* Mobile spacing */}
-      <div className="md:hidden h-20" />
-    </main>
+    </div>
   );
 }
