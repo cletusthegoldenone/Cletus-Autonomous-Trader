@@ -47,21 +47,19 @@ SOLANA_NETWORK=mainnet-beta
 # ============================================================================
 # WALLET & TRADING (CRITICAL - KEEP SECRET)
 # ============================================================================
-# Your PUBLIC address (safe to expose)
-TRADING_WALLET_ADDRESS=9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7
+# Your PUBLIC address (safe to expos
 
 # Your PRIVATE key (NEVER expose, server-side only)
-# Format: Base58 encoded Solana private key
-TRADING_WALLET_PRIVATE_KEY=4Zp3eCSbW8VsemnGQbgvWQK3E3T5ai2BVmxLkPhtzrj2KTzq8mjKDfXjjXVkq5zJ8qJXRK7kQ7jZNYs7Y6xK3nXj
+# Format: Base58 encoded Solana 
 
 # ============================================================================
 # API KEYS & CREDENTIALS
 # ============================================================================
 # Helius API Key (get from https://dev.helius.xyz)
-HELIUS_API_KEY=helius_rpc_key_xxxxxxxxxxxxx
+HELIUS_API_KEY=helius_rpc_key_
 
 # Google Gemini API Key (get from https://makersuite.google.com)
-GEMINI_API_KEY=AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=
 
 # Jupiter API Key (optional, for better routing)
 JUPITER_API_KEY=your_jupiter_api_key_optional
