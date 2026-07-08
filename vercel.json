@@ -1,0 +1,8 @@
+{
+  "env": {
+    "TRADING_WALLET_PRIVATE_KEY": "@trading_wallet_private_key",
+    "HELIUS_API_KEY": "@helius_api_key",
+    "GEMINI_API_KEY": "@gemini_api_key",
+    "DATABASE_URL": "@database_url"
+  }
+}
