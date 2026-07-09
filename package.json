@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Cletus Autonomous Trader - AI-powered Solana trading system with real-time dashboard",
   "private": true,
+  "packageManager": "pnpm@9.x",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -27,5 +28,8 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.35",
     "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }
