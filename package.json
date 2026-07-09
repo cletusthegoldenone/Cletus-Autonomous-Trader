@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "AI-powered autonomous trading system with staking rewards on Solana",
   "private": true,
+  "packageManager": "pnpm@9.x",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -46,7 +47,6 @@
     "typescript": "^5.3.0"
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": "20.x"
   }
 }
