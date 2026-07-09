@@ -10,6 +10,8 @@ import StakingDashboard from '@/components/StakingDashboard';
 
 type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'staking';
 
+const AI_MODEL_LABEL = process.env.NEXT_PUBLIC_AI_MODEL_LABEL ?? 'Gemini AI';
+
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '📊' },
   { id: 'chart', label: 'Chart', icon: '📈' },
@@ -48,7 +50,7 @@ export default function TraderPage() {
               <span className="text-gray-600">|</span>
               <span className="text-gray-400 font-mono">Solana Mainnet</span>
               <span className="text-gray-600">|</span>
-              <span className="text-gray-400 font-mono">AI: Gemini 2.0</span>
+              <span className="text-gray-400 font-mono">AI: {AI_MODEL_LABEL}</span>
             </div>
 
             {/* Back to home */}

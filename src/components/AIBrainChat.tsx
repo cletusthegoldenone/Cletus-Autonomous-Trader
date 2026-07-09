@@ -356,11 +356,15 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
           body: JSON.stringify({ message: content.trim() }),
           signal: AbortSignal.timeout(12_000),
         });
+        if (!res.ok) throw new Error(`API error ${res.status}`);
         const data = await res.json();
+        const answer = typeof data?.answer === 'string' && data.answer
+          ? data.answer
+          : findBestResponse(content).content;
         const aiMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: data.answer ?? findBestResponse(content).content,
+          content: answer,
           timestamp: Date.now(),
         };
         setMessages((prev) => [...prev, aiMsg]);
@@ -369,7 +373,7 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
         const aiMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: response.content,
+          content: response.content + '\n\n*⚠️ Running in offline mode — AI API unavailable.*',
           timestamp: Date.now(),
           citations: response.citations,
         };
