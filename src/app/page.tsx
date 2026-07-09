@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Home() {
@@ -98,7 +99,13 @@ export default function Home() {
               <div className="flex -space-x-3">
                 {[12, 47, 28].map((n) => (
                   <div key={n} className="w-8 h-8 bg-zinc-800 border border-white/20 rounded-full overflow-hidden">
-                    <img src={`https://i.pravatar.cc/32?img=${n}`} className="w-full h-full object-cover" alt="avatar" />
+                    <Image
+                      src={`https://i.pravatar.cc/32?img=${n}`}
+                      className="w-full h-full object-cover"
+                      alt="avatar"
+                      width={32}
+                      height={32}
+                    />
                   </div>
                 ))}
               </div>
@@ -154,7 +161,7 @@ export default function Home() {
       <div id="features" className="max-w-screen-2xl mx-auto px-8 pt-20 pb-16">
         <div className="text-center mb-14">
           <div className="text-emerald-400 text-sm font-semibold tracking-widest">POWERFUL BY DEFAULT</div>
-          <h2 className="text-5xl font-bold tracking-tighter mt-2">Everything you need.<br />Nothing you don't.</h2>
+          <h2 className="text-5xl font-bold tracking-tighter mt-2">Everything you need.<br />Nothing you don&apos;t.</h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -365,7 +372,7 @@ export default function Home() {
               </button>
             </form>
             
-            <div className="text-center mt-4 text-xs text-white/40">We'll review your wallet activity and notify you within 48 hours.</div>
+            <div className="text-center mt-4 text-xs text-white/40">We&apos;ll review your wallet activity and notify you within 48 hours.</div>
           </div>
         </div>
       )}
