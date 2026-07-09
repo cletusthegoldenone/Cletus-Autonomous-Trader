@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
@@ -160,62 +159,4 @@ body {
   .trading-card {
     @apply rounded-lg;
   }
-=======
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
-
-:root {
-  --primary: #22c55e;
-}
-
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-}
-
-.font-display {
-  font-family: 'Space Grotesk', 'Inter', sans-serif;
-  font-weight: 600;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.feature-card {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-}
-
-.section-header {
-  font-size: 3.5rem;
-  line-height: 1.1;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-}
-
-.terminal {
-  font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
-  background: #0a0a0a;
-}
-
-.stat-value {
-  font-variant-numeric: tabular-nums;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  background-color: #09090b;
-  color: #fff;
->>>>>>> origin/main
 }
