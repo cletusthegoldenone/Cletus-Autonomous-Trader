@@ -2,60 +2,161 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --primary: #22c55e;
-}
-
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-}
-
-.font-display {
-  font-family: 'Space Grotesk', 'Inter', sans-serif;
-  font-weight: 600;
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.feature-card {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-}
-
-.section-header {
-  font-size: 3.5rem;
-  line-height: 1.1;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-}
-
-.terminal {
-  font-family: ui-monospace, 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
-  background: #0a0a0a;
-}
-
-.stat-value {
-  font-variant-numeric: tabular-nums;
+  --bg-primary: #0a0b0d;
+  --bg-surface: #111318;
+  --bg-card: #161b22;
+  --border: #21262d;
+  --green: #00d4aa;
+  --red: #ff4757;
+  --yellow: #ffd43b;
+  --blue: #4dabf7;
+  --purple: #cc5de8;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #484f58;
 }
 
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-html, body {
-  background-color: #09090b;
-  color: #fff;
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #30363d;
+}
+
+/* Trading card base */
+.trading-card {
+  @apply bg-trading-card border border-trading-border rounded-xl;
+}
+
+/* Number formatting */
+.font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* Glow effects */
+.glow-green {
+  box-shadow: 0 0 20px rgba(0, 212, 170, 0.15);
+}
+
+.glow-red {
+  box-shadow: 0 0 20px rgba(255, 71, 87, 0.15);
+}
+
+/* Status dot pulse */
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.status-dot-live {
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+/* Chart container */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Signal strength bars */
+.strength-bar {
+  height: 4px;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* Chat bubble */
+.chat-bubble-user {
+  @apply bg-trading-blue bg-opacity-20 border border-trading-blue border-opacity-30 rounded-2xl rounded-br-sm;
+}
+
+.chat-bubble-ai {
+  @apply bg-trading-card border border-trading-border rounded-2xl rounded-bl-sm;
+}
+
+/* Gradient text */
+.gradient-text-green {
+  background: linear-gradient(135deg, #00d4aa 0%, #4dabf7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tooltip */
+.tooltip {
+  @apply absolute z-50 px-3 py-2 text-xs bg-trading-surface border border-trading-border rounded-lg pointer-events-none;
+}
+
+/* Tab active state */
+.tab-active {
+  @apply text-trading-green border-b-2 border-trading-green;
+}
+
+/* Tier badge colors */
+.tier-starter { @apply text-gray-400 border-gray-600; }
+.tier-bronze { @apply text-amber-600 border-amber-700; }
+.tier-silver { @apply text-gray-300 border-gray-400; }
+.tier-gold { @apply text-yellow-400 border-yellow-500; }
+.tier-platinum { @apply text-cyan-300 border-cyan-400; }
+.tier-diamond { @apply text-blue-300 border-blue-400; }
+.tier-founder { @apply text-purple-300 border-purple-400; }
+
+/* Loading skeleton */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--border) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .trading-card {
+    @apply rounded-lg;
+  }
 }
