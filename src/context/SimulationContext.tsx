@@ -139,8 +139,8 @@ const SIM_TOKENS = [
 
 function isWithinTradingHours(config: TradingConfig): boolean {
   const now = new Date();
-  const dayOfWeek = now.getDay(); // 0=Sun … 6=Sat
-  const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Mon=0 … Sun=6
+  const dayOfWeek = now.getDay(); // 0=Sun … 6=Sat (JS convention)
+  const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // convert to Mon=0 … Sun=6 for activeDays array
   if (!config.activeDays[dayIndex]) return false;
 
   const currentMinutes = now.getHours() * 60 + now.getMinutes();

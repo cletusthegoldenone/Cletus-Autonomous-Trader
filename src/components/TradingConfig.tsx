@@ -315,8 +315,14 @@ export default function TradingConfig() {
         </div>
         <button
           onClick={() => {
-            const preset = AGGRESSION_PRESETS[DEFAULT_CONFIG.aggression];
-            updateConfig({ ...DEFAULT_CONFIG, positionSizePercent: preset.positionSizePercent, signalThreshold: preset.signalThreshold, perTradeSL: preset.perTradeSL, perTradeTP: preset.perTradeTP });
+            const defaultPreset = AGGRESSION_PRESETS[DEFAULT_CONFIG.aggression];
+            const presetValues = {
+              positionSizePercent: defaultPreset.positionSizePercent,
+              signalThreshold: defaultPreset.signalThreshold,
+              perTradeSL: defaultPreset.perTradeSL,
+              perTradeTP: defaultPreset.perTradeTP,
+            };
+            updateConfig({ ...DEFAULT_CONFIG, ...presetValues });
           }}
           className="mt-3 text-xs text-gray-600 hover:text-gray-400 transition-colors underline"
         >
