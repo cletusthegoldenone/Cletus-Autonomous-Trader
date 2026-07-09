@@ -1,7 +1,6 @@
 'use client';
 
-<<<<<<< HEAD
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface TokenData {
   rank: number;
@@ -48,7 +47,7 @@ export default function Home() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const fetchTokenData = async () => {
+  const fetchTokenData = useCallback(async () => {
     try {
       const res = await fetch('/api/tokens');
       if (res.ok) {
@@ -61,7 +60,7 @@ export default function Home() {
       // keep existing data
     }
     setCountdown(20);
-  };
+  }, []);
 
   useEffect(() => {
     fetchTokenData();
@@ -73,7 +72,7 @@ export default function Home() {
       clearInterval(dataInterval);
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
-  }, []);
+  }, [fetchTokenData]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -153,48 +152,6 @@ export default function Home() {
               <div className="flex items-baseline">
                 <span className="font-display text-2xl sm:text-3xl font-semibold tracking-tighter">Cletus</span>
                 <span className="text-emerald-400 text-xs font-mono tracking-[3px] ml-1">PRO</span>
-=======
-import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import Dashboard from '@/components/Dashboard';
-import TradingSignals from '@/components/TradingSignals';
-import StakingDashboard from '@/components/StakingDashboard';
-import AIBrainChat from '@/components/AIBrainChat';
-
-// Dynamically import the chart to avoid SSR issues with lightweight-charts
-const CandlestickChart = dynamic(() => import('@/components/CandlestickChart'), {
-  ssr: false,
-  loading: () => (
-    <div className="trading-card h-96 flex items-center justify-center text-gray-500">
-      Loading chart...
-    </div>
-  ),
-});
-
-type Tab = 'dashboard' | 'chart' | 'signals' | 'staking' | 'ai';
-
-const TABS: { id: Tab; label: string; icon: string; mobileLabel: string }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: '🏠', mobileLabel: 'Home' },
-  { id: 'chart', label: 'Chart', icon: '📈', mobileLabel: 'Chart' },
-  { id: 'signals', label: 'Signals', icon: '⚡', mobileLabel: 'Signals' },
-  { id: 'staking', label: 'Staking', icon: '💎', mobileLabel: 'Stake' },
-  { id: 'ai', label: 'AI Brain', icon: '🤖', mobileLabel: 'AI' },
-];
-
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
-
-  return (
-    <div className="min-h-screen bg-trading-bg">
-      {/* Top Navigation Bar */}
-      <nav className="sticky top-0 z-40 bg-trading-surface/95 backdrop-blur-md border-b border-trading-border">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* Logo */}
-            <div className="flex items-center gap-2 shrink-0">
-              <div className="w-7 h-7 rounded-lg bg-trading-green/20 border border-trading-green/40 flex items-center justify-center text-xs">
-                🤖
->>>>>>> origin/main
               </div>
               <span className="font-bold text-sm gradient-text-green hidden sm:block">
                 Cletus
@@ -202,7 +159,6 @@ export default function Home() {
               <span className="text-xs text-gray-500 hidden md:block">Autonomous Trader</span>
             </div>
 
-<<<<<<< HEAD
             {/* Desktop nav links */}
             <div className="hidden md:flex items-center gap-x-7 text-sm">
               {navLinks.map((link) => (
@@ -227,31 +183,6 @@ export default function Home() {
                 <span>Dashboard</span>
                 <span>→</span>
               </button>
-=======
-            {/* Desktop Tab Navigation */}
-            <div className="hidden sm:flex items-center gap-1">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 ${
-                    activeTab === tab.id
-                      ? 'bg-trading-green/15 text-trading-green border border-trading-green/30'
-                      : 'text-gray-400 hover:text-white hover:bg-trading-card'
-                  }`}
-                >
-                  <span>{tab.icon}</span>
-                  <span>{tab.label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Status Indicator */}
-            <div className="flex items-center gap-2 text-xs">
-              <div className="w-1.5 h-1.5 rounded-full bg-trading-green status-dot-live" />
-              <span className="text-trading-green hidden sm:block font-mono">LIVE</span>
-              <span className="text-gray-500 hidden md:block font-mono">Solana Mainnet</span>
->>>>>>> origin/main
             </div>
 
             {/* Mobile: hamburger + CTA */}
@@ -296,7 +227,6 @@ export default function Home() {
         </div>
       </nav>
 
-<<<<<<< HEAD
       {/* Hero */}
       <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 pt-10 sm:pt-14 pb-16 sm:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -381,7 +311,7 @@ export default function Home() {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-white/50 text-xs sm:text-sm">
           <div className="flex items-center gap-x-2">◎ Solana Native</div>
           <div>Real-time WebSocket</div>
-          <div>Gemini 2.5 Flash AI</div>
+          <div>Gemini 2.0 Flash AI</div>
           <div>Staking Access Control</div>
           <div>Anti-Rug Intelligence</div>
         </div>
@@ -654,7 +584,7 @@ export default function Home() {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter">Built with modern, battle-tested tech</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 text-center">
-          {['TypeScript + Express', 'Drizzle ORM + Postgres', 'WebSocket Broadcaster', 'Gemini 2.5 Flash', 'CoinGecko + DexScreener', 'OpenID Connect ready'].map((tech, i) => (
+          {['TypeScript + Express', 'Drizzle ORM + Postgres', 'WebSocket Broadcaster', 'Gemini 2.0 Flash', 'CoinGecko + DexScreener', 'OpenID Connect ready'].map((tech, i) => (
             <div key={i} className="glass p-4 sm:p-6 rounded-3xl hover:border-white/20 border border-white/10 transition text-xs sm:text-sm">
               {tech}
             </div>
@@ -742,39 +672,6 @@ export default function Home() {
           </div>
         </div>
       )}
-=======
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-6 pb-24 sm:pb-6">
-        {activeTab === 'dashboard' && (
-          <Dashboard onNavigate={(tab) => setActiveTab(tab as Tab)} />
-        )}
-        {activeTab === 'chart' && <CandlestickChart />}
-        {activeTab === 'signals' && <TradingSignals />}
-        {activeTab === 'staking' && <StakingDashboard />}
-        {activeTab === 'ai' && <AIBrainChat />}
-      </main>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-trading-surface/95 backdrop-blur-md border-t border-trading-border">
-        <div className="flex items-center justify-around h-16 px-2">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-2 rounded-lg transition-all duration-150 flex-1 ${
-                activeTab === tab.id ? 'text-trading-green' : 'text-gray-500'
-              }`}
-            >
-              <span className="text-xl">{tab.icon}</span>
-              <span className="text-[10px] font-medium">{tab.mobileLabel}</span>
-              {activeTab === tab.id && (
-                <div className="absolute bottom-1 w-1 h-1 rounded-full bg-trading-green" />
-              )}
-            </button>
-          ))}
-        </div>
-      </nav>
->>>>>>> origin/main
     </div>
   );
 }

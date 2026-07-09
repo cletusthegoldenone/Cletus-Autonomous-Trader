@@ -249,7 +249,8 @@ export async function GET() {
     cachedData = { tokens, isLive: true, timestamp: now };
     return NextResponse.json(cachedData);
   } catch {
-    // Return fallback data on any API error
-    return NextResponse.json({ tokens: FALLBACK_TOKENS, isLive: false, timestamp: now });
+    // Cache and return fallback data so repeated failures don't hammer the API
+    cachedData = { tokens: FALLBACK_TOKENS, isLive: false, timestamp: now };
+    return NextResponse.json(cachedData);
   }
 }
