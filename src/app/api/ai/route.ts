@@ -1,35 +1,83 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const SYSTEM_PROMPT = `You are Cletus AI, an expert Solana DeFi trading assistant built into the Cletus PRO platform. 
+You help traders understand micro-cap token signals, market patterns, risk management, and DeFi strategies on Solana.
+Keep responses concise, actionable, and trader-focused. Use bullet points for clarity. 
+Avoid financial advice disclaimers in casual conversation. Be direct and informative.`;
+
+async function callGeminiAPI(message: string): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error('GEMINI_API_KEY not configured');
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+        contents: [{ role: 'user', parts: [{ text: message }] }],
+        generationConfig: { maxOutputTokens: 512, temperature: 0.7 },
+      }),
+      signal: AbortSignal.timeout(10_000),
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Gemini API error ${res.status}: ${err}`);
+  }
+
+  const data = await res.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Empty Gemini response');
+  return text;
+}
+
+function mockResponse(question: string): string {
+  const q = question.toLowerCase();
+
+  if (q.includes('signal') || q.includes('scanner')) {
+    return `**Cletus Signal Engine** scans 500+ Solana micro-cap tokens every 15 seconds.\n\n**Top signal types:**\n- 🔥 Volume spike: 5m volume >5% of market cap\n- 📈 Momentum breakout: >5% price increase in 5m\n- 💧 Liquidity build: growing LP depth\n- 🐋 Buy pressure: buys >70% of 5m txns\n\nHigh-score tokens (80+) are worth investigating. Always DYOR before entering.`;
+  }
+  if (q.includes('stake') || q.includes('staking')) {
+    return `**Cletus Staking Tiers:**\n\n- **Basic** (100 CLETUS): Core scanner access\n- **Full** (500 CLETUS): All features + AI chat\n- **Unlimited** (2000 CLETUS): Priority signals + API access\n\nStaking runs on Solana with 5% APY + profit sharing from platform fees. 30-day trials available.`;
+  }
+  if (q.includes('rug') || q.includes('scam')) {
+    return `**Rug Detection Checklist:**\n\n- ✅ Check rugcheck.xyz for risk score\n- ✅ Verify LP is locked (>6 months ideal)\n- ✅ Dev wallet <5% of supply\n- ✅ No honeypot in contract\n- ✅ Cletus rug database: known bad devs flagged automatically\n\nCletus integrates rugcheck.xyz in real-time for every scanned token.`;
+  }
+  if (q.includes('solana') || q.includes('sol')) {
+    return `**Solana DeFi Quick Overview:**\n\n- ⚡ 65k TPS, sub-$0.001 fees\n- 🔥 Hottest DEXes: Raydium, Orca, Meteora\n- 📊 Key metrics: check Birdeye or DexScreener\n- 🤖 Cletus monitors Raydium new pairs in real-time\n\nWhat specifically about Solana would you like to know?`;
+  }
+
+  return `I'm **Cletus AI**, your Solana DeFi intelligence assistant.\n\nI can help with:\n- 📊 Token signal analysis\n- 🛡️ Rug/scam detection\n- 📈 Market pattern recognition\n- 🔐 Staking tier questions\n- ⚙️ Platform features\n\nWhat would you like to know? Try asking about signals, staking, or a specific token.`;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { question } = await request.json();
+    const body = await request.json();
+    const message: string = body.message ?? body.question ?? '';
 
-    // Mock AI response
-    const response = {
-      question,
-      answer: `I'm Cletus, your AI trading companion. You asked: "${question}"
+    if (!message.trim()) {
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+    }
 
-Here are some insights:
+    let answer: string;
+    let usedLiveAI = false;
 
-1. **Market Analysis**: I scan 500+ micro-cap tokens daily looking for signals
-2. **Risk Management**: Every trade has a stop-loss at 10% and take-profit at 25%
-3. **Staking Rewards**: Your stake earns 5% APY in SOL plus profit sharing
+    try {
+      answer = await callGeminiAPI(message);
+      usedLiveAI = true;
+    } catch {
+      answer = mockResponse(message);
+    }
 
-Would you like to know more about any specific strategy?`,
-      citations: [
-        "Cletus Trading Signals Documentation",
-        "Solana DeFi Best Practices",
-        "Risk Management Guide",
-      ],
-      confidence: 0.92,
+    return NextResponse.json({
+      answer,
+      usedLiveAI,
       timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(response);
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to process request' },
-      { status: 500 }
-    );
+    });
+  } catch {
+    return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
   }
 }

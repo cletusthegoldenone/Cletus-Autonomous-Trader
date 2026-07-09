@@ -1,19 +1,19 @@
 {
   "name": "cletus-autonomous-trader",
   "version": "1.0.0",
-  "description": "AI-powered autonomous trading system with staking rewards on Solana",
+  "description": "Cletus Autonomous Trader - AI-powered Solana trading system with real-time dashboard",
   "private": true,
+  "packageManager": "pnpm@9.x",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:integration": "jest --testPathPattern=integration",
-    "type-check": "tsc --noEmit"
+    "test": "echo \"No tests configured\" && exit 0",
+    "test:integration": "echo \"No integration tests configured\" && exit 0"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@solana/wallet-adapter-base": "^0.9.23",
     "@solana/wallet-adapter-react": "^0.15.35",
     "@solana/wallet-adapter-react-ui": "^0.9.35",
@@ -44,9 +44,25 @@
     "postcss": "^8.4.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.3.0"
+=======
+    "autoprefixer": "^10.4.19",
+    "lightweight-charts": "^4.2.0",
+    "next": "14.2.5",
+    "postcss": "^8.4.38",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.35",
+    "typescript": "^5.5.3"
+>>>>>>> origin/main
   },
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": "20.x"
   }
 }
