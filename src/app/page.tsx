@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface TokenData {
@@ -267,7 +268,13 @@ export default function Home() {
               <div className="flex -space-x-3">
                 {[12, 47, 28].map((n) => (
                   <div key={n} className="w-8 h-8 bg-zinc-800 border border-white/20 rounded-full overflow-hidden">
-                    <img src={`https://i.pravatar.cc/32?img=${n}`} className="w-full h-full object-cover" alt="avatar" />
+                    <Image
+                      src={`https://i.pravatar.cc/32?img=${n}`}
+                      className="w-full h-full object-cover"
+                      alt="avatar"
+                      width={32}
+                      height={32}
+                    />
                   </div>
                 ))}
               </div>
