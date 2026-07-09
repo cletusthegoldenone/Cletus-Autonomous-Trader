@@ -124,6 +124,7 @@ export default function Home() {
     { href: '#features', label: 'Features' },
     { href: '#demo', label: 'Live Demo' },
     { href: '#ai-chat', label: 'AI Chat' },
+    { href: '#pricing', label: 'Pricing' },
     { href: '#comparison', label: 'Compare' },
     { href: '#tech', label: 'Tech' },
   ];
@@ -540,6 +541,118 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Pricing / Subscription */}
+      <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
+        <div className="text-center mb-10 sm:mb-14">
+          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">PLANS &amp; PRICING</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Start free. Scale with staking.</h2>
+          <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
+            Every plan includes a 30-day free trial. Full access is gated by on-chain staking — the more you stake, the more you earn.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          {/* Free Trial */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">⏱️</div>
+            <div className="font-bold text-xl mb-1">Free Trial</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">$0</div>
+            <div className="text-white/50 text-xs mb-5">30 days · No credit card</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Live Market Scanner', 'AI Chat (25 msgs/day)', 'Basic signal alerts', 'Community read access', 'Candlestick charts'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+              {['Dev wallet inspector', 'Profit sharing', 'Priority signals'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setShowWaitlist(true)}
+              className="w-full py-3 border border-white/20 hover:bg-white/5 transition-all font-medium rounded-2xl text-sm active:scale-[0.985]"
+            >
+              Start Free Trial →
+            </button>
+          </div>
+
+          {/* Starter Staking */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">🌱</div>
+            <div className="font-bold text-xl mb-1">Starter</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Trial', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community write access'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+              {['Profit sharing', 'Priority alerts'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 transition-all font-medium rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake Now →
+            </Link>
+          </div>
+
+          {/* Gold / Pro — highlighted */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border-2 border-emerald-500 flex flex-col relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500 rounded-full text-xs font-bold text-black whitespace-nowrap">
+              MOST POPULAR
+            </div>
+            <div className="text-2xl mb-3">🥇</div>
+            <div className="font-bold text-xl mb-1">Gold</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">5M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 5% profit share</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Starter', '5% monthly profit share', 'Priority signal alerts', 'Advanced AI analysis', 'Tier badge in community', 'Early feature access'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake for Gold →
+            </Link>
+          </div>
+
+          {/* Diamond / Unlimited */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">💎</div>
+            <div className="font-bold text-xl mb-1">Diamond</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">25M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 20% profit share</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Gold', '20% monthly profit share', 'API access', 'Custom signal parameters', 'Direct dev support', 'Diamond badge + perks'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 border border-blue-400/40 text-blue-400 hover:bg-blue-400/10 transition-all font-medium rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Go Diamond →
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center text-xs text-white/40 max-w-lg mx-auto">
+          Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus's actual trading performance.
+          7-day unstaking cooldown. <span className="text-white/60 underline cursor-pointer" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>Full tier comparison →</span>
         </div>
       </div>
 

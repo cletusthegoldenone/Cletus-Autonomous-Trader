@@ -1,14 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Dashboard from '@/components/Dashboard';
 import CandlestickChart from '@/components/CandlestickChart';
 import TradingSignals from '@/components/TradingSignals';
 import AIBrainChat from '@/components/AIBrainChat';
 import StakingDashboard from '@/components/StakingDashboard';
+import CommunityChat from '@/components/CommunityChat';
+import DevWalletInspector from '@/components/DevWalletInspector';
 
-type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'staking';
+type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'staking' | 'community' | 'inspect';
+
+const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'staking', 'community', 'inspect'];
 
 const AI_MODEL_LABEL = process.env.NEXT_PUBLIC_AI_MODEL_LABEL ?? 'Gemini AI';
 
@@ -18,10 +23,23 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'signals', label: 'Signals', icon: '⚡' },
   { id: 'ai', label: 'Cletus AI', icon: '🤖' },
   { id: 'staking', label: 'Staking', icon: '💎' },
+  { id: 'community', label: 'Community', icon: '🪿' },
+  { id: 'inspect', label: 'Dev Wallet', icon: '🔍' },
 ];
 
-export default function TraderPage() {
-  const [activeTab, setActiveTab] = useState<Tab>('dashboard');
+// Inner component that reads search params (must be wrapped in Suspense)
+function TraderInner() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get('tab') as Tab | null;
+  const initialTab: Tab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'dashboard';
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab') as Tab | null;
+    if (tab && VALID_TABS.includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-trading-bg text-white">
@@ -101,20 +119,22 @@ export default function TraderPage() {
         {activeTab === 'signals' && <TradingSignals />}
         {activeTab === 'ai' && <AIBrainChat />}
         {activeTab === 'staking' && <StakingDashboard />}
+        {activeTab === 'community' && <CommunityChat />}
+        {activeTab === 'inspect' && <DevWalletInspector />}
       </main>
 
       {/* Mobile bottom tab bar */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 border-t border-trading-border bg-trading-surface z-50">
-        <div className="flex">
+        <div className="flex overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex flex-col items-center gap-y-1 py-2.5 text-xs transition-colors ${
+              className={`flex-1 flex flex-col items-center gap-y-0.5 py-2 text-[10px] transition-colors min-w-[52px] ${
                 activeTab === tab.id ? 'text-trading-green' : 'text-gray-600'
               }`}
             >
-              <span className="text-lg leading-none">{tab.icon}</span>
+              <span className="text-base leading-none">{tab.icon}</span>
               <span className="font-medium leading-none">{tab.label}</span>
             </button>
           ))}
@@ -126,3 +146,12 @@ export default function TraderPage() {
     </div>
   );
 }
+
+export default function TraderPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-trading-bg text-white flex items-center justify-center text-gray-500">Loading…</div>}>
+      <TraderInner />
+    </Suspense>
+  );
+}
+
