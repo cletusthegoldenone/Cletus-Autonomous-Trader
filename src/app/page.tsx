@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 interface TokenData {
@@ -177,23 +178,23 @@ export default function Home() {
               >
                 Join Waitlist
               </button>
-              <button
-                onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+              <Link
+                href="/trader"
                 className="px-5 py-2.5 text-sm font-semibold bg-emerald-500 hover:bg-emerald-600 transition-all rounded-3xl flex items-center gap-x-2 active:scale-[0.985]"
               >
-                <span>Dashboard</span>
+                <span>Launch App</span>
                 <span>→</span>
-              </button>
+              </Link>
             </div>
 
             {/* Mobile: hamburger + CTA */}
             <div className="flex items-center gap-x-2 md:hidden">
-              <button
-                onClick={() => setShowWaitlist(true)}
+              <Link
+                href="/trader"
                 className="px-4 py-2 text-xs font-medium bg-emerald-500 hover:bg-emerald-600 rounded-2xl transition-all active:scale-[0.985]"
               >
-                Get Access
-              </button>
+                Launch App
+              </Link>
               <button
                 onClick={() => setMobileMenuOpen((v) => !v)}
                 className="p-2 rounded-xl hover:bg-white/10 transition-colors"
@@ -249,12 +250,13 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
-              <button
-                onClick={() => setShowWaitlist(true)}
-                className="w-full sm:w-auto px-8 py-3.5 sm:py-4 bg-white text-black font-semibold rounded-3xl flex items-center justify-center gap-x-2 hover:bg-zinc-100 transition-all text-base sm:text-lg active:scale-[0.985]"
+              <Link
+                href="/trader"
+                className="w-full sm:w-auto px-8 py-3.5 sm:py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-3xl flex items-center justify-center gap-x-2 transition-all text-base sm:text-lg active:scale-[0.985]"
               >
-                Get Early Access
-              </button>
+                <span>🚀</span>
+                <span>Launch Trading App</span>
+              </Link>
               <button
                 onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
                 className="w-full sm:w-auto px-7 py-3.5 sm:py-4 border border-white/30 hover:bg-white/5 font-medium rounded-3xl flex items-center justify-center gap-x-2 text-base sm:text-lg transition-all active:scale-[0.985]"
@@ -605,13 +607,21 @@ export default function Home() {
           <div className="max-w-lg mx-auto">
             <div className="text-emerald-400 mb-2 text-sm sm:text-base">Ready to trade smarter?</div>
             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mb-6">Join the Cletus beta today.</h3>
-            <button
-              onClick={() => setShowWaitlist(true)}
-              className="px-8 sm:px-10 py-3.5 sm:py-4 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-3xl text-base sm:text-lg inline-flex items-center gap-x-2 sm:gap-x-3 active:scale-[0.985]"
-            >
-              <span>Request Access</span>
-              <span>→</span>
-            </button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link
+                href="/trader"
+                className="px-8 sm:px-10 py-3.5 sm:py-4 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-3xl text-base sm:text-lg inline-flex items-center gap-x-2 sm:gap-x-3 active:scale-[0.985]"
+              >
+                <span>🚀 Launch Trading App</span>
+                <span>→</span>
+              </Link>
+              <button
+                onClick={() => setShowWaitlist(true)}
+                className="px-8 sm:px-10 py-3.5 sm:py-4 border border-white/20 hover:bg-white/5 transition-all font-medium rounded-3xl text-base sm:text-lg inline-flex items-center gap-x-2 sm:gap-x-3 active:scale-[0.985]"
+              >
+                <span>Join Waitlist</span>
+              </button>
+            </div>
             <div className="mt-4 text-xs text-white/50">Limited spots · Staking or trial required for full access</div>
           </div>
         </div>
