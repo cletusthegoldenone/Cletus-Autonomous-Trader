@@ -349,21 +349,34 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
       setInput('');
       setIsTyping(true);
 
-      // Simulate AI response delay (600ms–2s)
-      const delay = 600 + Math.random() * 1400;
-      await new Promise((r) => setTimeout(r, delay));
-
-      const response = findBestResponse(content);
-      const aiMsg: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: response.content,
-        timestamp: Date.now(),
-        citations: response.citations,
-      };
-
-      setIsTyping(false);
-      setMessages((prev) => [...prev, aiMsg]);
+      try {
+        const res = await fetch('/api/ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: content.trim() }),
+          signal: AbortSignal.timeout(12_000),
+        });
+        const data = await res.json();
+        const aiMsg: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: data.answer ?? findBestResponse(content).content,
+          timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, aiMsg]);
+      } catch {
+        const response = findBestResponse(content);
+        const aiMsg: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: response.content,
+          timestamp: Date.now(),
+          citations: response.citations,
+        };
+        setMessages((prev) => [...prev, aiMsg]);
+      } finally {
+        setIsTyping(false);
+      }
     },
     []
   );
