@@ -13,6 +13,7 @@
     "test:integration": "echo \"No integration tests configured\" && exit 0"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
     "autoprefixer": "^10.4.19",
     "lightweight-charts": "^4.2.0",
     "next": "14.2.5",
