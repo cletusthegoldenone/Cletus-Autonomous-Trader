@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
@@ -83,9 +85,39 @@ interface DashboardProps {
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
-  const [wallet] = useState<WalletInfo>(MOCK_WALLET);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo>(MOCK_WALLET);
   const [isLive, setIsLive] = useState(true);
   const [currentTime, setCurrentTime] = useState<string>('');
+
+  // Real wallet integration
+  const { publicKey, connected } = useWallet();
+  const { connection } = useConnection();
+
+  // Sync real wallet data when connected
+  useEffect(() => {
+    if (!connected || !publicKey) {
+      setWalletInfo(MOCK_WALLET);
+      return;
+    }
+
+    const addr = publicKey.toBase58();
+    setWalletInfo({
+      address: `${addr.slice(0, 4)}…${addr.slice(-4)}`,
+      solBalance: 0,
+      usdtBalance: 0,
+      connected: true,
+    });
+
+    // Fetch real SOL balance
+    connection.getBalance(publicKey).then((lamports) => {
+      setWalletInfo((prev) => ({
+        ...prev,
+        solBalance: lamports / LAMPORTS_PER_SOL,
+      }));
+    }).catch(() => {
+      // keep zero balance on error
+    });
+  }, [connected, publicKey, connection]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -136,30 +168,41 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
           <div className="flex flex-col items-start sm:items-end gap-2">
             <div className="flex items-center gap-2 text-sm">
-              <span className="w-2 h-2 rounded-full bg-trading-green" />
-              <span className="text-gray-300 font-mono text-xs">{wallet.address}</span>
+              <span className={`w-2 h-2 rounded-full ${connected ? 'bg-trading-green status-dot-live' : 'bg-gray-600'}`} />
+              <span className="text-gray-300 font-mono text-xs">{walletInfo.address}</span>
+              {connected && (
+                <span className="text-xs px-1.5 py-0.5 rounded bg-trading-green/20 text-trading-green border border-trading-green/30 font-semibold">
+                  LIVE
+                </span>
+              )}
             </div>
             <div className="flex gap-3 text-xs font-mono">
               <span className="text-gray-400">
-                <span className="text-white font-semibold">{wallet.solBalance.toFixed(2)}</span> SOL
+                <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(connected ? 4 : 2)}</span> SOL
               </span>
-              <span className="text-gray-400">
-                <span className="text-white font-semibold">
-                  ${wallet.usdtBalance.toLocaleString()}
-                </span>{' '}
-                USDT
-              </span>
+              {!connected && (
+                <span className="text-gray-400">
+                  <span className="text-white font-semibold">
+                    ${walletInfo.usdtBalance.toLocaleString()}
+                  </span>{' '}
+                  USDT
+                </span>
+              )}
             </div>
-            <button
-              onClick={() => setIsLive((v) => !v)}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                isLive
-                  ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
-                  : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
-              }`}
-            >
-              {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
-            </button>
+            {connected ? (
+              <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Simulation ready</div>
+            ) : (
+              <button
+                onClick={() => setIsLive((v) => !v)}
+                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                  isLive
+                    ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
+                    : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
+                }`}
+              >
+                {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
+              </button>
+            )}
           </div>
         </div>
       </div>

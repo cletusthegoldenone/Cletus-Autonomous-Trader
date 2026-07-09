@@ -111,3 +111,56 @@ export interface TradeMarker {
   shape: 'arrowUp' | 'arrowDown';
   text: string;
 }
+
+// ── Simulation & Trading Config ───────────────────────────────────────────────
+
+export type AggressionLevel = 'CONSERVATIVE' | 'MODERATE' | 'AGGRESSIVE' | 'MAX_RISK';
+
+export interface TradingConfig {
+  /** 24-hour time string "HH:MM" */
+  startTime: string;
+  /** 24-hour time string "HH:MM" */
+  endTime: string;
+  /** Mon=0 … Sun=6 */
+  activeDays: boolean[];
+  aggression: AggressionLevel;
+  /** % of available balance allocated per trade */
+  positionSizePercent: number;
+  /** Min composite score (0–1) required to open a trade */
+  signalThreshold: number;
+  /** Per-trade stop loss in % of entry price */
+  perTradeSL: number;
+  /** Per-trade take profit in % of entry price */
+  perTradeTP: number;
+  /** Stop trading when daily profit hits this USD amount (0 = disabled) */
+  dailyProfitTarget: number;
+  /** Stop trading when daily loss hits this USD amount (0 = disabled) */
+  dailyMaxLoss: number;
+  /** Max number of concurrently open positions */
+  maxPositions: number;
+  /** Starting USD balance for the simulation */
+  initialCapital: number;
+}
+
+export interface SimulatedPosition {
+  id: string;
+  tokenName: string;
+  tokenAddress: string;
+  direction: 'LONG' | 'SHORT';
+  entryPrice: number;
+  currentPrice: number;
+  stopLoss: number;
+  takeProfit: number;
+  /** USD reserved for this position at open */
+  positionSizeUsd: number;
+  /** Token quantity = positionSizeUsd / entryPrice */
+  quantity: number;
+  openedAt: number;
+  pnlUsd: number;
+  pnlPercent: number;
+  status: 'OPEN' | 'CLOSED_TP' | 'CLOSED_SL' | 'CLOSED_MANUAL';
+  closedAt?: number;
+  closingPrice?: number;
+  closingPnlUsd?: number;
+  signalScore: number;
+}
