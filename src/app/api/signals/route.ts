@@ -146,7 +146,7 @@ function fallbackSignals() {
           socialSentiment: Math.random(),
         },
         riskReward: 1.5 + Math.random() * 3.5,
-        direction: Math.random() > 0.3 ? 'LONG' : ('SHORT' as 'LONG' | 'SHORT'),
+        direction: (Math.random() > 0.3 ? 'LONG' : 'SHORT') as 'LONG' | 'SHORT',
         strength: (
           score >= 0.75 ? 'EXTREME' : score >= 0.55 ? 'STRONG' : score >= 0.4 ? 'MODERATE' : 'WEAK'
         ) as 'WEAK' | 'MODERATE' | 'STRONG' | 'EXTREME',

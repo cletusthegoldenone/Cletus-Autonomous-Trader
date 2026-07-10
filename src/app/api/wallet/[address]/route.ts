@@ -160,7 +160,9 @@ export async function GET(
         : 'Unknown';
 
     // Token holdings sorted by raw amount descending, top 5
-    const holdings: TokenHolding[] = tokenAccounts
+    // Use a separate intermediate type to avoid polluting TokenHolding
+    type RawHolding = TokenHolding & { _uiAmount: number };
+    const rawHoldings: RawHolding[] = tokenAccounts
       .map((acc) => {
         const info = acc.account.data.parsed.info;
         const uiAmount = info.tokenAmount.uiAmount ?? 0;
@@ -178,8 +180,9 @@ export async function GET(
       })
       .filter((h) => h._uiAmount > 0)
       .sort((a, b) => b._uiAmount - a._uiAmount)
-      .slice(0, 5)
-      .map(({ _uiAmount: _, ...h }) => h);
+      .slice(0, 5);
+
+    const holdings: TokenHolding[] = rawHoldings.map(({ _uiAmount: _, ...h }) => h);
 
     // Recent activity from signatures
     const recentActivity: ActivityItem[] = signatures.slice(0, 8).map((sig) => ({

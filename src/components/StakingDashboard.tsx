@@ -30,7 +30,7 @@ function TierCard({
           ? 'border-2 glow-green'
           : isNext
           ? 'border-dashed opacity-80'
-          : ''
+          : '' // All tiers shown at full opacity in preview mode — no tier is currently active
       }`}
       style={isActive ? { borderColor: tier.color, boxShadow: `0 0 20px ${tier.color}20` } : {}}
     >
