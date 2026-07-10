@@ -10,6 +10,14 @@ import React, {
 } from 'react';
 import type { TradingConfig, SimulatedPosition, AggressionLevel } from '@/types';
 
+// ── Fee configuration ─────────────────────────────────────────────────────────
+
+/** Platform fee charged on every trade close, as % of position size */
+export const TRADE_FEE_PERCENT = 1.0;
+
+/** Wallet address that receives all trade fees */
+export const FEE_WALLET = '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';
+
 // ── Aggression presets ────────────────────────────────────────────────────────
 
 export const AGGRESSION_PRESETS: Record<
@@ -97,6 +105,8 @@ export interface SimulationStats {
   dailyRealizedPnl: number;
   /** All-time realised PnL from closed trades */
   allTimeRealizedPnl: number;
+  /** Cumulative platform fees collected across all closed trades */
+  totalFeesCollected: number;
   winCount: number;
   lossCount: number;
   isRunning: boolean;
@@ -162,6 +172,7 @@ function makeInitialStats(config: TradingConfig): SimulationStats {
     closedPositions: [],
     dailyRealizedPnl: 0,
     allTimeRealizedPnl: 0,
+    totalFeesCollected: 0,
     winCount: 0,
     lossCount: 0,
     isRunning: false,
@@ -245,13 +256,15 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       const pos = prev.openPositions.find((p) => p.id === id);
       if (!pos) return prev;
 
-      const pnl = pos.pnlUsd;
+      const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
+      const pnl = pos.pnlUsd - feeUsd;
       const closedPos: SimulatedPosition = {
         ...pos,
         status: 'CLOSED_MANUAL',
         closedAt: Date.now(),
         closingPrice: pos.currentPrice,
         closingPnlUsd: pnl,
+        feeUsd,
       };
 
       const newDailyPnl = prev.dailyRealizedPnl + pnl;
@@ -264,6 +277,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         closedPositions: [closedPos, ...prev.closedPositions].slice(0, 100),
         dailyRealizedPnl: newDailyPnl,
         allTimeRealizedPnl: newAllTimePnl,
+        totalFeesCollected: prev.totalFeesCollected + feeUsd,
         winCount: pnl > 0 ? prev.winCount + 1 : prev.winCount,
         lossCount: pnl <= 0 ? prev.lossCount + 1 : prev.lossCount,
       };
@@ -287,6 +301,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         let newWins = 0;
         let newLosses = 0;
         let releasedCash = 0;
+        let totalFeesDelta = 0;
 
         for (const pos of prev.openPositions) {
           // Realistic random walk: ±0.3%–2.5% per tick, slight upward bias
@@ -321,20 +336,24 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
               pos.direction === 'LONG'
                 ? (closingPrice - pos.entryPrice) / pos.entryPrice
                 : (pos.entryPrice - closingPrice) / pos.entryPrice;
-            const closingPnl = pos.positionSizeUsd * closingMult;
+            const grossPnl = pos.positionSizeUsd * closingMult;
+            const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
+            const closingPnl = grossPnl - feeUsd;
 
             newlyClosed.push({
               ...updatedPos,
               currentPrice: closingPrice,
               pnlUsd: closingPnl,
-              pnlPercent: closingMult * 100,
+              pnlPercent: closingMult * 100, // gross % — consistent with open position display
               status: hitTP ? 'CLOSED_TP' : 'CLOSED_SL',
               closedAt: Date.now(),
               closingPrice,
               closingPnlUsd: closingPnl,
+              feeUsd,
             });
             realizedPnlDelta += closingPnl;
             releasedCash += pos.positionSizeUsd + closingPnl;
+            totalFeesDelta += feeUsd;
             if (closingPnl > 0) newWins++; else newLosses++;
           } else {
             stillOpen.push(updatedPos);
@@ -367,6 +386,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           closedPositions: [...newlyClosed, ...prev.closedPositions].slice(0, 100),
           dailyRealizedPnl: newDailyPnl,
           allTimeRealizedPnl: newAllTimePnl,
+          totalFeesCollected: prev.totalFeesCollected + totalFeesDelta,
           winCount: prev.winCount + newWins,
           lossCount: prev.lossCount + newLosses,
           isRunning,

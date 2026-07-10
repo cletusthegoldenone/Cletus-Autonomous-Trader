@@ -1,6 +1,6 @@
 'use client';
 
-import { useSimulation, AGGRESSION_PRESETS } from '@/context/SimulationContext';
+import { useSimulation, AGGRESSION_PRESETS, TRADE_FEE_PERCENT, FEE_WALLET } from '@/context/SimulationContext';
 import type { SimulatedPosition } from '@/types';
 
 function formatUsd(n: number, showSign = false): string {
@@ -148,6 +148,9 @@ function ClosedPositionRow({ pos }: { pos: SimulatedPosition }) {
           <div className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
             <span>{statusLabels[pos.status]}</span>
             {pos.closedAt && <span>{timeSince(pos.closedAt)}</span>}
+            {pos.feeUsd !== undefined && (
+              <span className="text-trading-yellow/70">fee: {formatUsd(pos.feeUsd)}</span>
+            )}
           </div>
         </div>
       </div>
@@ -314,6 +317,27 @@ export default function SimulationDashboard() {
             {'sub' in s && s.sub && <div className="text-xs text-gray-500">{s.sub}</div>}
           </div>
         ))}
+      </div>
+
+      {/* Platform fee info */}
+      <div className="trading-card p-4 border-trading-yellow/20 bg-trading-yellow/5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">💸 Platform Fee</div>
+            <div className="text-sm font-semibold text-trading-yellow">
+              {TRADE_FEE_PERCENT}% per trade <span className="text-gray-500 font-normal">(charged on position size at close)</span>
+            </div>
+            <div className="text-xs text-gray-500 mt-1 font-mono">
+              Fee wallet: <span className="text-gray-400">{FEE_WALLET}</span>
+            </div>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total Fees Collected</div>
+            <div className="text-xl font-bold font-mono text-trading-yellow">
+              {formatUsd(stats.totalFeesCollected)}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* PnL limits bar */}
