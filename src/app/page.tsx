@@ -344,7 +344,7 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
-            { icon: '🔐', title: 'Staking Access', desc: 'Stake 0.5% of your SOL portfolio to unlock full access. Unstake at any time — your SOL stays yours.' },
+            { icon: '🔐', title: 'Staking Tiers', desc: 'Stake $CLETUS tokens to unlock full access and receive up to monthly profit distributions — from 500K tokens ($750/mo cap) up to 25M+ for unlimited gains.' },
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -549,43 +549,121 @@ export default function Home() {
       {/* Pricing / Access */}
       <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-10 sm:mb-14">
-          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">ACCESS</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake SOL. Unlock everything.</h2>
-          <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
-            Cletus is powered by its community. Stake just 0.5% of your SOL portfolio to unlock full platform access — no subscriptions, no hidden fees.
+          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">STAKING TIERS</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake $CLETUS. Earn monthly profits.</h2>
+          <p className="mt-3 text-white/60 max-w-xl mx-auto text-sm sm:text-base">
+            Stake $CLETUS tokens to unlock full platform access and receive monthly profit distributions. The more you stake, the more you earn.
           </p>
         </div>
 
-        <div className="max-w-lg mx-auto">
-          <div className="glass p-8 rounded-3xl border-2 border-emerald-500 flex flex-col items-center text-center">
-            <div className="text-4xl mb-4">◎</div>
-            <div className="font-bold text-2xl mb-1">Staking Access</div>
-            <div className="text-4xl font-bold tracking-tighter mb-1">0.5% SOL</div>
-            <div className="text-white/50 text-xs mb-6">One-time stake · No credit card · Unstake anytime</div>
-            <ul className="space-y-2 text-sm text-white/70 mb-8 w-full text-left">
-              {['Live Market Scanner', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community access', 'Trading simulation', 'All future features'].map((f) => (
-                <li key={f} className="flex items-start gap-2">
-                  <span className="text-emerald-400 shrink-0">✓</span>
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 mb-6 text-left">
-              <div className="text-xs text-white/50 mb-1 font-mono">EXAMPLE</div>
-              <div className="flex justify-between text-sm">
-                <span className="text-white/60">10 SOL portfolio</span>
-                <span className="text-emerald-400 font-semibold">= 0.05 SOL staked</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5 max-w-7xl mx-auto">
+          {[
+            {
+              label: 'Starter',
+              stake: '500K',
+              stakeRaw: '500,000',
+              profit: '$750',
+              profitSub: 'per month',
+              color: 'border-emerald-500/50',
+              accentText: 'text-emerald-400',
+              accentBg: 'bg-emerald-500/10',
+              icon: '🌱',
+              featured: false,
+            },
+            {
+              label: 'Growth',
+              stake: '2M',
+              stakeRaw: '2,000,000',
+              profit: '$1,500',
+              profitSub: 'per month',
+              color: 'border-blue-500/50',
+              accentText: 'text-blue-400',
+              accentBg: 'bg-blue-500/10',
+              icon: '📈',
+              featured: false,
+            },
+            {
+              label: 'Pro',
+              stake: '5M',
+              stakeRaw: '5,000,000',
+              profit: '$3,000',
+              profitSub: 'per month',
+              color: 'border-emerald-500',
+              accentText: 'text-emerald-400',
+              accentBg: 'bg-emerald-500/10',
+              icon: '⚡',
+              featured: true,
+            },
+            {
+              label: 'Elite',
+              stake: '10M',
+              stakeRaw: '10,000,000',
+              profit: '$10,000',
+              profitSub: 'per month',
+              color: 'border-yellow-500/50',
+              accentText: 'text-yellow-400',
+              accentBg: 'bg-yellow-500/10',
+              icon: '👑',
+              featured: false,
+            },
+            {
+              label: 'Whale',
+              stake: '25M+',
+              stakeRaw: '25,000,000+',
+              profit: 'Unlimited',
+              profitSub: 'profit gains',
+              color: 'border-purple-500/50',
+              accentText: 'text-purple-400',
+              accentBg: 'bg-purple-500/10',
+              icon: '🐋',
+              featured: false,
+            },
+          ].map((tier) => (
+            <div
+              key={tier.label}
+              className={`glass rounded-3xl border-2 ${tier.color} p-6 flex flex-col items-center text-center relative ${tier.featured ? 'bg-emerald-500/5 shadow-lg shadow-emerald-500/10' : ''}`}
+            >
+              {tier.featured && (
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-emerald-500 rounded-full text-xs font-bold text-black whitespace-nowrap">
+                  MOST POPULAR
+                </div>
+              )}
+              <div className="text-3xl mb-3">{tier.icon}</div>
+              <div className={`text-xs font-semibold tracking-widest mb-1 ${tier.accentText}`}>{tier.label.toUpperCase()}</div>
+              <div className="font-bold text-xl mb-0.5">
+                <span className={tier.accentText}>{tier.stake}</span>
+                <span className="text-white/50 text-sm font-normal ml-1">$CLETUS</span>
               </div>
-              <div className="flex justify-between text-sm mt-1">
-                <span className="text-white/60">100 SOL portfolio</span>
-                <span className="text-emerald-400 font-semibold">= 0.5 SOL staked</span>
+              <div className="text-xs text-white/40 mb-4">staked</div>
+              <div className={`w-full rounded-2xl p-3 mb-5 ${tier.accentBg}`}>
+                <div className={`text-2xl font-bold tracking-tight ${tier.accentText}`}>{tier.profit}</div>
+                <div className="text-xs text-white/50 mt-0.5">{tier.profitSub}</div>
               </div>
+              <ul className="space-y-1.5 text-xs text-white/60 mb-6 w-full text-left">
+                {['Full platform access', 'Live Market Scanner', 'Unlimited AI Chat', 'Trading simulation', 'Community access', 'All future features'].map((f) => (
+                  <li key={f} className="flex items-center gap-2">
+                    <span className={`shrink-0 ${tier.accentText}`}>✓</span>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/trader"
+                className={`w-full py-2.5 font-semibold rounded-xl text-xs text-center transition-all active:scale-[0.985] block ${
+                  tier.featured
+                    ? 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                    : 'border border-white/20 hover:bg-white/5 text-white'
+                }`}
+              >
+                Stake & Launch →
+              </Link>
             </div>
-            <Link href="/trader" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
-              Stake & Launch App →
-            </Link>
-          </div>
+          ))}
         </div>
+
+        <p className="mt-8 text-xs text-white/30 text-center">
+          All tiers include full access to every platform feature. Monthly profit figures are caps on distributions from platform trading revenue — actual payouts depend on platform performance. Unstake anytime — your tokens stay yours.
+        </p>
       </div>
 
       {/* $CLETUS Token — Coming Soon */}
@@ -659,16 +737,16 @@ export default function Home() {
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
                 ◎
               </div>
-              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake & Access</h3>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake & Earn</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Stake 0.5% of your SOL to unlock every feature — no subscriptions, no paywalls. Unstake anytime and your SOL is returned.
+                Stake $CLETUS tokens to unlock every feature and earn monthly profit distributions — from $750/mo at 500K tokens to unlimited gains at 25M+.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                 {[
-                  { feature: 'Live scanner', icon: '📊' },
-                  { feature: 'Unlimited AI chat', icon: '🤖' },
-                  { feature: 'Full signal access', icon: '⚡' },
-                  { feature: 'Dev wallet inspector', icon: '🔍' },
+                  { feature: '500K → up to $750/mo', icon: '🌱' },
+                  { feature: '5M → up to $3,000/mo', icon: '⚡' },
+                  { feature: '25M+ → unlimited gains', icon: '🐋' },
+                  { feature: 'Full platform access', icon: '🔓' },
                 ].map(({ feature, icon }) => (
                   <div key={feature} className="flex items-center gap-2 text-xs font-mono">
                     <span>{icon}</span>
@@ -717,7 +795,7 @@ export default function Home() {
                     status: 'LIVE NOW',
                     statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
                     dotColor: 'bg-emerald-500',
-                    items: ['SOL staking live (0.5%)', 'Trading simulation active', 'Community airdrop eligible', '10% supply distributed', 'Full feature access for stakers'],
+                    items: ['$CLETUS token staking live', 'Trading simulation active', 'Community airdrop eligible', '10% supply distributed', 'Full feature access for stakers'],
                   },
                   {
                     phase: 'Phase 2',
@@ -860,7 +938,7 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
-                ['Monthly Fee', '0.5% SOL stake', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
+                ['Monthly Fee', '$CLETUS stake tiers', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
@@ -914,7 +992,7 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
-            <div className="mt-4 text-xs text-white/50">Stake 0.5% SOL to unlock · Unstake anytime</div>
+            <div className="mt-4 text-xs text-white/50">Stake $CLETUS tokens to unlock · Earn monthly profits · Unstake anytime</div>
           </div>
         </div>
       </div>
