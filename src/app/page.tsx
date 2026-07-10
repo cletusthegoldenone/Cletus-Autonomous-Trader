@@ -944,7 +944,7 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
-                ['Trade Fee', '1% per trade', '~1% per trade', '~1% per trade', '~1% per trade', '~1% per trade'],
+                ['Trade Fee', '1% per trade', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>

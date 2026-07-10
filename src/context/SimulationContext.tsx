@@ -344,7 +344,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
               ...updatedPos,
               currentPrice: closingPrice,
               pnlUsd: closingPnl,
-              pnlPercent: (closingPnl / pos.positionSizeUsd) * 100,
+              pnlPercent: closingMult * 100, // gross % — consistent with open position display
               status: hitTP ? 'CLOSED_TP' : 'CLOSED_SL',
               closedAt: Date.now(),
               closingPrice,
