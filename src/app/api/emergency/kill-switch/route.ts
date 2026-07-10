@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   const hasKeypair = loadTradingKeypair() !== null;
   const isDryRun = !isLive || !hasKeypair;
 
-  const openPositions = getOpenPositions();
+  const openPositions = await getOpenPositions();
   if (openPositions.length === 0) {
     return NextResponse.json({
       status: 'NO_POSITIONS',
@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      const closed = closePosition(pos.id, exitPrice, exitSignature, 'KILL_SWITCH');
+      const closed = await closePosition(pos.id, exitPrice, exitSignature, 'KILL_SWITCH');
       if (closed) {
         if (pos.signalBreakdown) {
           recordOutcome(pos.signalBreakdown, closed.realisedPnlUsd > 0);

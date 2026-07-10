@@ -3,9 +3,9 @@ import { getOpenPositions, getClosedPositions, getStats } from '@/lib/position-s
 
 /** GET /api/trade/positions — return all open and recent closed positions */
 export async function GET() {
-  const open = getOpenPositions();
-  const closed = getClosedPositions();
-  const stats = getStats();
+  const open = await getOpenPositions();
+  const closed = await getClosedPositions();
+  const stats = await getStats();
 
   return NextResponse.json({
     open,

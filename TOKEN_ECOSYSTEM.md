@@ -50,11 +50,11 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 
 | Staked Amount | Free Usage Tier | Weekly SOL Reward | Reward Rate |
 |---------------|-----------------|-------------------|------------|
-| 1,000 CLETUS | Starter | 0.05 SOL | 5% APY |
-| 5,000 CLETUS | Pro | 0.30 SOL | 5% APY |
-| 10,000 CLETUS | Elite | 0.70 SOL | 5% APY |
-| 50,000 CLETUS | Whale | 3.50 SOL | 5% APY |
-| 100,000+ CLETUS | Founder | 7.00+ SOL | 5% APY |
+| 1,000 CLETUS | Starter | 0.005 SOL | 0.5% APY |
+| 5,000 CLETUS | Pro | 0.030 SOL | 0.5% APY |
+| 10,000 CLETUS | Elite | 0.070 SOL | 0.5% APY |
+| 50,000 CLETUS | Whale | 0.350 SOL | 0.5% APY |
+| 100,000+ CLETUS | Founder | 0.700+ SOL | 0.5% APY |
 
 #### Free Usage by Tier
 
@@ -114,8 +114,8 @@ interface StakingInfo {
 }
 
 // Weekly reward calculation
-weeklyReward = (stakedTokens / 1_000_000_000) * 50_000 * (5 / 52);
-// Example: 10,000 CLETUS = ~0.70 SOL per week
+weeklyReward = (stakedTokens / 1_000_000_000) * 50_000 * (0.5 / 52);
+// Example: 10,000 CLETUS = ~0.070 SOL per week
 ```
 
 #### Gas-Free Staking

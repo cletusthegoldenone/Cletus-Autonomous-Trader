@@ -164,7 +164,7 @@ All fee distribution logic is:
 
 **Used For:**
 - Weekly SOL distributions to stakers
-- Maintaining 5% APY for all staking tiers
+- Maintaining 0.5% APY for all staking tiers
 - Additional bonus rewards during high-profit months
 - Covering gas fees for reward distributions
 
@@ -207,11 +207,11 @@ Combined, this creates a robust reward system independent of individual trade pe
 
 | Tier | Staked Amount | SOL Rewards | Profit Share Eligible |
 |------|--------------|-------------|----------------------|
-| Starter | 1,000 CLETUS | 5% APY | No |
-| Pro | 5,000 CLETUS | 5% APY | No |
-| Elite | 10,000 CLETUS | 5% APY | No |
-| Whale | 50,000 CLETUS | 5% APY | No |
-| Profit Sharer | 2,500,000+ CLETUS | 5% APY | Yes |
+| Starter | 1,000 CLETUS | 0.5% APY | No |
+| Pro | 5,000 CLETUS | 0.5% APY | No |
+| Elite | 10,000 CLETUS | 0.5% APY | No |
+| Whale | 50,000 CLETUS | 0.5% APY | No |
+| Profit Sharer | 2,500,000+ CLETUS | 0.5% APY | Yes |
 
 **See STAKING_REWARDS_STRUCTURE.md for complete details.**
 
