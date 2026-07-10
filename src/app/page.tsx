@@ -344,7 +344,7 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
-            { icon: '🔐', title: 'Staking Tiers', desc: 'Stake $CLETUS tokens to unlock full access and receive up to monthly profit distributions — from 500K tokens ($750/mo cap) up to 25M+ for unlimited gains.' },
+            { icon: '🔐', title: 'Staking Tiers', desc: 'Your staking tier determines how much profit you can make from having Cletus trade on your behalf — from 500K tokens ($750/mo cap) up to 25M+ for unlimited gains.' },
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -550,9 +550,9 @@ export default function Home() {
       <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-10 sm:mb-14">
           <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">STAKING TIERS</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake $CLETUS. Earn monthly profits.</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake $CLETUS. Let Cletus trade for you.</h2>
           <p className="mt-3 text-white/60 max-w-xl mx-auto text-sm sm:text-base">
-            Stake $CLETUS tokens to unlock full platform access and receive monthly profit distributions. The more you stake, the more you earn.
+            Your staking tier determines how much profit you can make from having Cletus autonomously trade on your behalf. The more you stake, the higher your profit cap.
           </p>
         </div>
 
@@ -563,7 +563,7 @@ export default function Home() {
               stake: '500K',
               stakeRaw: '500,000',
               profit: '$750',
-              profitSub: 'per month',
+              profitSub: 'monthly cap from Cletus trading',
               color: 'border-emerald-500/50',
               accentText: 'text-emerald-400',
               accentBg: 'bg-emerald-500/10',
@@ -575,7 +575,7 @@ export default function Home() {
               stake: '2M',
               stakeRaw: '2,000,000',
               profit: '$1,500',
-              profitSub: 'per month',
+              profitSub: 'monthly cap from Cletus trading',
               color: 'border-blue-500/50',
               accentText: 'text-blue-400',
               accentBg: 'bg-blue-500/10',
@@ -587,7 +587,7 @@ export default function Home() {
               stake: '5M',
               stakeRaw: '5,000,000',
               profit: '$3,000',
-              profitSub: 'per month',
+              profitSub: 'monthly cap from Cletus trading',
               color: 'border-emerald-500',
               accentText: 'text-emerald-400',
               accentBg: 'bg-emerald-500/10',
@@ -599,7 +599,7 @@ export default function Home() {
               stake: '10M',
               stakeRaw: '10,000,000',
               profit: '$10,000',
-              profitSub: 'per month',
+              profitSub: 'monthly cap from Cletus trading',
               color: 'border-yellow-500/50',
               accentText: 'text-yellow-400',
               accentBg: 'bg-yellow-500/10',
@@ -611,7 +611,7 @@ export default function Home() {
               stake: '25M+',
               stakeRaw: '25,000,000+',
               profit: 'Unlimited',
-              profitSub: 'profit gains',
+              profitSub: 'profit from Cletus trading',
               color: 'border-purple-500/50',
               accentText: 'text-purple-400',
               accentBg: 'bg-purple-500/10',
@@ -662,7 +662,7 @@ export default function Home() {
         </div>
 
         <p className="mt-8 text-xs text-white/30 text-center">
-          All tiers include full access to every platform feature. Monthly profit figures are caps on distributions from platform trading revenue — actual payouts depend on platform performance. Unstake anytime — your tokens stay yours.
+          All tiers include full access to every platform feature. Profit figures are caps on what you can earn from Cletus trading on your behalf — actual payouts depend on platform performance. Unstake anytime — your tokens stay yours.
         </p>
       </div>
 
@@ -739,7 +739,7 @@ export default function Home() {
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Stake & Earn</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Stake $CLETUS tokens to unlock every feature and earn monthly profit distributions — from $750/mo at 500K tokens to unlimited gains at 25M+.
+                Stake $CLETUS tokens to unlock every feature and let Cletus trade on your behalf — your staking tier determines your monthly profit cap, from $750/mo at 500K tokens to unlimited gains at 25M+.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                 {[
@@ -992,7 +992,7 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
-            <div className="mt-4 text-xs text-white/50">Stake $CLETUS tokens to unlock · Earn monthly profits · Unstake anytime</div>
+            <div className="mt-4 text-xs text-white/50">Stake $CLETUS tokens to unlock · Let Cletus trade for you · Unstake anytime</div>
           </div>
         </div>
       </div>
