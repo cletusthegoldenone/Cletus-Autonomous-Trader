@@ -344,7 +344,11 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
+<<<<<<< HEAD
             { icon: '🔐', title: 'Staking Access', desc: 'Stake 0.5% of your SOL portfolio to unlock full access. Unstake at any time — your SOL stays yours.' },
+=======
+            { icon: '🔐', title: 'Smart Access Control', desc: 'Full access on 30-day free trial. Staking unlocks profit sharing. All enforced server-side.' },
+>>>>>>> origin/main
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -552,6 +556,7 @@ export default function Home() {
           <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">ACCESS</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake SOL. Unlock everything.</h2>
           <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
+<<<<<<< HEAD
             Cletus is powered by its community. Stake just 0.5% of your SOL portfolio to unlock full platform access — no subscriptions, no hidden fees.
           </p>
         </div>
@@ -564,11 +569,38 @@ export default function Home() {
             <div className="text-white/50 text-xs mb-6">One-time stake · No credit card · Unstake anytime</div>
             <ul className="space-y-2 text-sm text-white/70 mb-8 w-full text-left">
               {['Live Market Scanner', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community access', 'Trading simulation', 'All future features'].map((f) => (
+=======
+            The free trial gives you full access to every Cletus feature — no limits. Staking unlocks profit sharing on top of everything else.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          {/* Free Trial */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-emerald-500/40 flex flex-col relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400 whitespace-nowrap">
+              FULL ACCESS
+            </div>
+            <div className="text-2xl mb-3">⏱️</div>
+            <div className="font-bold text-xl mb-1">Free Trial</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">$0</div>
+            <div className="text-white/50 text-xs mb-5">30 days · No credit card · 1% trade fee</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {[
+                'Live Market Scanner',
+                'Unlimited AI Chat',
+                'Full signal access',
+                'Priority signal alerts',
+                'Dev wallet inspector',
+                'Community read access',
+                'Candlestick charts',
+              ].map((f) => (
+>>>>>>> origin/main
                 <li key={f} className="flex items-start gap-2">
                   <span className="text-emerald-400 shrink-0">✓</span>
                   <span>{f}</span>
                 </li>
               ))}
+<<<<<<< HEAD
             </ul>
             <div className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 mb-6 text-left">
               <div className="text-xs text-white/50 mb-1 font-mono">EXAMPLE</div>
@@ -580,6 +612,52 @@ export default function Home() {
                 <span className="text-white/60">100 SOL portfolio</span>
                 <span className="text-emerald-400 font-semibold">= 0.5 SOL staked</span>
               </div>
+=======
+              {['Profit sharing'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setShowWaitlist(true)}
+              className="w-full py-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/30 transition-all font-medium rounded-2xl text-sm active:scale-[0.985]"
+            >
+              Start Free Trial →
+            </button>
+          </div>
+
+          {/* Starter Staking */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">🌱</div>
+            <div className="font-bold text-xl mb-1">Starter</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY · 1% trade fee</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Trial', 'Community write access', '5% APY in SOL'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+              {['Profit sharing', 'Priority alerts'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 transition-all font-medium rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake Now →
+            </Link>
+          </div>
+
+          {/* Gold / Pro — highlighted */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border-2 border-emerald-500 flex flex-col relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500 rounded-full text-xs font-bold text-black whitespace-nowrap">
+              MOST POPULAR
+>>>>>>> origin/main
             </div>
             <Link href="/trader" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
               Stake & Launch App →
@@ -860,7 +938,11 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
+<<<<<<< HEAD
                 ['Monthly Fee', '0.5% SOL stake', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
+=======
+                ['Trade Fee', '1% per trade', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)'],
+>>>>>>> origin/main
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
@@ -914,7 +996,11 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
+<<<<<<< HEAD
             <div className="mt-4 text-xs text-white/50">Stake 0.5% SOL to unlock · Unstake anytime</div>
+=======
+            <div className="mt-4 text-xs text-white/50">Free trial gives full access · Staking unlocks profit sharing</div>
+>>>>>>> origin/main
           </div>
         </div>
       </div>

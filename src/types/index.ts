@@ -126,5 +126,7 @@ export interface SimulatedPosition {
   closedAt?: number;
   closingPrice?: number;
   closingPnlUsd?: number;
+  /** Platform fee charged on close (% of position size, sent to dev wallet) */
+  feeUsd?: number;
   signalScore: number;
 }
