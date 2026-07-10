@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect, useRef, useCallback } from 'react';
+import ConnectWalletButton from '@/components/ConnectWalletButton';
 
 interface TokenData {
   rank: number;
@@ -174,6 +175,7 @@ export default function Home() {
 
             {/* Desktop CTA buttons */}
             <div className="hidden md:flex items-center gap-x-3">
+              <ConnectWalletButton />
               <button
                 onClick={() => setShowWaitlist(true)}
                 className="px-5 py-2.5 text-sm font-medium border border-white/20 hover:bg-white/5 rounded-3xl transition-all active:scale-[0.985]"
@@ -652,7 +654,7 @@ export default function Home() {
         </div>
 
         <div className="mt-8 text-center text-xs text-white/40 max-w-lg mx-auto">
-          Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus's actual trading performance.
+          Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus&apos;s actual trading performance.
           7-day unstaking cooldown. <span className="text-white/60 underline cursor-pointer" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>Full tier comparison →</span>
         </div>
       </div>
@@ -901,44 +903,53 @@ export default function Home() {
       <div id="comparison" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter">How Cletus compares</h2>
-          <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">Most tools are just Telegram snipers. Cletus is a full trading intelligence platform.</p>
+          <p className="mt-3 text-white/60 max-w-lg mx-auto text-sm sm:text-base">Most tools are just Telegram bots or simple snipers. Cletus is a full AI-powered trading intelligence platform with a real web dashboard.</p>
         </div>
 
         <div className="overflow-x-auto -mx-4 sm:-mx-6 md:mx-0 px-4 sm:px-6 md:px-0">
-          <table className="w-full min-w-[640px] border border-white/10 rounded-3xl overflow-hidden text-xs sm:text-sm">
+          <table className="w-full min-w-[700px] border border-white/10 rounded-3xl overflow-hidden text-xs sm:text-sm">
             <thead>
               <tr className="bg-white/5">
-                <th className="text-left p-4 sm:p-6 font-medium">Feature</th>
-                <th className="p-4 sm:p-6 text-center font-medium text-emerald-400">Cletus</th>
-                <th className="p-4 sm:p-6 text-center font-medium">Photon</th>
-                <th className="p-4 sm:p-6 text-center font-medium">Trojan</th>
-                <th className="p-4 sm:p-6 text-center font-medium">BullX</th>
+                <th className="text-left p-4 sm:p-5 font-medium text-white/60">Feature</th>
+                <th className="p-4 sm:p-5 text-center font-bold text-emerald-400">🪿 Cletus</th>
+                <th className="p-4 sm:p-5 text-center font-medium text-white/60">Photon</th>
+                <th className="p-4 sm:p-5 text-center font-medium text-white/60">Trojan</th>
+                <th className="p-4 sm:p-5 text-center font-medium text-white/60">BullX</th>
+                <th className="p-4 sm:p-5 text-center font-medium text-white/60">GMGN</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
               {[
-                ['Full Web Dashboard', true, 'Partial', 'TG only', 'Partial'],
-                ['AI Chat + Memory', true, false, false, 'Limited'],
-                ['Real-time Narrative Briefings', true, false, false, false],
-                ['Community Chat + Profiles', true, false, false, false],
-                ['Staking-Gated Access', true, false, false, false],
-                ['File Integrity + Anti-Tamper', true, false, false, false],
-                ['Developer Rug Database', true, 'Basic', false, false],
-                ['Self-Hostable / Open Core', true, 'Closed', 'Closed', 'Closed'],
+                ['Full Web Dashboard', true, '✓', '✗ TG only', '✓', '✓'],
+                ['AI Chat Assistant', true, '✗', '✗', 'Limited', '✗'],
+                ['Real-time Market Briefings', true, '✗', '✗', '✗', '✗'],
+                ['Multi-wallet Support (4+)', true, '✓', '✓', '✓', '✓'],
+                ['Copy Trading', '🔜', '✗', '✓', '✓', '✓'],
+                ['Community Chat + Profiles', true, '✗', '✗', '✗', '✗'],
+                ['Staking-Gated Access Tiers', true, '✗', '✗', '✗', '✗'],
+                ['On-chain Profit Sharing', true, '✗', '✗', '✗', '✗'],
+                ['Developer Rug Database', true, 'Basic', '✗', 'Basic', 'Basic'],
+                ['Token Airdrop for Testers', true, '✗', '✗', '✗', '✗'],
+                ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
+                ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
+                ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
+                ['Monthly Fee', '$0 (stake to unlock)', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
-                  <td className="p-4 sm:p-6 font-medium">{row[0]}</td>
-                  <td className="p-4 sm:p-6 text-center text-emerald-400">
+                  <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
+                  <td className="p-4 sm:p-5 text-center font-semibold text-emerald-400">
                     {row[1] === true ? '✓' : typeof row[1] === 'string' ? row[1] : '✗'}
                   </td>
-                  <td className="p-4 sm:p-6 text-center text-white/40">{row[2] === false ? '✗' : row[2]}</td>
-                  <td className="p-4 sm:p-6 text-center text-white/40">{row[3] === false ? '✗' : row[3]}</td>
-                  <td className="p-4 sm:p-6 text-center text-white/40">{row[4] === false ? '✗' : row[4]}</td>
+                  <td className="p-4 sm:p-5 text-center text-white/40">{row[2] === false ? '✗' : row[2]}</td>
+                  <td className="p-4 sm:p-5 text-center text-white/40">{row[3] === false ? '✗' : row[3]}</td>
+                  <td className="p-4 sm:p-5 text-center text-white/40">{row[4] === false ? '✗' : row[4]}</td>
+                  <td className="p-4 sm:p-5 text-center text-white/40">{row[5] === false ? '✗' : row[5]}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="mt-4 text-xs text-white/30 text-center">Comparison based on publicly available feature lists as of Q2 2026. 🔜 = on roadmap.</p>
       </div>
 
       {/* Tech Stack */}

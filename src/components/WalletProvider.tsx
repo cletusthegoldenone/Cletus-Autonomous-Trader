@@ -6,7 +6,12 @@ import {
   WalletProvider,
 } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  CoinbaseWalletAdapter,
+  TrustWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const SOLANA_RPC =
@@ -18,7 +23,12 @@ const ConnProvider = ConnectionProvider as React.ComponentType<{
   children: React.ReactNode;
 }>;
 const WalletAdapterProvider = WalletProvider as React.ComponentType<{
-  wallets: InstanceType<typeof PhantomWalletAdapter | typeof SolflareWalletAdapter>[];
+  wallets: (
+    | InstanceType<typeof PhantomWalletAdapter>
+    | InstanceType<typeof SolflareWalletAdapter>
+    | InstanceType<typeof CoinbaseWalletAdapter>
+    | InstanceType<typeof TrustWalletAdapter>
+  )[];
   autoConnect?: boolean;
   children: React.ReactNode;
 }>;
@@ -28,7 +38,12 @@ const ModalProvider = WalletModalProvider as React.ComponentType<{
 
 export default function SolanaWalletProvider({ children }: { children: React.ReactNode }) {
   const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter(),
+      new CoinbaseWalletAdapter(),
+      new TrustWalletAdapter(),
+    ],
     [],
   );
 
