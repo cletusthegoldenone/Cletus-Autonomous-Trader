@@ -345,7 +345,7 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
-            { icon: '🔐', title: 'Smart Access Control', desc: 'Staking tiers (Basic / Full / Unlimited). 30-day trials. All enforced server-side.' },
+            { icon: '🔐', title: 'Smart Access Control', desc: 'Full access on 30-day free trial. Staking unlocks profit sharing. All enforced server-side.' },
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -553,25 +553,36 @@ export default function Home() {
           <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">PLANS &amp; PRICING</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Start free. Scale with staking.</h2>
           <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
-            Every plan includes a 30-day free trial. Full access is gated by on-chain staking — the more you stake, the more you earn.
+            The free trial gives you full access to every Cletus feature — no limits. Staking unlocks profit sharing on top of everything else.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
           {/* Free Trial */}
-          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-emerald-500/40 flex flex-col relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500/20 border border-emerald-500/40 rounded-full text-xs font-bold text-emerald-400 whitespace-nowrap">
+              FULL ACCESS
+            </div>
             <div className="text-2xl mb-3">⏱️</div>
             <div className="font-bold text-xl mb-1">Free Trial</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">$0</div>
-            <div className="text-white/50 text-xs mb-5">30 days · No credit card</div>
+            <div className="text-white/50 text-xs mb-5">30 days · No credit card · 1% trade fee</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
-              {['Live Market Scanner', 'AI Chat (25 msgs/day)', 'Basic signal alerts', 'Community read access', 'Candlestick charts'].map((f) => (
+              {[
+                'Live Market Scanner',
+                'Unlimited AI Chat',
+                'Full signal access',
+                'Priority signal alerts',
+                'Dev wallet inspector',
+                'Community read access',
+                'Candlestick charts',
+              ].map((f) => (
                 <li key={f} className="flex items-start gap-2">
                   <span className="text-emerald-400 shrink-0">✓</span>
                   <span>{f}</span>
                 </li>
               ))}
-              {['Dev wallet inspector', 'Profit sharing', 'Priority signals'].map((f) => (
+              {['Profit sharing'].map((f) => (
                 <li key={f} className="flex items-start gap-2 opacity-40">
                   <span className="shrink-0">✗</span>
                   <span>{f}</span>
@@ -580,7 +591,7 @@ export default function Home() {
             </ul>
             <button
               onClick={() => setShowWaitlist(true)}
-              className="w-full py-3 border border-white/20 hover:bg-white/5 transition-all font-medium rounded-2xl text-sm active:scale-[0.985]"
+              className="w-full py-3 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/30 transition-all font-medium rounded-2xl text-sm active:scale-[0.985]"
             >
               Start Free Trial →
             </button>
@@ -591,9 +602,9 @@ export default function Home() {
             <div className="text-2xl mb-3">🌱</div>
             <div className="font-bold text-xl mb-1">Starter</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
-            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY</div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY · 1% trade fee</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
-              {['Everything in Trial', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community write access'].map((f) => (
+              {['Everything in Trial', 'Community write access', '5% APY in SOL'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
                   <span className="text-emerald-400 shrink-0">✓</span>
                   <span>{f}</span>
@@ -933,7 +944,7 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
-                ['Monthly Fee', '$0 (stake to unlock)', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
+                ['Trade Fee', '1% per trade', '~1% per trade', '~1% per trade', '~1% per trade', '~1% per trade'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
@@ -987,7 +998,7 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
-            <div className="mt-4 text-xs text-white/50">Limited spots · Staking or trial required for full access</div>
+            <div className="mt-4 text-xs text-white/50">Free trial gives full access · Staking unlocks profit sharing</div>
           </div>
         </div>
       </div>
