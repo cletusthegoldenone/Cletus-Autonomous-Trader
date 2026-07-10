@@ -566,7 +566,7 @@ export default function Home() {
             <div className="text-2xl mb-3">⏱️</div>
             <div className="font-bold text-xl mb-1">Free Trial</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">$0</div>
-            <div className="text-white/50 text-xs mb-5">30 days · No credit card · 1% trade fee</div>
+            <div className="text-white/50 text-xs mb-5">30 days · No credit card · 1% trade fee*</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
               {[
                 'Live Market Scanner',
@@ -602,7 +602,7 @@ export default function Home() {
             <div className="text-2xl mb-3">🌱</div>
             <div className="font-bold text-xl mb-1">Starter</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
-            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY · 1% trade fee</div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY · 1% trade fee*</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
               {['Everything in Trial', 'Community write access', '5% APY in SOL'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -665,6 +665,8 @@ export default function Home() {
         </div>
 
         <div className="mt-8 text-center text-xs text-white/40 max-w-lg mx-auto">
+          *1% trade fee distributed: 20% to developer, 25% to staking rewards, 30% to platform upgrades, 25% to digital bank fund.
+          <br />
           Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus&apos;s actual trading performance.
           7-day unstaking cooldown. <span className="text-white/60 underline cursor-pointer" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>Full tier comparison →</span>
         </div>
@@ -944,7 +946,8 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
-                ['Trade Fee', '1% per trade', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)'],
+                ['Trade Fee', '1% per trade*', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)'],
+                ['Fee Distribution', '20% dev · 25% staking · 30% upgrades · 25% digital bank', 'Opaque', 'Opaque', 'Opaque', 'Opaque'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>

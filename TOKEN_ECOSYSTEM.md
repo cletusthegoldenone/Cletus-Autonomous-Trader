@@ -209,6 +209,68 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 
 ---
 
+## Fee Distribution Model
+
+Cletus operates on a transparent, multi-stakeholder fee distribution model that ensures platform sustainability, rewards community members, and funds future innovation.
+
+### Trading Fees (1% per trade)
+
+Every trade executed through Cletus incurs a **1% fee** on the position size at close. This fee is automatically distributed as follows:
+
+| Allocation | Percentage | Purpose |
+|------------|------------|---------|
+| **Developer** | 20% | Platform development, maintenance, and creator compensation |
+| **Staking Rewards** | 25% | Funds SOL rewards for CLETUS token stakers (5% APY) |
+| **Future Upgrades** | 30% | Reserved for new features, AI improvements, and infrastructure scaling |
+| **Digital Bank Fund** | 25% | Building towards a comprehensive DeFi banking ecosystem |
+
+**Example:** On a $10,000 trade, the $100 fee (1%) is split: $20 to developer, $25 to staking rewards, $30 to upgrades, $25 to digital bank.
+
+### Token Creator Fees (Future Feature)
+
+For tokens launched through Cletus's token creation platform, creator fees are split evenly:
+
+| Allocation | Percentage | Purpose |
+|------------|------------|---------|
+| **Liquidity Pool** | 50% | Ensures deep liquidity and price stability for the token |
+| **Staker Support** | 50% | Additional rewards distributed to CLETUS token stakers |
+
+This dual-incentive structure benefits both token stability and community members.
+
+### Why This Model?
+
+1. **Developer Sustainability** (20%)
+   - Ensures ongoing development and platform maintenance
+   - Covers infrastructure costs (RPC nodes, databases, hosting)
+   - Compensates the creator fairly
+
+2. **Staker Rewards** (25% + 50% creator fees)
+   - Makes staking profitable independent of trading performance
+   - Creates predictable income for long-term holders
+   - Rewards community loyalty
+
+3. **Innovation Fund** (30%)
+   - Invests in cutting-edge trading algorithms
+   - Expands to new chains and markets
+   - Builds advanced risk management tools
+
+4. **Digital Bank Vision** (25%)
+   - Accumulates capital for future DeFi banking services
+   - Enables lending, savings, and payment products
+   - Creates a complete financial ecosystem
+
+### Transparency
+
+All fee distributions are:
+- ✅ **On-chain** - Verifiable on Solana Explorer
+- ✅ **Real-time** - Executed on every trade close
+- ✅ **Audited** - Third-party security reviews
+- ✅ **Multi-sig protected** - No single point of failure
+
+**See FEE_DISTRIBUTION.md for complete technical details and wallet addresses.**
+
+---
+
 ## Token Launch Timeline
 
 ### Phase 1: Beta Launch (Q2 2026)
