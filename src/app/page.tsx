@@ -582,7 +582,7 @@ export default function Home() {
               </div>
             </div>
             <Link href="/trader" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
-              Stake &amp; Launch App →
+              Stake & Launch App →
             </Link>
           </div>
         </div>
@@ -659,7 +659,7 @@ export default function Home() {
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
                 ◎
               </div>
-              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake &amp; Access</h3>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake & Access</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
                 Stake 0.5% of your SOL to unlock every feature — no subscriptions, no paywalls. Unstake anytime and your SOL is returned.
               </p>
