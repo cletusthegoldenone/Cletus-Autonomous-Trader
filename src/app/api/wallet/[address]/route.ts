@@ -58,6 +58,48 @@ function formatRelativeTime(blockTime: number): string {
   return `${Math.floor(s / 86_400)}d ago`;
 }
 
+// ── Rugcheck.xyz integration ──────────────────────────────────────────────────
+const RUGCHECK_BASE = 'https://api.rugcheck.xyz/v1';
+
+interface RugcheckRisk {
+  name: string;
+  description: string;
+  level: 'warning' | 'danger' | 'info';
+  score: number;
+}
+
+interface RugcheckReport {
+  mint: string;
+  score: number;           // 0–100, higher = riskier
+  score_normalised: number;
+  risks: RugcheckRisk[];
+  rugged?: boolean;
+  tokenMeta?: { name?: string; symbol?: string };
+}
+
+/**
+ * Fetches a rugcheck.xyz token report.
+ * Returns null silently when the API key is not set or the request fails.
+ */
+async function getRugcheckReport(mint: string): Promise<RugcheckReport | null> {
+  const apiKey = process.env.RUGCHECK_API_KEY;
+  if (!apiKey || apiKey === 'your_rugcheck_api_key_here') return null;
+
+  try {
+    const res = await fetch(`${RUGCHECK_BASE}/tokens/${mint}/report`, {
+      headers: {
+        Accept: 'application/json',
+        'X-API-KEY': apiKey,
+      },
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!res.ok) return null;
+    return (await res.json()) as RugcheckReport;
+  } catch {
+    return null;
+  }
+}
+
 // ── Types returned by this route ──────────────────────────────────────────────
 interface TokenHolding {
   symbol: string;
@@ -67,6 +109,12 @@ interface TokenHolding {
   valueUsd: string;
   percentOfSupply: string;
   suspicious: boolean;
+  /** rugcheck.xyz risk score for this token (0–100, higher = riskier). Only present when API key is configured. */
+  rugcheckScore?: number;
+  /** Top risk flags from rugcheck.xyz */
+  rugcheckRisks?: string[];
+  /** Whether rugcheck has flagged this token as already rugged */
+  rugged?: boolean;
 }
 
 interface ActivityItem {
@@ -161,7 +209,7 @@ export async function GET(
 
     // Token holdings sorted by raw amount descending, top 5
     // Use a separate intermediate type to avoid polluting TokenHolding
-    type RawHolding = TokenHolding & { _uiAmount: number };
+    type RawHolding = Omit<TokenHolding, 'rugcheckScore' | 'rugcheckRisks' | 'rugged'> & { _uiAmount: number };
     const rawHoldings: RawHolding[] = tokenAccounts
       .map((acc) => {
         const info = acc.account.data.parsed.info;
@@ -182,7 +230,29 @@ export async function GET(
       .sort((a, b) => b._uiAmount - a._uiAmount)
       .slice(0, 5);
 
-    const holdings: TokenHolding[] = rawHoldings.map(({ _uiAmount: _, ...h }) => h);
+    // Enrich top holdings with rugcheck.xyz data (in parallel, max 5 calls)
+    const rugcheckReports = await Promise.all(
+      rawHoldings.map((h) => getRugcheckReport(h.mint)),
+    );
+
+    const holdings: TokenHolding[] = rawHoldings.map(({ _uiAmount: _, ...h }, i) => {
+      const report = rugcheckReports[i];
+      if (!report) return h;
+
+      const topRisks = report.risks
+        .filter((r) => r.level === 'danger' || r.level === 'warning')
+        .slice(0, 3)
+        .map((r) => r.name);
+
+      return {
+        ...h,
+        rugcheckScore: report.score,
+        rugcheckRisks: topRisks,
+        rugged: report.rugged ?? false,
+        // Mark as suspicious if rugcheck score is high (>60) or already rugged
+        suspicious: report.score > 60 || (report.rugged ?? false),
+      };
+    });
 
     // Recent activity from signatures
     const recentActivity: ActivityItem[] = signatures.slice(0, 8).map((sig) => ({
@@ -241,6 +311,22 @@ export async function GET(
     if (latestBlockTime && oldestBlockTime && latestBlockTime - oldestBlockTime < 3600 && signatures.length >= 15) {
       riskScore += 10;
       flags.push('⚠️ High-frequency activity detected in short window');
+    }
+
+    // Incorporate real rugcheck.xyz data for held tokens
+    const ruggedTokens = holdings.filter((h) => h.rugged);
+    const highRiskTokens = holdings.filter((h) => h.rugcheckScore !== undefined && h.rugcheckScore > 60 && !h.rugged);
+    if (ruggedTokens.length > 0) {
+      riskScore += Math.min(25, ruggedTokens.length * 12);
+      flags.push(`🚨 Holds ${ruggedTokens.length} already-rugged token(s): ${ruggedTokens.map((h) => h.symbol).join(', ')}`);
+    }
+    if (highRiskTokens.length > 0) {
+      riskScore += Math.min(15, highRiskTokens.length * 7);
+      flags.push(`⚠️ Holds ${highRiskTokens.length} high-risk token(s) per rugcheck.xyz: ${highRiskTokens.map((h) => h.symbol).join(', ')}`);
+    }
+    const lowRiskTokenCount = holdings.filter((h) => h.rugcheckScore !== undefined && h.rugcheckScore <= 30).length;
+    if (lowRiskTokenCount > 0) {
+      flags.push(`✅ ${lowRiskTokenCount} holding(s) scored low-risk by rugcheck.xyz`);
     }
 
     if (flags.length === 0) {

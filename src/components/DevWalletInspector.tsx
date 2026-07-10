@@ -23,10 +23,14 @@ interface WalletAnalysis {
 interface TokenHolding {
   symbol: string;
   name: string;
+  mint?: string;
   amount: string;
   valueUsd: string;
   percentOfSupply: string;
   suspicious: boolean;
+  rugcheckScore?: number;
+  rugcheckRisks?: string[];
+  rugged?: boolean;
 }
 
 interface ActivityItem {
@@ -272,26 +276,61 @@ export default function DevWalletInspector() {
                   <div
                     key={i}
                     className={`flex items-center gap-3 p-3 rounded-lg ${
-                      h.suspicious ? 'bg-trading-red/10 border border-trading-red/20' : 'bg-trading-surface'
+                      h.rugged
+                        ? 'bg-trading-red/15 border border-trading-red/40'
+                        : h.suspicious
+                        ? 'bg-trading-red/10 border border-trading-red/20'
+                        : 'bg-trading-surface'
                     }`}
                   >
                     <div className="w-8 h-8 rounded-full bg-trading-surface border border-trading-border flex items-center justify-center text-xs font-bold shrink-0">
-                      {h.symbol.slice(1, 3)}
+                      {h.symbol.replace('$', '').slice(0, 2)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center flex-wrap gap-1.5">
                         <span className="font-semibold text-sm">{h.symbol}</span>
-                        {h.suspicious && (
+                        {h.rugged && (
+                          <span className="text-[10px] px-1.5 py-0.5 bg-trading-red/30 text-trading-red rounded-full font-bold">
+                            🚨 RUGGED
+                          </span>
+                        )}
+                        {!h.rugged && h.suspicious && (
                           <span className="text-[10px] px-1.5 py-0.5 bg-trading-red/20 text-trading-red rounded-full font-semibold">
-                            SUSPICIOUS
+                            HIGH RISK
+                          </span>
+                        )}
+                        {h.rugcheckScore !== undefined && !h.rugged && !h.suspicious && (
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+                            h.rugcheckScore <= 30
+                              ? 'bg-trading-green/20 text-trading-green'
+                              : h.rugcheckScore <= 60
+                              ? 'bg-trading-yellow/20 text-trading-yellow'
+                              : 'bg-trading-red/20 text-trading-red'
+                          }`}>
+                            RC {h.rugcheckScore}
                           </span>
                         )}
                       </div>
                       <div className="text-xs text-gray-500">{h.name}</div>
+                      {h.rugcheckRisks && h.rugcheckRisks.length > 0 && (
+                        <div className="text-[10px] text-trading-yellow mt-0.5">
+                          {h.rugcheckRisks.join(' · ')}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right text-sm">
-                      <div className="font-mono font-semibold">{h.valueUsd}</div>
-                      <div className="text-xs text-gray-500">{h.percentOfSupply} of supply</div>
+                    <div className="text-right text-sm shrink-0">
+                      <div className="font-mono text-xs text-gray-400">{h.amount}</div>
+                      {h.rugcheckScore !== undefined && (
+                        <div className={`text-xs font-mono font-bold ${
+                          h.rugcheckScore <= 30
+                            ? 'text-trading-green'
+                            : h.rugcheckScore <= 60
+                            ? 'text-trading-yellow'
+                            : 'text-trading-red'
+                        }`}>
+                          {h.rugged ? '☠ DEAD' : `RC: ${h.rugcheckScore}`}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -356,7 +395,10 @@ export default function DevWalletInspector() {
                 Solana mainnet
               </a>
               {' '}via JSON-RPC. Token metadata from Jupiter verified list.
-              Risk scoring is heuristic — always verify independently before trading.
+              {result.tokenHoldings.some((h) => h.rugcheckScore !== undefined) && (
+                <> Token risk scored by <a href="https://rugcheck.xyz" target="_blank" rel="noopener noreferrer" className="text-white font-medium hover:underline">rugcheck.xyz</a>.</>
+              )}
+              {' '}Risk scoring is heuristic — always verify independently before trading.
               {result.isLive && (
                 <span className="ml-1 text-trading-green">● Live</span>
               )}
@@ -377,7 +419,7 @@ export default function DevWalletInspector() {
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left max-w-lg mx-auto">
             {[
               { icon: '💰', title: 'SOL Balance', desc: 'Live from mainnet RPC' },
-              { icon: '🪙', title: 'Token Holdings', desc: 'SPL tokens via Jupiter list' },
+              { icon: '🪙', title: 'Token Holdings', desc: 'SPL tokens + rugcheck.xyz risk scores' },
               { icon: '📊', title: 'Transaction History', desc: 'Last 25 on-chain txns' },
             ].map((item) => (
               <div key={item.title} className="bg-trading-surface rounded-xl p-3">
