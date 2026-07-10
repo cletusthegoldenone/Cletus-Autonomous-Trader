@@ -49,7 +49,7 @@ Crypto markets are adversarial, zero-sum, and frequently irrational. Even the be
 - ✅ **Best-effort risk management** - Cletus will try to minimize losses
 - ✅ **Audited smart contracts** - Professional security review (but not perfect)
 - ✅ **Emergency kill switch** - Close all positions instantly if something breaks
-- ✅ **Staking rewards in SOL** - 5% APY regardless of trading performance (separate from profit share)
+- ✅ **Staking rewards in SOL** - 0.5% APY regardless of trading performance (separate from profit share)
 - ✅ **Liquidity to unstake** - Exit anytime if you lose confidence
 - ✅ **Honest communication** - We won't hide losses or failures
 
@@ -61,13 +61,13 @@ Crypto markets are adversarial, zero-sum, and frequently irrational. Even the be
 
 | Staked Amount | Tier Name | Expected Monthly Profit* | Staking APY | Features |
 |---------------|-----------|-------------------------|------------|----------|
-| 1,000 CLETUS | Starter | None | 5% SOL | Trial access |
-| 5,000 CLETUS | Pro | None | 5% SOL | Limited features |
-| 10,000 CLETUS | Elite | None | 5% SOL | Full access |
-| 50,000 CLETUS | Whale | None | 5% SOL | Priority support |
-| **2,500,000 CLETUS** | **Profit Sharer Tier 1** | **~$5,000* (NOT guaranteed)** | **5% SOL** | **Profit share eligibility** |
-| **5,000,000 CLETUS** | **Profit Sharer Tier 2** | **~$10,000* (NOT guaranteed)** | **5% SOL** | **Profit share eligibility** |
-| **10,000,000+ CLETUS** | **Founder** | **Variable* (NOT guaranteed)** | **5% SOL** | **Profit share eligibility** |
+| 1,000 CLETUS | Starter | None | 0.5% SOL | Trial access |
+| 5,000 CLETUS | Pro | None | 0.5% SOL | Limited features |
+| 10,000 CLETUS | Elite | None | 0.5% SOL | Full access |
+| 50,000 CLETUS | Whale | None | 0.5% SOL | Priority support |
+| **2,500,000 CLETUS** | **Profit Sharer Tier 1** | **~$5,000* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
+| **5,000,000 CLETUS** | **Profit Sharer Tier 2** | **~$10,000* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
+| **10,000,000+ CLETUS** | **Founder** | **Variable* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
 
 **\*These are ESTIMATES based on historical performance. They are NOT guaranteed. Actual profits could be significantly higher or lower (including negative/loss months).**
 
@@ -101,9 +101,9 @@ Cletus monthly trading profit: $75,000
 ```
 Cletus gets exploited by a pump-and-dump scheme
 Losses: -$50,000
-2.5M staker receives: $0 (plus their 5% SOL reward)
-5M staker receives: $0 (plus their 5% SOL reward)
-10M staker receives: $0 (plus their 5% SOL reward)
+2.5M staker receives: $0 (plus their 0.5% SOL reward)
+5M staker receives: $0 (plus their 0.5% SOL reward)
+10M staker receives: $0 (plus their 0.5% SOL reward)
 
 Your staked tokens are still there, but no profit share that month.
 ```
@@ -134,10 +134,10 @@ All stakers suffer proportional loss
 
 ```
 Investment (at $0.10/token): ~$100
-Monthly SOL Reward: 0.05 SOL (~$0.50)
+Monthly SOL Reward: 0.005 SOL (~$0.05)
 Profit Share: None
 
-Realistic expectation: $0.50/month in SOL
+Realistic expectation: $0.05/month in SOL
 Don't expect: Riches
 Use for: Testing/experimenting
 ```
@@ -148,10 +148,10 @@ Use for: Testing/experimenting
 
 ```
 Investment (at $0.10/token): ~$500
-Monthly SOL Reward: 0.30 SOL (~$3)
+Monthly SOL Reward: 0.030 SOL (~$0.30)
 Profit Share: None
 
-Realistic expectation: $3/month in SOL
+Realistic expectation: $0.30/month in SOL
 Don't expect: Significant returns
 Use for: Light usage
 ```
@@ -162,10 +162,10 @@ Use for: Light usage
 
 ```
 Investment (at $0.10/token): ~$1,000
-Monthly SOL Reward: 0.70 SOL (~$7)
+Monthly SOL Reward: 0.070 SOL (~$0.70)
 Profit Share: None
 
-Realistic expectation: $7/month in SOL
+Realistic expectation: $0.70/month in SOL
 Don't expect: Guaranteed anything
 Use for: Active traders
 ```
@@ -176,10 +176,10 @@ Use for: Active traders
 
 ```
 Investment (at $0.10/token): ~$5,000
-Monthly SOL Reward: 3.50 SOL (~$35)
+Monthly SOL Reward: 0.35 SOL (~$3.50)
 Profit Share: None
 
-Realistic expectation: $35/month in SOL
+Realistic expectation: $3.50/month in SOL
 Don't expect: Profits beyond staking rewards
 Use for: Large capital traders
 ```
@@ -190,23 +190,23 @@ Use for: Large capital traders
 
 ```
 Investment (at $0.10/token): ~$250,000
-Monthly SOL Reward: 125 SOL (~$1,250)
+Monthly SOL Reward: 12.5 SOL (~$125)
 Expected Monthly Profit Share: ~$5,000* (*NOT guaranteed, highly variable)
 
 Best Case Scenario (Good months):
-- SOL rewards: $1,250
+- SOL rewards: $125
 - Profit share: $5,000
-- Total: $6,250/month
+- Total: $5,125/month
 
 Realistic Case (Mixed months):
-- SOL rewards: $1,250
+- SOL rewards: $125
 - Profit share: $2,000 (some loss months)
-- Average: $3,250/month
+- Average: $2,125/month
 
 Worst Case Scenario (Bad months):
-- SOL rewards: $1,250
+- SOL rewards: $125
 - Profit share: $0 (Cletus loses money)
-- Total: $1,250/month
+- Total: $125/month
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
@@ -222,23 +222,23 @@ Loss Scenario (Catastrophic):
 
 ```
 Investment (at $0.10/token): ~$500,000
-Monthly SOL Reward: 250 SOL (~$2,500)
+Monthly SOL Reward: 25 SOL (~$250)
 Expected Monthly Profit Share: ~$10,000* (*NOT guaranteed, highly variable)
 
 Best Case Scenario:
-- SOL rewards: $2,500
+- SOL rewards: $250
 - Profit share: $10,000
-- Total: $12,500/month
+- Total: $10,250/month
 
 Realistic Case (Mixed):
-- SOL rewards: $2,500
+- SOL rewards: $250
 - Profit share: $5,000
-- Average: $7,500/month
+- Average: $5,250/month
 
 Worst Case Scenario:
-- SOL rewards: $2,500
+- SOL rewards: $250
 - Profit share: $0
-- Total: $2,500/month
+- Total: $250/month
 
 Loss Scenario:
 - Cletus suffers catastrophic failure
@@ -254,27 +254,27 @@ Loss Scenario:
 
 ```
 Investment (at $0.10/token): ~$1,000,000
-Monthly SOL Reward: 500 SOL (~$5,000)
+Monthly SOL Reward: 50 SOL (~$500)
 Expected Monthly Profit Share: Variable* (*NOT guaranteed)
 
 Best Case Scenario:
-- SOL rewards: $5,000
+- SOL rewards: $500
 - Profit share: $15,000+
 - Plus: Revenue share from subscriptions
-- Total: $20,000+/month
+- Total: $15,500+/month
 
 Realistic Case:
-- SOL rewards: $5,000
+- SOL rewards: $500
 - Profit share: $8,000
 - Revenue share: $2,000
-- Total: $15,000/month
+- Total: $10,500/month
 
 Worst Case:
 - Cletus has losing month
-- SOL rewards: $5,000
+- SOL rewards: $500
 - Profit share: $0
 - Revenue share: $0
-- Total: $5,000/month
+- Total: $500/month
 
 Catastrophic Loss:
 - Smart contract exploit, AI failure, RPC disaster

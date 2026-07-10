@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'positionId is required' }, { status: 400 });
   }
 
-  const position = getPosition(positionId);
+  const position = await getPosition(positionId);
   if (!position) {
     return NextResponse.json({ error: `Position ${positionId} not found` }, { status: 404 });
   }
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const closed = closePosition(positionId, exitPrice, exitSignature, reason);
+  const closed = await closePosition(positionId, exitPrice, exitSignature, reason);
   if (!closed) {
     return NextResponse.json({ error: 'Failed to close position (already closed?)' }, { status: 409 });
   }

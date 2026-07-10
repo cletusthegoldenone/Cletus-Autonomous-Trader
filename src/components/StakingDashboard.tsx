@@ -4,13 +4,13 @@ import { useState } from 'react';
 import type { TierInfo } from '@/types';
 
 const TIERS: TierInfo[] = [
-  { name: 'Starter', minStake: 100_000, apy: 5, profitShare: 0, color: '#6b7280', icon: '🌱' },
-  { name: 'Bronze', minStake: 500_000, apy: 5, profitShare: 1, color: '#b45309', icon: '🥉' },
-  { name: 'Silver', minStake: 1_000_000, apy: 5, profitShare: 2, color: '#9ca3af', icon: '🥈' },
-  { name: 'Gold', minStake: 5_000_000, apy: 5, profitShare: 5, color: '#f59e0b', icon: '🥇' },
-  { name: 'Platinum', minStake: 10_000_000, apy: 5, profitShare: 10, color: '#22d3ee', icon: '💠' },
-  { name: 'Diamond', minStake: 25_000_000, apy: 5, profitShare: 20, color: '#60a5fa', icon: '💎' },
-  { name: 'Founder', minStake: 100_000_000, apy: 5, profitShare: 35, color: '#c084fc', icon: '👑' },
+  { name: 'Starter', minStake: 100_000, apy: 0.5, profitShare: 0, color: '#6b7280', icon: '🌱' },
+  { name: 'Bronze', minStake: 500_000, apy: 0.5, profitShare: 1, color: '#b45309', icon: '🥉' },
+  { name: 'Silver', minStake: 1_000_000, apy: 0.5, profitShare: 2, color: '#9ca3af', icon: '🥈' },
+  { name: 'Gold', minStake: 5_000_000, apy: 0.5, profitShare: 5, color: '#f59e0b', icon: '🥇' },
+  { name: 'Platinum', minStake: 10_000_000, apy: 0.5, profitShare: 10, color: '#22d3ee', icon: '💠' },
+  { name: 'Diamond', minStake: 25_000_000, apy: 0.5, profitShare: 20, color: '#60a5fa', icon: '💎' },
+  { name: 'Founder', minStake: 100_000_000, apy: 0.5, profitShare: 35, color: '#c084fc', icon: '👑' },
 ];
 
 
@@ -150,7 +150,7 @@ export default function StakingDashboard() {
             {
               icon: '💰',
               title: 'Earn Monthly',
-              desc: '5% SOL APY on your staked position, plus a share of Cletus\'s monthly trading profits based on your tier.',
+              desc: '0.5% SOL APY on your staked position, plus a share of Cletus\'s monthly trading profits based on your tier.',
             },
           ].map((step) => (
             <div key={step.title} className="flex gap-3">

@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
   // ── Max positions gate ─────────────────────────────────────────────────────
   const { getOpenCount } = await import('@/lib/position-store');
   const maxPositions = parseInt(process.env.MAX_OPEN_POSITIONS ?? '5', 10);
-  if (getOpenCount() >= maxPositions) {
+  if ((await getOpenCount()) >= maxPositions) {
     return NextResponse.json(
       { error: `Maximum open positions (${maxPositions}) reached` },
       { status: 422 },
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
   }
 
   // ── Record position ───────────────────────────────────────────────────────
-  const position = openPosition({
+  const position = await openPosition({
     tokenAddress,
     tokenSymbol,
     tokenName,

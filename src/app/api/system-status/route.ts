@@ -86,6 +86,6 @@ export async function GET() {
 
     patternMemory: getSignalStats(),
 
-    positionStats: getStats(),
+    positionStats: await getStats(),
   });
 }
