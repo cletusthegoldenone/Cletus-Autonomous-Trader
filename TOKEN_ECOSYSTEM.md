@@ -209,6 +209,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 
 ---
 
+<<<<<<< HEAD
 ## Fee Distribution Model
 
 Cletus operates on a transparent, multi-stakeholder fee distribution model that ensures platform sustainability, rewards community members, and funds future innovation.
@@ -271,6 +272,8 @@ All fee distributions are:
 
 ---
 
+=======
+>>>>>>> origin/main
 ## Token Launch Timeline
 
 ### Phase 1: Beta Launch (Q2 2026)

@@ -40,6 +40,7 @@ export interface SignalBreakdown {
   socialSentiment: number;
 }
 
+<<<<<<< HEAD
 export type StakingTier =
   | 'Starter'
   | 'Bronze'
@@ -76,6 +77,8 @@ export interface DistributionRecord {
   claimed: boolean;
 }
 
+=======
+>>>>>>> origin/main
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -164,6 +167,7 @@ export interface SimulatedPosition {
   closingPnlUsd?: number;
   /** Platform fee charged on close (% of position size, sent to dev wallet) */
   feeUsd?: number;
+<<<<<<< HEAD
   /** Distributed fee breakdown */
   feeDistribution?: FeeDistribution;
   signalScore: number;
@@ -196,3 +200,7 @@ export interface AggregatedFeeDistribution {
   /** Total distributed to digital bank wallet */
   totalDigitalBank: number;
 }
+=======
+  signalScore: number;
+}
+>>>>>>> origin/main

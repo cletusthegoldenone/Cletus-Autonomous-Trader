@@ -265,6 +265,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           neutral
           icon="🔢"
         />
+<<<<<<< HEAD
         <StatCard
           label="Staking Tier"
           value="Gold"
@@ -272,6 +273,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           neutral
           icon="🥇"
         />
+=======
+>>>>>>> origin/main
       </div>
 
       {/* Quick Actions */}
@@ -279,7 +282,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <h2 className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
           Quick Actions
         </h2>
+<<<<<<< HEAD
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+=======
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+>>>>>>> origin/main
           <QuickAction
             icon="📈"
             label="Start Trading"
@@ -301,6 +308,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             color="hover:border-trading-blue/50"
             onClick={() => onNavigate('ai')}
           />
+<<<<<<< HEAD
           <QuickAction
             icon="💎"
             label="My Staking"
@@ -308,6 +316,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             color="hover:border-trading-purple/50"
             onClick={() => onNavigate('staking')}
           />
+=======
+>>>>>>> origin/main
         </div>
       </div>
 

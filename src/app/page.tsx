@@ -42,7 +42,11 @@ export default function Home() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
+<<<<<<< HEAD
       content: "Hey! I'm **Cletus AI**, your Solana DeFi intelligence assistant. Ask me about token signals, market patterns, staking, or anything DeFi-related. 🚀",
+=======
+      content: "Hey! I'm **Cletus AI**, your Solana DeFi intelligence assistant. Ask me about token signals, market patterns, or anything DeFi-related. 🚀",
+>>>>>>> origin/main
     },
   ]);
   const [chatInput, setChatInput] = useState('');
@@ -250,7 +254,11 @@ export default function Home() {
             </h1>
 
             <p className="max-w-lg mx-auto lg:mx-0 text-base sm:text-lg md:text-xl text-white/70 mb-8 sm:mb-10">
+<<<<<<< HEAD
               Autonomous AI scanner · Real-time market briefings · Community intelligence · Staking-gated access · Anti-tamper security.
+=======
+              Autonomous AI scanner · Real-time market briefings · Community intelligence · Anti-tamper security.
+>>>>>>> origin/main
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
@@ -325,7 +333,10 @@ export default function Home() {
           <div className="flex items-center gap-x-2">◎ Solana Native</div>
           <div>Real-time WebSocket</div>
           <div>Gemini 2.0 Flash AI</div>
+<<<<<<< HEAD
           <div>Staking Access Control</div>
+=======
+>>>>>>> origin/main
           <div>Anti-Rug Intelligence</div>
         </div>
       </div>
@@ -345,7 +356,11 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
+<<<<<<< HEAD
             { icon: '🔐', title: 'Smart Access Control', desc: 'Full access on 30-day free trial. Staking unlocks profit sharing. All enforced server-side.' },
+=======
+            { icon: '🔐', title: 'Staking Access', desc: 'Stake 0.5% of your SOL portfolio to unlock full access. Unstake at any time — your SOL stays yours.' },
+>>>>>>> origin/main
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -512,7 +527,11 @@ export default function Home() {
 
             {/* Quick prompts */}
             <div className="px-4 sm:px-6 pb-3 flex flex-wrap gap-2">
+<<<<<<< HEAD
               {['How do signals work?', 'Explain staking tiers', 'What is rug detection?'].map((prompt) => (
+=======
+              {['How do signals work?', 'What is rug detection?'].map((prompt) => (
+>>>>>>> origin/main
                 <button
                   key={prompt}
                   onClick={() => { setChatInput(prompt); }}
@@ -531,7 +550,11 @@ export default function Home() {
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={handleChatKey}
+<<<<<<< HEAD
                   placeholder="Ask about tokens, signals, staking..."
+=======
+                  placeholder="Ask about tokens, signals, DeFi..."
+>>>>>>> origin/main
                   className="flex-1 bg-zinc-900 border border-white/20 px-3 sm:px-4 py-2.5 sm:py-3 rounded-2xl text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors placeholder-white/30"
                 />
                 <button
@@ -547,6 +570,7 @@ export default function Home() {
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Pricing / Subscription */}
       <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-10 sm:mb-14">
@@ -669,6 +693,47 @@ export default function Home() {
           <br />
           Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus&apos;s actual trading performance.
           7-day unstaking cooldown. <span className="text-white/60 underline cursor-pointer" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>Full tier comparison →</span>
+=======
+      {/* Pricing / Access */}
+      <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
+        <div className="text-center mb-10 sm:mb-14">
+          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">ACCESS</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake SOL. Unlock everything.</h2>
+          <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
+            Cletus is powered by its community. Stake just 0.5% of your SOL portfolio to unlock full platform access — no subscriptions, no hidden fees.
+          </p>
+        </div>
+
+        <div className="max-w-lg mx-auto">
+          <div className="glass p-8 rounded-3xl border-2 border-emerald-500 flex flex-col items-center text-center">
+            <div className="text-4xl mb-4">◎</div>
+            <div className="font-bold text-2xl mb-1">Staking Access</div>
+            <div className="text-4xl font-bold tracking-tighter mb-1">0.5% SOL</div>
+            <div className="text-white/50 text-xs mb-6">One-time stake · No credit card · Unstake anytime</div>
+            <ul className="space-y-2 text-sm text-white/70 mb-8 w-full text-left">
+              {['Live Market Scanner', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community access', 'Trading simulation', 'All future features'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 mb-6 text-left">
+              <div className="text-xs text-white/50 mb-1 font-mono">EXAMPLE</div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">10 SOL portfolio</span>
+                <span className="text-emerald-400 font-semibold">= 0.05 SOL staked</span>
+              </div>
+              <div className="flex justify-between text-sm mt-1">
+                <span className="text-white/60">100 SOL portfolio</span>
+                <span className="text-emerald-400 font-semibold">= 0.5 SOL staked</span>
+              </div>
+            </div>
+            <Link href="/trader" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake & Launch App →
+            </Link>
+          </div>
+>>>>>>> origin/main
         </div>
       </div>
 
@@ -691,7 +756,11 @@ export default function Home() {
               <span className="text-yellow-400">$CLETUS</span> Token
             </h2>
             <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+<<<<<<< HEAD
               The native token powering the entire Cletus ecosystem. Stake to earn SOL, unlock features, and govern the future of autonomous trading.
+=======
+              The native token powering the entire Cletus ecosystem. Hold to participate in governance and shape the future of autonomous trading.
+>>>>>>> origin/main
             </p>
           </div>
 
@@ -700,7 +769,11 @@ export default function Home() {
             {[
               { label: 'Total Supply', value: '1,000,000,000', sub: 'fixed forever', icon: '🪙' },
               { label: 'Blockchain', value: 'Solana', sub: '~400ms blocks', icon: '◎' },
+<<<<<<< HEAD
               { label: 'APY Yield', value: '5%', sub: 'in SOL rewards', icon: '💰' },
+=======
+              { label: 'Community', value: '40%', sub: 'to community', icon: '🪿' },
+>>>>>>> origin/main
               { label: 'Token Address', value: 'TBA', sub: 'at public launch', icon: '📋' },
             ].map((stat) => (
               <div key={stat.label} className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-yellow-500/20 bg-yellow-500/5 text-center">
@@ -716,6 +789,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16 max-w-5xl mx-auto">
             <div className="glass rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-yellow-500/30 transition-all group">
               <div className="w-12 h-12 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-500/20 transition-all">
+<<<<<<< HEAD
                 💎
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Stake to Earn SOL</h3>
@@ -731,6 +805,23 @@ export default function Home() {
                   <div key={stake} className="flex justify-between text-xs font-mono">
                     <span className="text-white/50">{stake}</span>
                     <span className="text-yellow-400">{reward}</span>
+=======
+                🪿
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Community Token</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+                $CLETUS is the community token of the platform. Hold it to participate in governance, access airdrops, and be part of the ecosystem.
+              </p>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm">
+                {[
+                  ['Total supply', '1,000,000,000'],
+                  ['Community allocation', '40%'],
+                  ['Team vesting', '2 years'],
+                ].map(([label, value]) => (
+                  <div key={label} className="flex justify-between text-xs font-mono">
+                    <span className="text-white/50">{label}</span>
+                    <span className="text-yellow-400">{value}</span>
+>>>>>>> origin/main
                   </div>
                 ))}
               </div>
@@ -741,6 +832,7 @@ export default function Home() {
                 MOST VALUABLE
               </div>
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
+<<<<<<< HEAD
                 🔓
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Unlock Full Access</h3>
@@ -757,6 +849,24 @@ export default function Home() {
                   <div key={tier} className="flex justify-between text-xs font-mono">
                     <span className={color}>{tier}</span>
                     <span className="text-white/50">{stake} CLETUS</span>
+=======
+                ◎
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake & Access</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+                Stake 0.5% of your SOL to unlock every feature — no subscriptions, no paywalls. Unstake anytime and your SOL is returned.
+              </p>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
+                {[
+                  { feature: 'Live scanner', icon: '📊' },
+                  { feature: 'Unlimited AI chat', icon: '🤖' },
+                  { feature: 'Full signal access', icon: '⚡' },
+                  { feature: 'Dev wallet inspector', icon: '🔍' },
+                ].map(({ feature, icon }) => (
+                  <div key={feature} className="flex items-center gap-2 text-xs font-mono">
+                    <span>{icon}</span>
+                    <span className="text-white/70">{feature}</span>
+>>>>>>> origin/main
                   </div>
                 ))}
               </div>
@@ -768,7 +878,11 @@ export default function Home() {
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Govern the Protocol</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+<<<<<<< HEAD
                 Token holders vote on signal algorithms, fee structures, and feature priorities. The more you stake, the more your vote counts.
+=======
+                Token holders vote on signal algorithms, fee structures, and feature priorities. The more you hold, the more your vote counts.
+>>>>>>> origin/main
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-2 text-sm text-white/50">
                 {[
@@ -801,7 +915,11 @@ export default function Home() {
                     status: 'LIVE NOW',
                     statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
                     dotColor: 'bg-emerald-500',
+<<<<<<< HEAD
                     items: ['30-day free trial live', 'Trading simulation active', 'Staking contract deployed', '10% supply distributed', 'Community airdrop eligible'],
+=======
+                    items: ['SOL staking live (0.5%)', 'Trading simulation active', 'Community airdrop eligible', '10% supply distributed', 'Full feature access for stakers'],
+>>>>>>> origin/main
                   },
                   {
                     phase: 'Phase 2',
@@ -810,7 +928,11 @@ export default function Home() {
                     status: 'COMING SOON',
                     statusColor: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40',
                     dotColor: 'bg-yellow-500',
+<<<<<<< HEAD
                     items: ['DEX listing on Jupiter', 'Full staking rewards live', 'Token address revealed', 'Premium subscriptions', 'CoinGecko / CMC listing'],
+=======
+                    items: ['DEX listing on Jupiter', 'Token address revealed', 'Premium subscriptions', 'CoinGecko / CMC listing', 'Revenue-sharing mechanism'],
+>>>>>>> origin/main
                   },
                   {
                     phase: 'Phase 3',
@@ -857,7 +979,11 @@ export default function Home() {
             </div>
             <div className="glass rounded-3xl border border-white/10 overflow-hidden">
               {[
+<<<<<<< HEAD
                 { label: 'Community & Staking Rewards', pct: 40, color: 'bg-emerald-500', desc: 'Distributed to stakers over 4 years' },
+=======
+                { label: 'Community Rewards & Ecosystem', pct: 40, color: 'bg-emerald-500', desc: 'Distributed to the community via airdrops and grants' },
+>>>>>>> origin/main
                 { label: 'Public Sale / DEX Liquidity', pct: 25, color: 'bg-yellow-400', desc: 'Initial DEX offering + liquidity pool' },
                 { label: 'Team & Advisors', pct: 15, color: 'bg-blue-400', desc: '2-year vesting, 6-month cliff' },
                 { label: 'Ecosystem & Partnerships', pct: 10, color: 'bg-purple-400', desc: 'Grants, integrations, BD' },
@@ -898,10 +1024,17 @@ export default function Home() {
                   🎯 Claim Early Allocation
                 </button>
                 <Link
+<<<<<<< HEAD
                   href="/trader?tab=staking"
                   className="px-7 py-3.5 border border-white/20 hover:bg-white/5 font-medium rounded-2xl transition-all active:scale-[0.985] text-sm sm:text-base text-center"
                 >
                   View Staking Tiers →
+=======
+                  href="/trader"
+                  className="px-7 py-3.5 border border-white/20 hover:bg-white/5 font-medium rounded-2xl transition-all active:scale-[0.985] text-sm sm:text-base text-center"
+                >
+                  Launch Trading App →
+>>>>>>> origin/main
                 </Link>
               </div>
               <p className="text-xs text-white/30 mt-4">
@@ -939,15 +1072,22 @@ export default function Home() {
                 ['Multi-wallet Support (4+)', true, '✓', '✓', '✓', '✓'],
                 ['Copy Trading', '🔜', '✗', '✓', '✓', '✓'],
                 ['Community Chat + Profiles', true, '✗', '✗', '✗', '✗'],
+<<<<<<< HEAD
                 ['Staking-Gated Access Tiers', true, '✗', '✗', '✗', '✗'],
                 ['On-chain Profit Sharing', true, '✗', '✗', '✗', '✗'],
+=======
+>>>>>>> origin/main
                 ['Developer Rug Database', true, 'Basic', '✗', 'Basic', 'Basic'],
                 ['Token Airdrop for Testers', true, '✗', '✗', '✗', '✗'],
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
+<<<<<<< HEAD
                 ['Trade Fee', '1% per trade*', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)', 'varies (~1%)'],
                 ['Fee Distribution', '20% dev · 25% staking · 30% upgrades · 25% digital bank', 'Opaque', 'Opaque', 'Opaque', 'Opaque'],
+=======
+                ['Monthly Fee', '0.5% SOL stake', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
+>>>>>>> origin/main
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
@@ -1001,7 +1141,11 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
+<<<<<<< HEAD
             <div className="mt-4 text-xs text-white/50">Free trial gives full access · Staking unlocks profit sharing</div>
+=======
+            <div className="mt-4 text-xs text-white/50">Stake 0.5% SOL to unlock · Unstake anytime</div>
+>>>>>>> origin/main
           </div>
         </div>
       </div>

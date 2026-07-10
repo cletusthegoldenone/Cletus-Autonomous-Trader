@@ -13,10 +13,14 @@ const SUGGESTED_QUESTIONS = [
   'Explain your signal scoring system',
   'What is the best timeframe for trading meme coins?',
   'How do you manage risk on volatile tokens?',
+<<<<<<< HEAD
   'What makes a good staking decision?',
   'Explain the 7 staking tiers',
   'What are your current active positions?',
   'How does profit sharing work?',
+=======
+  'What are your current active positions?',
+>>>>>>> origin/main
 ];
 
 const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }> = {
@@ -60,6 +64,7 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
 - ⚪ WEAK (<60): Watchlist only`,
     citations: ['TRADING_PARAMETERS.env#signal-weights'],
   },
+<<<<<<< HEAD
   staking: {
     content: `**Staking in Cletus** has two reward streams:
 
@@ -83,6 +88,8 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
 The honest truth: staking CLETUS is a bet that an AI trading system will be profitable long-term. This is a high-risk proposition.`,
     citations: ['STAKING_REWARDS_STRUCTURE.md', 'TOKEN_ECOSYSTEM.md'],
   },
+=======
+>>>>>>> origin/main
   risk: {
     content: `**Risk Management Framework:**
 
@@ -121,9 +128,12 @@ function findBestResponse(question: string): { content: string; citations?: stri
   if (q.includes('signal') || q.includes('score') || q.includes('indicator')) {
     return CLETUS_RESPONSES.signals;
   }
+<<<<<<< HEAD
   if (q.includes('stak') || q.includes('tier') || q.includes('reward') || q.includes('apy')) {
     return CLETUS_RESPONSES.staking;
   }
+=======
+>>>>>>> origin/main
   if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) {
     return CLETUS_RESPONSES.risk;
   }
@@ -147,6 +157,7 @@ function findBestResponse(question: string): { content: string; citations?: stri
 ⚠️ **Meme coin reality:** 80% of them go to zero eventually. Position sizing and stop losses are non-negotiable. I never hold meme coins overnight without tight stops.`,
     };
   }
+<<<<<<< HEAD
   if (q.includes('profit shar') || q.includes('how does profit')) {
     return {
       content: `**Profit Sharing Mechanism:**
@@ -172,6 +183,8 @@ The 5% APY SOL rewards are separate and more reliable (paid from fees, not profi
       citations: ['STAKING_REWARDS_STRUCTURE.md'],
     };
   }
+=======
+>>>>>>> origin/main
 
   // Default response
   return {
@@ -183,7 +196,10 @@ As Cletus, I can tell you that I'm continuously analyzing the Solana ecosystem t
 - Trading strategy explanations
 - Signal analysis and interpretation
 - Risk management concepts
+<<<<<<< HEAD
 - Staking and tokenomics
+=======
+>>>>>>> origin/main
 - DeFi education
 
 **What I cannot do:**
@@ -191,7 +207,11 @@ As Cletus, I can tell you that I'm continuously analyzing the Solana ecosystem t
 - Predict the future with certainty
 - Give personalized financial advice
 
+<<<<<<< HEAD
 Try asking me about my signal scoring system, risk management approach, or how staking tiers work!
+=======
+Try asking me about my signal scoring system or risk management approach!
+>>>>>>> origin/main
 
 *Remember: Cletus is an AI. Always DYOR and never invest more than you can afford to lose.*`,
   };
@@ -307,7 +327,10 @@ I'm an AI autonomous trading system operating on Solana. I analyze market signal
 **I can help you understand:**
 - My trading strategy and signal detection
 - Risk management and position sizing
+<<<<<<< HEAD
 - Staking tiers and reward mechanics
+=======
+>>>>>>> origin/main
 - DeFi concepts and Solana ecosystem
 - Current market conditions
 
@@ -467,7 +490,11 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
+<<<<<<< HEAD
             placeholder="Ask Cletus about trading, signals, staking, DeFi..."
+=======
+            placeholder="Ask Cletus about trading, signals, DeFi..."
+>>>>>>> origin/main
             rows={1}
             className="flex-1 bg-trading-card border border-trading-border rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-trading-green resize-none transition-all"
             style={{ maxHeight: '120px' }}

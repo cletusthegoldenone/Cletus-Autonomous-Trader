@@ -41,7 +41,11 @@ function mockResponse(question: string): string {
     return `**Cletus Signal Engine** scans 500+ Solana micro-cap tokens every 15 seconds.\n\n**Top signal types:**\n- 🔥 Volume spike: 5m volume >5% of market cap\n- 📈 Momentum breakout: >5% price increase in 5m\n- 💧 Liquidity build: growing LP depth\n- 🐋 Buy pressure: buys >70% of 5m txns\n\nHigh-score tokens (80+) are worth investigating. Always DYOR before entering.`;
   }
   if (q.includes('stake') || q.includes('staking')) {
+<<<<<<< HEAD
     return `**Cletus Staking Tiers:**\n\n- **Starter** (100K CLETUS): Core access + 5% APY in SOL\n- **Gold** (5M CLETUS): 5% APY + 5% monthly profit share\n- **Diamond** (25M CLETUS): 5% APY + 20% profit share + priority signals\n\n30-day free trial gives **full platform access** — all features, unlimited AI chat, dev wallet inspector. A 1% trade fee applies on every trade close, distributed as follows: 20% to developer, 25% to staking rewards, 30% to platform upgrades, and 25% to digital bank fund. Staking unlocks profit sharing on top of everything.`;
+=======
+    return `**Cletus Access Model:**\n\n- ◎ Stake **0.5% of your SOL portfolio** to unlock full platform access\n- ✅ Keep custody of your SOL and unstake anytime\n- 📊 Includes live scanner, unlimited AI chat, full signal access, and community features\n- 🚫 No subscriptions or hidden monthly charges\n\nCletus is community-powered, so access is aligned with your portfolio instead of a fixed subscription.`;
+>>>>>>> origin/main
   }
   if (q.includes('rug') || q.includes('scam')) {
     return `**Rug Detection Checklist:**\n\n- ✅ Check rugcheck.xyz for risk score\n- ✅ Verify LP is locked (>6 months ideal)\n- ✅ Dev wallet <5% of supply\n- ✅ No honeypot in contract\n- ✅ Cletus rug database: known bad devs flagged automatically\n\nCletus integrates rugcheck.xyz in real-time for every scanned token.`;
@@ -50,7 +54,11 @@ function mockResponse(question: string): string {
     return `**Solana DeFi Quick Overview:**\n\n- ⚡ 65k TPS, sub-$0.001 fees\n- 🔥 Hottest DEXes: Raydium, Orca, Meteora\n- 📊 Key metrics: check Birdeye or DexScreener\n- 🤖 Cletus monitors Raydium new pairs in real-time\n\nWhat specifically about Solana would you like to know?`;
   }
 
+<<<<<<< HEAD
   return `I'm **Cletus AI**, your Solana DeFi intelligence assistant.\n\nI can help with:\n- 📊 Token signal analysis\n- 🛡️ Rug/scam detection\n- 📈 Market pattern recognition\n- 🔐 Staking tier questions\n- ⚙️ Platform features\n\nWhat would you like to know? Try asking about signals, staking, or a specific token.`;
+=======
+  return `I'm **Cletus AI**, your Solana DeFi intelligence assistant.\n\nI can help with:\n- 📊 Token signal analysis\n- 🛡️ Rug/scam detection\n- 📈 Market pattern recognition\n- ⚙️ Platform features\n\nWhat would you like to know? Try asking about signals or a specific token.`;
+>>>>>>> origin/main
 }
 
 export async function POST(request: NextRequest) {
