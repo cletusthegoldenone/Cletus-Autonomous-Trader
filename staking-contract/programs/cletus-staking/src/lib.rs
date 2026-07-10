@@ -8,13 +8,13 @@ declare_id!("CLETUSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 // ============================================================
 // Cletus Staking Program - Solana/Anchor
 // 7 Tiers: Starter → Founder
-// 5% APY SOL rewards + Profit sharing
+// 0.5% APY SOL rewards + Profit sharing
 // Multi-sig treasury, emergency pause
 // ============================================================
 
 pub mod constants {
-    /// SOL APY rate: 5% per year (in basis points, 500 = 5%)
-    pub const APY_BPS: u64 = 500;
+    /// SOL APY rate: 0.5% per year (in basis points, 50 = 0.5%)
+    pub const APY_BPS: u64 = 50;
     /// Basis points denominator
     pub const BPS_DENOMINATOR: u64 = 10_000;
     /// Seconds in a year

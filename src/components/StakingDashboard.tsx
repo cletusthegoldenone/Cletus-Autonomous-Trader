@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import type { StakingTier, TierInfo, StakingPosition, DistributionRecord } from '@/types';
 
 const TIERS: TierInfo[] = [
-  { name: 'Starter', minStake: 100_000, apy: 5, profitShare: 0, color: '#6b7280', icon: '🌱' },
-  { name: 'Bronze', minStake: 500_000, apy: 5, profitShare: 1, color: '#b45309', icon: '🥉' },
-  { name: 'Silver', minStake: 1_000_000, apy: 5, profitShare: 2, color: '#9ca3af', icon: '🥈' },
-  { name: 'Gold', minStake: 5_000_000, apy: 5, profitShare: 5, color: '#f59e0b', icon: '🥇' },
-  { name: 'Platinum', minStake: 10_000_000, apy: 5, profitShare: 10, color: '#22d3ee', icon: '💠' },
-  { name: 'Diamond', minStake: 25_000_000, apy: 5, profitShare: 20, color: '#60a5fa', icon: '💎' },
-  { name: 'Founder', minStake: 100_000_000, apy: 5, profitShare: 35, color: '#c084fc', icon: '👑' },
+  { name: 'Starter', minStake: 100_000, apy: 0.5, profitShare: 0, color: '#6b7280', icon: '🌱' },
+  { name: 'Bronze', minStake: 500_000, apy: 0.5, profitShare: 1, color: '#b45309', icon: '🥉' },
+  { name: 'Silver', minStake: 1_000_000, apy: 0.5, profitShare: 2, color: '#9ca3af', icon: '🥈' },
+  { name: 'Gold', minStake: 5_000_000, apy: 0.5, profitShare: 5, color: '#f59e0b', icon: '🥇' },
+  { name: 'Platinum', minStake: 10_000_000, apy: 0.5, profitShare: 10, color: '#22d3ee', icon: '💠' },
+  { name: 'Diamond', minStake: 25_000_000, apy: 0.5, profitShare: 20, color: '#60a5fa', icon: '💎' },
+  { name: 'Founder', minStake: 100_000_000, apy: 0.5, profitShare: 35, color: '#c084fc', icon: '👑' },
 ];
 
 const MOCK_POSITION: StakingPosition = {
@@ -511,7 +511,7 @@ export default function StakingDashboard() {
       <div className="trading-card p-3 border-trading-yellow/30">
         <p className="text-xs text-gray-500 leading-relaxed">
           ⚠️ <span className="text-trading-yellow font-medium">Important:</span> Staking rewards
-          are estimates only. 5% APY is paid in SOL from protocol fees. Profit sharing depends on
+          are estimates only. 0.5% APY is paid in SOL from protocol fees. Profit sharing depends on
           actual trading performance — Cletus is an AI and cannot guarantee profits. Rewards may
           be zero in losing months. Past distributions do not guarantee future payments.
         </p>

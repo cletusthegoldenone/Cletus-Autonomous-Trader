@@ -63,7 +63,7 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
   staking: {
     content: `**Staking in Cletus** has two reward streams:
 
-**1. APY Rewards (5% annually in SOL)**
+**1. APY Rewards (0.5% annually in SOL)**
 - Calculated on your CLETUS stake value
 - Distributed monthly based on protocol fees
 - NOT profit-dependent — paid from fee pool
@@ -168,7 +168,7 @@ Your Share = (Your Stake / Total Eligible Stake) × Tier Multiplier × Monthly P
 - If Cletus loses big → no distributions until recovered
 - This has happened to real AI trading systems before
 
-The 5% APY SOL rewards are separate and more reliable (paid from fees, not profits).`,
+The 0.5% APY SOL rewards are separate and more reliable (paid from fees, not profits).`,
       citations: ['STAKING_REWARDS_STRUCTURE.md'],
     };
   }

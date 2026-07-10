@@ -591,7 +591,7 @@ export default function Home() {
             <div className="text-2xl mb-3">🌱</div>
             <div className="font-bold text-xl mb-1">Starter</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
-            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY</div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 0.5% APY</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
               {['Everything in Trial', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community write access'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -619,7 +619,7 @@ export default function Home() {
             <div className="text-2xl mb-3">🥇</div>
             <div className="font-bold text-xl mb-1">Gold</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">5M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
-            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 5% profit share</div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 0.5% APY + 5% profit share</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
               {['Everything in Starter', '5% monthly profit share', 'Priority signal alerts', 'Advanced AI analysis', 'Tier badge in community', 'Early feature access'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -638,7 +638,7 @@ export default function Home() {
             <div className="text-2xl mb-3">💎</div>
             <div className="font-bold text-xl mb-1">Diamond</div>
             <div className="text-3xl font-bold tracking-tighter mb-1">25M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
-            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 20% profit share</div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 0.5% APY + 20% profit share</div>
             <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
               {['Everything in Gold', '20% monthly profit share', 'API access', 'Custom signal parameters', 'Direct dev support', 'Diamond badge + perks'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -687,7 +687,7 @@ export default function Home() {
             {[
               { label: 'Total Supply', value: '1,000,000,000', sub: 'fixed forever', icon: '🪙' },
               { label: 'Blockchain', value: 'Solana', sub: '~400ms blocks', icon: '◎' },
-              { label: 'APY Yield', value: '5%', sub: 'in SOL rewards', icon: '💰' },
+              { label: 'APY Yield', value: '0.5%', sub: 'in SOL rewards', icon: '💰' },
               { label: 'Token Address', value: 'TBA', sub: 'at public launch', icon: '📋' },
             ].map((stat) => (
               <div key={stat.label} className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-yellow-500/20 bg-yellow-500/5 text-center">
@@ -707,13 +707,13 @@ export default function Home() {
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Stake to Earn SOL</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Lock your $CLETUS and earn real SOL weekly. 5% APY calculated every Solana block. Claim anytime, no lockup period.
+                Lock your $CLETUS and earn real SOL weekly. 0.5% APY calculated every Solana block. Claim anytime, no lockup period.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm">
                 {[
-                  ['100K CLETUS', '0.05 SOL / week'],
-                  ['1M CLETUS', '0.50 SOL / week'],
-                  ['10M CLETUS', '5.00 SOL / week'],
+                  ['100K CLETUS', '0.005 SOL / week'],
+                  ['1M CLETUS', '0.050 SOL / week'],
+                  ['10M CLETUS', '0.500 SOL / week'],
                 ].map(([stake, reward]) => (
                   <div key={stake} className="flex justify-between text-xs font-mono">
                     <span className="text-white/50">{stake}</span>
