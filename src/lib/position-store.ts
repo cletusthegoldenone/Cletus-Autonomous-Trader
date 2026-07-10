@@ -74,7 +74,7 @@ let dbInitialized = false;
 
 if (typeof window === 'undefined') {
   const dbUrl = process.env.DATABASE_URL;
-  if (dbUrl && dbUrl !== '******localhost:5432/cletus') {
+  if (dbUrl) {
     pool = new Pool({
       connectionString: dbUrl,
       max: parseInt(process.env.DATABASE_POOL_SIZE ?? '20', 10),
@@ -217,7 +217,7 @@ export async function openPosition(
             position.entrySignature,
             position.currentPrice,
             position.pnlUsd,
-            position.signalBreakdown ? JSON.stringify(position.signalBreakdown) : null,
+            position.signalBreakdown || null,
             position.isDryRun,
           ]
         );
@@ -315,7 +315,7 @@ export async function closePosition(
                 row.entry_signature,
                 row.current_price,
                 row.pnl_usd,
-                row.signal_breakdown ? JSON.stringify(row.signal_breakdown) : null,
+                row.signal_breakdown || null,
                 row.is_dry_run,
                 closedAt,
                 exitPrice,
