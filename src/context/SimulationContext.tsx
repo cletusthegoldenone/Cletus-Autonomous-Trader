@@ -8,7 +8,7 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import type { TradingConfig, SimulatedPosition, AggressionLevel } from '@/types';
+import type { TradingConfig, SimulatedPosition, AggressionLevel, FeeDistribution, AggregatedFeeDistribution } from '@/types';
 
 // ── Fee configuration ─────────────────────────────────────────────────────────
 
@@ -17,6 +17,59 @@ export const TRADE_FEE_PERCENT = 1.0;
 
 /** Wallet address that receives all trade fees */
 export const FEE_WALLET = '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';
+
+// ── Fee Distribution Model ────────────────────────────────────────────────────
+
+/** Trading Fee Distribution (1% of each trade) */
+export const TRADING_FEE_DISTRIBUTION = {
+  /** 20% to developer/creator */
+  DEVELOPER: 0.20,
+  /** 25% for staking rewards */
+  STAKING_REWARDS: 0.25,
+  /** 30% for future Cletus upgrades */
+  FUTURE_UPGRADES: 0.30,
+  /** 25% to fund future digital bank */
+  DIGITAL_BANK: 0.25,
+} as const;
+
+/** Token Creator Fee Distribution */
+export const CREATOR_FEE_DISTRIBUTION = {
+  /** 50% into liquidity pool */
+  LIQUIDITY: 0.50,
+  /** 50% to help pay stakers */
+  STAKER_SUPPORT: 0.50,
+} as const;
+
+/** Wallet addresses for fee distribution */
+export const FEE_DISTRIBUTION_WALLETS = {
+  /** Developer wallet (20% of trading fees) */
+  DEVELOPER: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  /** Staking rewards wallet (25% of trading fees + 50% of creator fees) */
+  STAKING_REWARDS: 'StakeRewardWallet1234567890ABCDEFGHIJKLMNO',
+  /** Future upgrades wallet (30% of trading fees) */
+  FUTURE_UPGRADES: 'UpgradeWallet1234567890ABCDEFGHIJKLMNOPQR',
+  /** Digital bank wallet (25% of trading fees) */
+  DIGITAL_BANK: 'DigitalBankWallet1234567890ABCDEFGHIJKLMNO',
+  /** Liquidity pool wallet (50% of creator fees) */
+  LIQUIDITY: 'LiquidityPoolWallet1234567890ABCDEFGHIJKLM',
+} as const;
+
+// ── Fee Distribution Helper ───────────────────────────────────────────────────
+
+/**
+ * Calculates fee distribution breakdown based on the fee distribution model.
+ * @param totalFee - Total fee collected from a trade (1% of position size)
+ * @returns Fee distribution breakdown across all wallets
+ */
+export function calculateFeeDistribution(totalFee: number): FeeDistribution {
+  return {
+    totalFee,
+    developer: totalFee * TRADING_FEE_DISTRIBUTION.DEVELOPER,
+    stakingRewards: totalFee * TRADING_FEE_DISTRIBUTION.STAKING_REWARDS,
+    futureUpgrades: totalFee * TRADING_FEE_DISTRIBUTION.FUTURE_UPGRADES,
+    digitalBank: totalFee * TRADING_FEE_DISTRIBUTION.DIGITAL_BANK,
+  };
+}
 
 // ── Aggression presets ────────────────────────────────────────────────────────
 
@@ -107,6 +160,8 @@ export interface SimulationStats {
   allTimeRealizedPnl: number;
   /** Cumulative platform fees collected across all closed trades */
   totalFeesCollected: number;
+  /** Aggregated fee distribution across all wallets */
+  feeDistribution: AggregatedFeeDistribution;
   winCount: number;
   lossCount: number;
   isRunning: boolean;
@@ -173,6 +228,13 @@ function makeInitialStats(config: TradingConfig): SimulationStats {
     dailyRealizedPnl: 0,
     allTimeRealizedPnl: 0,
     totalFeesCollected: 0,
+    feeDistribution: {
+      totalFeesCollected: 0,
+      totalDeveloper: 0,
+      totalStakingRewards: 0,
+      totalFutureUpgrades: 0,
+      totalDigitalBank: 0,
+    },
     winCount: 0,
     lossCount: 0,
     isRunning: false,
@@ -257,6 +319,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       if (!pos) return prev;
 
       const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
+      const feeDistribution = calculateFeeDistribution(feeUsd);
       const pnl = pos.pnlUsd - feeUsd;
       const closedPos: SimulatedPosition = {
         ...pos,
@@ -265,6 +328,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         closingPrice: pos.currentPrice,
         closingPnlUsd: pnl,
         feeUsd,
+        feeDistribution,
       };
 
       const newDailyPnl = prev.dailyRealizedPnl + pnl;
@@ -278,6 +342,13 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         dailyRealizedPnl: newDailyPnl,
         allTimeRealizedPnl: newAllTimePnl,
         totalFeesCollected: prev.totalFeesCollected + feeUsd,
+        feeDistribution: {
+          totalFeesCollected: prev.feeDistribution.totalFeesCollected + feeDistribution.totalFee,
+          totalDeveloper: prev.feeDistribution.totalDeveloper + feeDistribution.developer,
+          totalStakingRewards: prev.feeDistribution.totalStakingRewards + feeDistribution.stakingRewards,
+          totalFutureUpgrades: prev.feeDistribution.totalFutureUpgrades + feeDistribution.futureUpgrades,
+          totalDigitalBank: prev.feeDistribution.totalDigitalBank + feeDistribution.digitalBank,
+        },
         winCount: pnl > 0 ? prev.winCount + 1 : prev.winCount,
         lossCount: pnl <= 0 ? prev.lossCount + 1 : prev.lossCount,
       };
@@ -302,6 +373,13 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         let newLosses = 0;
         let releasedCash = 0;
         let totalFeesDelta = 0;
+        let aggregatedFeeDist = {
+          totalFee: 0,
+          developer: 0,
+          stakingRewards: 0,
+          futureUpgrades: 0,
+          digitalBank: 0,
+        };
 
         for (const pos of prev.openPositions) {
           // Realistic random walk: ±0.3%–2.5% per tick, slight upward bias
@@ -338,6 +416,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
                 : (pos.entryPrice - closingPrice) / pos.entryPrice;
             const grossPnl = pos.positionSizeUsd * closingMult;
             const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
+            const feeDistribution = calculateFeeDistribution(feeUsd);
             const closingPnl = grossPnl - feeUsd;
 
             newlyClosed.push({
@@ -350,10 +429,16 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
               closingPrice,
               closingPnlUsd: closingPnl,
               feeUsd,
+              feeDistribution,
             });
             realizedPnlDelta += closingPnl;
             releasedCash += pos.positionSizeUsd + closingPnl;
             totalFeesDelta += feeUsd;
+            aggregatedFeeDist.totalFee += feeDistribution.totalFee;
+            aggregatedFeeDist.developer += feeDistribution.developer;
+            aggregatedFeeDist.stakingRewards += feeDistribution.stakingRewards;
+            aggregatedFeeDist.futureUpgrades += feeDistribution.futureUpgrades;
+            aggregatedFeeDist.digitalBank += feeDistribution.digitalBank;
             if (closingPnl > 0) newWins++; else newLosses++;
           } else {
             stillOpen.push(updatedPos);
@@ -387,6 +472,13 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           dailyRealizedPnl: newDailyPnl,
           allTimeRealizedPnl: newAllTimePnl,
           totalFeesCollected: prev.totalFeesCollected + totalFeesDelta,
+          feeDistribution: {
+            totalFeesCollected: prev.feeDistribution.totalFeesCollected + aggregatedFeeDist.totalFee,
+            totalDeveloper: prev.feeDistribution.totalDeveloper + aggregatedFeeDist.developer,
+            totalStakingRewards: prev.feeDistribution.totalStakingRewards + aggregatedFeeDist.stakingRewards,
+            totalFutureUpgrades: prev.feeDistribution.totalFutureUpgrades + aggregatedFeeDist.futureUpgrades,
+            totalDigitalBank: prev.feeDistribution.totalDigitalBank + aggregatedFeeDist.digitalBank,
+          },
           winCount: prev.winCount + newWins,
           lossCount: prev.lossCount + newLosses,
           isRunning,
