@@ -344,7 +344,7 @@ export default function Home() {
             { icon: '🤖', title: 'Autonomous AI Agent', desc: 'Persistent Gemini-powered conversations. Ask anything about tokens, strategies, or positions.' },
             { icon: '👥', title: 'Live Community', desc: 'Real-time chat + social profiles. Goose-themed avatars. Messages broadcast instantly.' },
             { icon: '🛡️', title: 'Enterprise Security', desc: 'File integrity monitoring. SHA-256 baseline checks. Admin device tokens + PIN.' },
-            { icon: '🔐', title: 'Smart Access Control', desc: 'Free to use. All features open to everyone — use the app to its full potential.' },
+            { icon: '🔐', title: 'Staking Access', desc: 'Stake 0.5% of your SOL portfolio to unlock full access. Unstake at any time — your SOL stays yours.' },
             { icon: '🔍', title: 'Dev Rug Intelligence', desc: 'Database of known ruggers with evidence. Real-time rugcheck.xyz integration.' },
           ].map((feature, i) => (
             <div key={i} className="glass p-5 sm:p-7 rounded-3xl border border-white/10 hover:border-white/20 transition-all hover:-translate-y-1 sm:hover:-translate-y-2">
@@ -550,18 +550,18 @@ export default function Home() {
       <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-10 sm:mb-14">
           <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">ACCESS</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Free to use. Forever.</h2>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Stake SOL. Unlock everything.</h2>
           <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
-            Using Cletus is the reward. Every feature is open to everyone — no staking, no tiers, no paywalls.
+            Cletus is powered by its community. Stake just 0.5% of your SOL portfolio to unlock full platform access — no subscriptions, no hidden fees.
           </p>
         </div>
 
-        <div className="max-w-md mx-auto">
+        <div className="max-w-lg mx-auto">
           <div className="glass p-8 rounded-3xl border-2 border-emerald-500 flex flex-col items-center text-center">
-            <div className="text-4xl mb-4">🪿</div>
-            <div className="font-bold text-2xl mb-1">Full Access</div>
-            <div className="text-4xl font-bold tracking-tighter mb-1">$0</div>
-            <div className="text-white/50 text-xs mb-6">No credit card · No staking required</div>
+            <div className="text-4xl mb-4">◎</div>
+            <div className="font-bold text-2xl mb-1">Staking Access</div>
+            <div className="text-4xl font-bold tracking-tighter mb-1">0.5% SOL</div>
+            <div className="text-white/50 text-xs mb-6">One-time stake · No credit card · Unstake anytime</div>
             <ul className="space-y-2 text-sm text-white/70 mb-8 w-full text-left">
               {['Live Market Scanner', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community access', 'Trading simulation', 'All future features'].map((f) => (
                 <li key={f} className="flex items-start gap-2">
@@ -570,8 +570,19 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            <div className="w-full bg-zinc-900 border border-white/10 rounded-2xl p-4 mb-6 text-left">
+              <div className="text-xs text-white/50 mb-1 font-mono">EXAMPLE</div>
+              <div className="flex justify-between text-sm">
+                <span className="text-white/60">10 SOL portfolio</span>
+                <span className="text-emerald-400 font-semibold">= 0.05 SOL staked</span>
+              </div>
+              <div className="flex justify-between text-sm mt-1">
+                <span className="text-white/60">100 SOL portfolio</span>
+                <span className="text-emerald-400 font-semibold">= 0.5 SOL staked</span>
+              </div>
+            </div>
             <Link href="/trader" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
-              Launch App →
+              Stake &amp; Launch App →
             </Link>
           </div>
         </div>
@@ -646,11 +657,11 @@ export default function Home() {
                 MOST VALUABLE
               </div>
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
-                🔓
+                ◎
               </div>
-              <h3 className="font-bold text-lg sm:text-xl mb-2">Free Full Access</h3>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake &amp; Access</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Every feature is open to all users — no tiers, no paywalls. Using Cletus and finding great trades is the real reward.
+                Stake 0.5% of your SOL to unlock every feature — no subscriptions, no paywalls. Unstake anytime and your SOL is returned.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                 {[
@@ -706,7 +717,7 @@ export default function Home() {
                     status: 'LIVE NOW',
                     statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
                     dotColor: 'bg-emerald-500',
-                    items: ['30-day free trial live', 'Trading simulation active', 'Community airdrop eligible', '10% supply distributed', 'Full feature access for all'],
+                    items: ['SOL staking live (0.5%)', 'Trading simulation active', 'Community airdrop eligible', '10% supply distributed', 'Full feature access for stakers'],
                   },
                   {
                     phase: 'Phase 2',
@@ -849,7 +860,7 @@ export default function Home() {
                 ['Open Source / Self-Hostable', true, 'Closed', 'Closed', 'Closed', 'Closed'],
                 ['Trading Simulation Mode', true, '✗', '✗', '✗', '✗'],
                 ['Mobile-Responsive App', true, '✗', '✓', '✓', '✓'],
-                ['Monthly Fee', '$0 (free)', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
+                ['Monthly Fee', '0.5% SOL stake', '$0 + fees', '$0 + fees', '$0 + fees', '$0 + fees'],
               ].map((row, i) => (
                 <tr key={i} className="hover:bg-white/5 transition">
                   <td className="p-4 sm:p-5 font-medium text-white/80">{row[0]}</td>
@@ -903,7 +914,7 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
-            <div className="mt-4 text-xs text-white/50">Limited spots · Free to join</div>
+            <div className="mt-4 text-xs text-white/50">Stake 0.5% SOL to unlock · Unstake anytime</div>
           </div>
         </div>
       </div>
