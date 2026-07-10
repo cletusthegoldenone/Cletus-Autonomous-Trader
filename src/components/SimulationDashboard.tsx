@@ -2,6 +2,7 @@
 
 import { useSimulation, AGGRESSION_PRESETS, TRADE_FEE_PERCENT, FEE_WALLET } from '@/context/SimulationContext';
 import type { SimulatedPosition } from '@/types';
+import FeeDistributionPanel from './FeeDistributionPanel';
 
 function formatUsd(n: number, showSign = false): string {
   const formatted = new Intl.NumberFormat('en-US', {
@@ -339,6 +340,9 @@ export default function SimulationDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Fee Distribution Panel */}
+      <FeeDistributionPanel />
 
       {/* PnL limits bar */}
       {(config.dailyProfitTarget > 0 || config.dailyMaxLoss > 0) && (

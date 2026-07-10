@@ -164,5 +164,35 @@ export interface SimulatedPosition {
   closingPnlUsd?: number;
   /** Platform fee charged on close (% of position size, sent to dev wallet) */
   feeUsd?: number;
+  /** Distributed fee breakdown */
+  feeDistribution?: FeeDistribution;
   signalScore: number;
+}
+
+/** Fee distribution breakdown for a single trade */
+export interface FeeDistribution {
+  /** Total fee collected (1% of position size) */
+  totalFee: number;
+  /** 20% to developer */
+  developer: number;
+  /** 25% for staking rewards */
+  stakingRewards: number;
+  /** 30% for future upgrades */
+  futureUpgrades: number;
+  /** 25% to digital bank fund */
+  digitalBank: number;
+}
+
+/** Aggregated fee distribution across all trades */
+export interface AggregatedFeeDistribution {
+  /** Total fees collected from all trades */
+  totalFeesCollected: number;
+  /** Total distributed to developer wallet */
+  totalDeveloper: number;
+  /** Total distributed to staking rewards wallet */
+  totalStakingRewards: number;
+  /** Total distributed to future upgrades wallet */
+  totalFutureUpgrades: number;
+  /** Total distributed to digital bank wallet */
+  totalDigitalBank: number;
 }
