@@ -18,6 +18,42 @@ export const TRADE_FEE_PERCENT = 1.0;
 /** Wallet address that receives all trade fees */
 export const FEE_WALLET = '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';
 
+// ── Fee Distribution Model ────────────────────────────────────────────────────
+
+/** Trading Fee Distribution (1% of each trade) */
+export const TRADING_FEE_DISTRIBUTION = {
+  /** 20% to developer/creator */
+  DEVELOPER: 0.20,
+  /** 25% for staking rewards */
+  STAKING_REWARDS: 0.25,
+  /** 30% for future Cletus upgrades */
+  FUTURE_UPGRADES: 0.30,
+  /** 25% to fund future digital bank */
+  DIGITAL_BANK: 0.25,
+} as const;
+
+/** Token Creator Fee Distribution */
+export const CREATOR_FEE_DISTRIBUTION = {
+  /** 50% into liquidity pool */
+  LIQUIDITY: 0.50,
+  /** 50% to help pay stakers */
+  STAKER_SUPPORT: 0.50,
+} as const;
+
+/** Wallet addresses for fee distribution */
+export const FEE_DISTRIBUTION_WALLETS = {
+  /** Developer wallet (20% of trading fees) */
+  DEVELOPER: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  /** Staking rewards wallet (25% of trading fees + 50% of creator fees) */
+  STAKING_REWARDS: 'StakeRewardWallet1234567890ABCDEFGHIJKLMNO',
+  /** Future upgrades wallet (30% of trading fees) */
+  FUTURE_UPGRADES: 'UpgradeWallet1234567890ABCDEFGHIJKLMNOPQR',
+  /** Digital bank wallet (25% of trading fees) */
+  DIGITAL_BANK: 'DigitalBankWallet1234567890ABCDEFGHIJKLMNO',
+  /** Liquidity pool wallet (50% of creator fees) */
+  LIQUIDITY: 'LiquidityPoolWallet1234567890ABCDEFGHIJKLM',
+} as const;
+
 // ── Aggression presets ────────────────────────────────────────────────────────
 
 export const AGGRESSION_PRESETS: Record<
