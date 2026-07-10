@@ -17,15 +17,20 @@ interface WalletAnalysis {
   firstSeen: string;
   totalVolume: string;
   rugcheckScore?: number;
+  isLive?: boolean;
 }
 
 interface TokenHolding {
   symbol: string;
   name: string;
+  mint?: string;
   amount: string;
   valueUsd: string;
   percentOfSupply: string;
   suspicious: boolean;
+  rugcheckScore?: number;
+  rugcheckRisks?: string[];
+  rugged?: boolean;
 }
 
 interface ActivityItem {
@@ -34,6 +39,7 @@ interface ActivityItem {
   amount: string;
   time: string;
   flagged: boolean;
+  signature?: string;
 }
 
 interface RugEvent {
@@ -41,135 +47,6 @@ interface RugEvent {
   date: string;
   lossUsd: string;
   evidence: string;
-}
-
-const KNOWN_RUGGERS: Record<string, Partial<WalletAnalysis>> = {
-  'RuG1111111111111111111111111111111111111111': {
-    isKnownRugger: true,
-    rugCount: 7,
-    riskScore: 98,
-    riskLabel: 'EXTREME DANGER',
-    riskColor: 'text-trading-red',
-    flags: ['Known serial rugger', '7 confirmed rug pulls', 'Honeypot deployer', 'Flagged by rugcheck.xyz'],
-    rugHistory: [
-      { token: '$HONK', date: 'Jan 2026', lossUsd: '$240,000', evidence: 'Drained LP 4 minutes after launch' },
-      { token: '$WADDLE', date: 'Dec 2025', lossUsd: '$85,000', evidence: 'Dev wallet sold 100% in single tx' },
-      { token: '$GEESE', date: 'Nov 2025', lossUsd: '$120,000', evidence: 'Honeypot contract, no sells possible' },
-    ],
-  },
-};
-
-function generateMockAnalysis(address: string): WalletAnalysis {
-  // Deterministic-ish mock from address chars
-  const seed = address.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-  const rng = (max: number) => (seed % (max + 1));
-
-  const knownRugger = KNOWN_RUGGERS[address];
-  if (knownRugger) {
-    return {
-      address,
-      solBalance: 0.4,
-      totalVolume: '$1.2M',
-      firstSeen: '2024-08-14',
-      tokenHoldings: [],
-      recentActivity: [
-        { type: 'sell', description: 'Dumped 100% of $NEWRUG holdings', amount: '$45,000', time: '2h ago', flagged: true },
-        { type: 'launch', description: 'Deployed new token contract', amount: '—', time: '6h ago', flagged: true },
-      ],
-      rugcheckScore: 5,
-      ...knownRugger,
-    } as WalletAnalysis;
-  }
-
-  const riskScore = 20 + rng(75);
-  let riskLabel: string;
-  let riskColor: string;
-  const flags: string[] = [];
-
-  if (riskScore >= 80) {
-    riskLabel = 'HIGH RISK';
-    riskColor = 'text-trading-red';
-    flags.push('Multiple suspicious sells detected', 'Wallet age < 30 days');
-  } else if (riskScore >= 55) {
-    riskLabel = 'MODERATE RISK';
-    riskColor = 'text-trading-yellow';
-    flags.push('Some large sell events', 'Limited on-chain history');
-  } else {
-    riskLabel = 'LOW RISK';
-    riskColor = 'text-trading-green';
-    flags.push('No rug pulls detected', 'Consistent trading pattern');
-  }
-
-  if (riskScore > 40) flags.push('Holds >5% of token supply');
-  if (riskScore > 60) flags.push('Sells within 48h of token launch (repeated)');
-
-  const holdings: TokenHolding[] = [
-    {
-      symbol: '$PEPU',
-      name: 'Pepe Unlimited',
-      amount: `${(100 + rng(400)).toLocaleString()}K`,
-      valueUsd: `$${(1000 + rng(9000)).toLocaleString()}`,
-      percentOfSupply: `${(0.5 + rng(8)).toFixed(1)}%`,
-      suspicious: riskScore > 65,
-    },
-    {
-      symbol: '$BONK',
-      name: 'Bonk',
-      amount: `${(50 + rng(200)).toLocaleString()}M`,
-      valueUsd: `$${(500 + rng(3000)).toLocaleString()}`,
-      percentOfSupply: `<0.1%`,
-      suspicious: false,
-    },
-    {
-      symbol: '$SOL',
-      name: 'Wrapped SOL',
-      amount: `${(1 + rng(30)).toFixed(2)}`,
-      valueUsd: `$${(200 + rng(5000)).toLocaleString()}`,
-      percentOfSupply: '—',
-      suspicious: false,
-    },
-  ];
-
-  const activity: ActivityItem[] = [
-    {
-      type: 'buy',
-      description: `Purchased $PEPU on Raydium`,
-      amount: `$${(500 + rng(3000)).toLocaleString()}`,
-      time: `${1 + rng(12)}h ago`,
-      flagged: false,
-    },
-    {
-      type: 'sell',
-      description: `Sold $HONK — ${riskScore > 60 ? '85% of holdings' : '20% of holdings'}`,
-      amount: `$${(200 + rng(5000)).toLocaleString()}`,
-      time: `${2 + rng(24)}h ago`,
-      flagged: riskScore > 60,
-    },
-    {
-      type: 'transfer',
-      description: 'Received SOL from exchange',
-      amount: `${(1 + rng(10)).toFixed(2)} SOL`,
-      time: `${1 + rng(5)}d ago`,
-      flagged: false,
-    },
-  ];
-
-  return {
-    address,
-    isKnownRugger: false,
-    rugCount: 0,
-    riskScore,
-    riskLabel,
-    riskColor,
-    solBalance: parseFloat((0.5 + rng(50)).toFixed(2)),
-    tokenHoldings: holdings,
-    recentActivity: activity,
-    flags,
-    rugHistory: [],
-    firstSeen: `${2024 + rng(1)}-${String(1 + rng(11)).padStart(2, '0')}-${String(1 + rng(27)).padStart(2, '0')}`,
-    totalVolume: `$${(10 + rng(500))}.${rng(9)}K`,
-    rugcheckScore: Math.max(10, 100 - riskScore),
-  };
 }
 
 function RiskMeter({ score }: { score: number }) {
@@ -199,19 +76,27 @@ export default function DevWalletInspector() {
   const inspect = useCallback(async (addr: string) => {
     const trimmed = addr.trim();
     if (!trimmed) return;
-    if (trimmed.length < 20) {
-      setError('Enter a valid Solana wallet or token address (32–44 chars).');
+    if (trimmed.length < 32) {
+      setError('Enter a valid Solana wallet address (32–44 characters).');
       return;
     }
     setError('');
     setIsLoading(true);
     setResult(null);
 
-    // Simulate network call + rugcheck.xyz lookup
-    await new Promise((r) => setTimeout(r, 1400 + Math.random() * 800));
-    const analysis = generateMockAnalysis(trimmed);
-    setResult(analysis);
-    setIsLoading(false);
+    try {
+      const res = await fetch(`/api/wallet/${encodeURIComponent(trimmed)}`);
+      const data = await res.json() as WalletAnalysis & { error?: string };
+      if (!res.ok || data.error) {
+        setError(data.error ?? 'Failed to fetch wallet data. Please try again.');
+      } else {
+        setResult(data);
+      }
+    } catch {
+      setError('Network error — check your connection and try again.');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -219,10 +104,10 @@ export default function DevWalletInspector() {
     inspect(query);
   };
 
+  // Real Solana mainnet wallets for demonstration
   const EXAMPLE_ADDRESSES = [
-    { label: '🚨 Known Rugger', addr: 'RuG1111111111111111111111111111111111111111' },
-    { label: '🟡 Mid Risk Dev', addr: 'DevWallet9xQ8kLmPvRtY3nBsHcJeWoFgUaZiXd7' },
-    { label: '✅ Clean Dev', addr: 'CleanDev5kP2mRwYnXsVqBtHdJeZoFgUaLiMc8E' },
+    { label: '🪿 Cletus Dev', addr: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7' },
+    { label: '🏦 Binance Hot', addr: '5tzFkiKscXHK5ZXCGbXZxdw7gTjjD1mBwuoFbhUvuAi9' },
   ];
 
   return (
@@ -234,8 +119,8 @@ export default function DevWalletInspector() {
           <div>
             <h2 className="font-bold text-lg">Dev Wallet Inspector</h2>
             <p className="text-sm text-gray-400 mt-0.5">
-              Inspect any Solana developer wallet or token address. Cross-references the Cletus rug
-              database and rugcheck.xyz for known bad actors.
+              Inspect any Solana wallet. Fetches live data from Solana mainnet — real SOL balance,
+              token holdings, and transaction history.
             </p>
           </div>
         </div>
@@ -279,8 +164,8 @@ export default function DevWalletInspector() {
       {isLoading && (
         <div className="trading-card p-8 text-center">
           <div className="text-3xl mb-3 animate-bounce">🔍</div>
-          <div className="text-sm text-gray-400">Querying rugcheck.xyz &amp; Cletus rug database…</div>
-          <div className="text-xs text-gray-600 mt-1">Checking on-chain history · Scanning token launches · Verifying LP locks</div>
+          <div className="text-sm text-gray-400">Querying Solana mainnet…</div>
+          <div className="text-xs text-gray-600 mt-1">Fetching balance · Token accounts · Transaction history</div>
         </div>
       )}
 
@@ -391,26 +276,61 @@ export default function DevWalletInspector() {
                   <div
                     key={i}
                     className={`flex items-center gap-3 p-3 rounded-lg ${
-                      h.suspicious ? 'bg-trading-red/10 border border-trading-red/20' : 'bg-trading-surface'
+                      h.rugged
+                        ? 'bg-trading-red/15 border border-trading-red/40'
+                        : h.suspicious
+                        ? 'bg-trading-red/10 border border-trading-red/20'
+                        : 'bg-trading-surface'
                     }`}
                   >
                     <div className="w-8 h-8 rounded-full bg-trading-surface border border-trading-border flex items-center justify-center text-xs font-bold shrink-0">
-                      {h.symbol.slice(1, 3)}
+                      {h.symbol.replace('$', '').slice(0, 2)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center flex-wrap gap-1.5">
                         <span className="font-semibold text-sm">{h.symbol}</span>
-                        {h.suspicious && (
+                        {h.rugged && (
+                          <span className="text-[10px] px-1.5 py-0.5 bg-trading-red/30 text-trading-red rounded-full font-bold">
+                            🚨 RUGGED
+                          </span>
+                        )}
+                        {!h.rugged && h.suspicious && (
                           <span className="text-[10px] px-1.5 py-0.5 bg-trading-red/20 text-trading-red rounded-full font-semibold">
-                            SUSPICIOUS
+                            HIGH RISK
+                          </span>
+                        )}
+                        {h.rugcheckScore !== undefined && !h.rugged && !h.suspicious && (
+                          <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
+                            h.rugcheckScore <= 30
+                              ? 'bg-trading-green/20 text-trading-green'
+                              : h.rugcheckScore <= 60
+                              ? 'bg-trading-yellow/20 text-trading-yellow'
+                              : 'bg-trading-red/20 text-trading-red'
+                          }`}>
+                            RC {h.rugcheckScore}
                           </span>
                         )}
                       </div>
                       <div className="text-xs text-gray-500">{h.name}</div>
+                      {h.rugcheckRisks && h.rugcheckRisks.length > 0 && (
+                        <div className="text-[10px] text-trading-yellow mt-0.5">
+                          {h.rugcheckRisks.join(' · ')}
+                        </div>
+                      )}
                     </div>
-                    <div className="text-right text-sm">
-                      <div className="font-mono font-semibold">{h.valueUsd}</div>
-                      <div className="text-xs text-gray-500">{h.percentOfSupply} of supply</div>
+                    <div className="text-right text-sm shrink-0">
+                      <div className="font-mono text-xs text-gray-400">{h.amount}</div>
+                      {h.rugcheckScore !== undefined && (
+                        <div className={`text-xs font-mono font-bold ${
+                          h.rugcheckScore <= 30
+                            ? 'text-trading-green'
+                            : h.rugcheckScore <= 60
+                            ? 'text-trading-yellow'
+                            : 'text-trading-red'
+                        }`}>
+                          {h.rugged ? '☠ DEAD' : `RC: ${h.rugcheckScore}`}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -440,7 +360,18 @@ export default function DevWalletInspector() {
                       <div className="text-xs text-gray-500">{act.time}</div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="font-mono text-sm text-white">{act.amount}</div>
+                      {act.signature ? (
+                        <a
+                          href={`https://solscan.io/tx/${act.signature}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono text-xs text-trading-blue hover:underline"
+                        >
+                          {act.amount}
+                        </a>
+                      ) : (
+                        <div className="font-mono text-sm text-white">{act.amount}</div>
+                      )}
                       {act.flagged && (
                         <span className="text-[10px] text-trading-red font-semibold">⚠️ FLAGGED</span>
                       )}
@@ -454,9 +385,23 @@ export default function DevWalletInspector() {
           {/* Powered by */}
           <div className="trading-card p-3 border-trading-border/50">
             <p className="text-xs text-gray-500">
-              🔍 Analysis powered by <span className="text-white font-medium">rugcheck.xyz</span> +{' '}
-              <span className="text-white font-medium">Cletus Rug Intelligence Database</span>.
-              On-chain data is fetched live from Solana mainnet. Always verify independently before trading.
+              🔗 Live data from{' '}
+              <a
+                href={`https://solscan.io/account/${result.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-medium hover:underline"
+              >
+                Solana mainnet
+              </a>
+              {' '}via JSON-RPC. Token metadata from Jupiter verified list.
+              {result.tokenHoldings.some((h) => h.rugcheckScore !== undefined) && (
+                <> Token risk scored by <a href="https://rugcheck.xyz" target="_blank" rel="noopener noreferrer" className="text-white font-medium hover:underline">rugcheck.xyz</a>.</>
+              )}
+              {' '}Risk scoring is heuristic — always verify independently before trading.
+              {result.isLive && (
+                <span className="ml-1 text-trading-green">● Live</span>
+              )}
             </p>
           </div>
         </div>
@@ -466,16 +411,16 @@ export default function DevWalletInspector() {
       {!result && !isLoading && (
         <div className="trading-card p-10 text-center">
           <div className="text-5xl mb-4">🔍</div>
-          <div className="text-lg font-semibold text-gray-300 mb-2">Inspect Any Dev Wallet</div>
+          <div className="text-lg font-semibold text-gray-300 mb-2">Inspect Any Solana Wallet</div>
           <div className="text-sm text-gray-500 max-w-sm mx-auto">
-            Paste a Solana wallet address above to check for known rug pulls, suspicious activity,
-            token holdings, and on-chain red flags.
+            Paste a Solana wallet address to see real SOL balance, token holdings, and
+            recent transaction history — fetched live from mainnet.
           </div>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left max-w-lg mx-auto">
             {[
-              { icon: '🚩', title: 'Rug Database', desc: '500+ known bad actors' },
-              { icon: '🔗', title: 'rugcheck.xyz', desc: 'Real-time integration' },
-              { icon: '📊', title: 'On-Chain Analysis', desc: 'Wallet history & patterns' },
+              { icon: '💰', title: 'SOL Balance', desc: 'Live from mainnet RPC' },
+              { icon: '🪙', title: 'Token Holdings', desc: 'SPL tokens + rugcheck.xyz risk scores' },
+              { icon: '📊', title: 'Transaction History', desc: 'Last 25 on-chain txns' },
             ].map((item) => (
               <div key={item.title} className="bg-trading-surface rounded-xl p-3">
                 <div className="text-xl mb-1">{item.icon}</div>

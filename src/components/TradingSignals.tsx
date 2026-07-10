@@ -1,69 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { TradingSignal, SignalBreakdown } from '@/types';
-
-const SIGNAL_TOKENS = [
-  { name: 'BONK', address: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263' },
-  { name: 'WIF', address: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm' },
-  { name: 'JTO', address: 'jtojtomepa8bdoa1lvfuv42y5k5yblxeqiqv9dgb1b' },
-  { name: 'PYTH', address: 'HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3' },
-  { name: 'RAY', address: '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R' },
-  { name: 'ORCA', address: 'orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE' },
-  { name: 'MNGO', address: 'MangoCzJ36AjZyKwVj3VnYU4GTonjfVEnJmvvWaxLac' },
-  { name: 'STEP', address: 'StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT' },
-];
-
-function generateSignal(): TradingSignal {
-  const token = SIGNAL_TOKENS[Math.floor(Math.random() * SIGNAL_TOKENS.length)];
-  const compositeScore = 0.55 + Math.random() * 0.45;
-  const marketCap = 10000 + Math.random() * 490000;
-  const volume24h = marketCap * (0.3 + Math.random() * 1.2);
-  const priceChange = -5 + Math.random() * 25;
-  const currentPrice = 0.00001 + Math.random() * 5;
-  const direction = Math.random() > 0.3 ? 'LONG' : 'SHORT';
-
-  const breakdown: SignalBreakdown = {
-    volumeSpike: Math.random(),
-    momentum: Math.random(),
-    breakout: Math.random(),
-    rsiScore: Math.random(),
-    macdCross: Math.random(),
-    holderGrowth: Math.random(),
-    liquidityScore: Math.random(),
-    socialSentiment: Math.random(),
-  };
-
-  let strength: TradingSignal['strength'];
-  if (compositeScore >= 0.85) strength = 'EXTREME';
-  else if (compositeScore >= 0.72) strength = 'STRONG';
-  else if (compositeScore >= 0.60) strength = 'MODERATE';
-  else strength = 'WEAK';
-
-  return {
-    id: Math.random().toString(36).slice(2),
-    tokenName: token.name,
-    tokenAddress: token.address,
-    marketCap,
-    volume24h,
-    compositeScore,
-    priceChange24h: priceChange,
-    currentPrice,
-    breakdown,
-    riskReward: 1.5 + Math.random() * 3.5,
-    stopLoss: currentPrice * (1 - 0.08 - Math.random() * 0.07),
-    takeProfit: currentPrice * (1 + 0.15 + Math.random() * 0.35),
-    direction,
-    strength,
-    timestamp: Date.now() - Math.random() * 3600000,
-  };
-}
-
-function generateSignals(count: number): TradingSignal[] {
-  return Array.from({ length: count }, generateSignal).sort(
-    (a, b) => b.compositeScore - a.compositeScore
-  );
-}
+import type { TradingSignal } from '@/types';
 
 function StrengthBadge({ strength }: { strength: TradingSignal['strength'] }) {
   const config = {
@@ -406,30 +344,45 @@ export default function TradingSignals() {
   const [selectedSignal, setSelectedSignal] = useState<TradingSignal | null>(null);
   const [filter, setFilter] = useState<'all' | 'extreme' | 'strong' | 'moderate'>('all');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLive, setIsLive] = useState(false);
 
-  const refreshSignals = useCallback(() => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      setSignals(generateSignals(8));
-      setIsRefreshing(false);
-    }, 800);
+  const fetchSignals = useCallback(async () => {
+    try {
+      const res = await fetch('/api/signals');
+      if (res.ok) {
+        const data = await res.json() as {
+          signals: TradingSignal[];
+          isLive?: boolean;
+        };
+        setSignals(
+          (data.signals ?? []).map((s) => ({
+            ...s,
+            stopLoss: s.stopLoss ?? s.currentPrice * 0.92,
+            takeProfit: s.takeProfit ?? s.currentPrice * 1.2,
+          })),
+        );
+        setIsLive(data.isLive ?? false);
+      }
+    } catch {
+      // keep existing signals
+    }
   }, []);
+
+  const refreshSignals = useCallback(async () => {
+    setIsRefreshing(true);
+    await fetchSignals();
+    setIsRefreshing(false);
+  }, [fetchSignals]);
 
   useEffect(() => {
-    setSignals(generateSignals(8));
-  }, []);
+    fetchSignals();
+  }, [fetchSignals]);
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSignals((prev) =>
-        [...generateSignals(2), ...prev.slice(0, 6)].sort(
-          (a, b) => b.compositeScore - a.compositeScore
-        )
-      );
-    }, 30000);
+    const interval = setInterval(fetchSignals, 30_000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchSignals]);
 
   const filteredSignals = signals.filter((s) => {
     if (filter === 'all') return true;
@@ -452,8 +405,10 @@ export default function TradingSignals() {
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-trading-green status-dot-live" />
-              <span className="text-xs text-trading-green font-mono">SCANNING</span>
+              <div className={`w-2 h-2 rounded-full ${isLive ? 'bg-trading-green status-dot-live' : 'bg-trading-yellow'}`} />
+              <span className={`text-xs font-mono ${isLive ? 'text-trading-green' : 'text-trading-yellow'}`}>
+                {isLive ? 'LIVE' : 'SIMULATED'}
+              </span>
             </div>
             <button
               onClick={refreshSignals}

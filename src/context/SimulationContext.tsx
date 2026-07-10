@@ -42,16 +42,29 @@ export const CREATOR_FEE_DISTRIBUTION = {
 
 /** Wallet addresses for fee distribution */
 export const FEE_DISTRIBUTION_WALLETS = {
-  /** Developer wallet (20% of trading fees) */
+  /** Developer wallet (20% of trading fees) — live wallet */
   DEVELOPER: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
-  /** Staking rewards wallet (25% of trading fees + 50% of creator fees) */
-  STAKING_REWARDS: 'StakeRewardWallet1234567890ABCDEFGHIJKLMNO',
-  /** Future upgrades wallet (30% of trading fees) */
-  FUTURE_UPGRADES: 'UpgradeWallet1234567890ABCDEFGHIJKLMNOPQR',
-  /** Digital bank wallet (25% of trading fees) */
-  DIGITAL_BANK: 'DigitalBankWallet1234567890ABCDEFGHIJKLMNO',
-  /** Liquidity pool wallet (50% of creator fees) */
-  LIQUIDITY: 'LiquidityPoolWallet1234567890ABCDEFGHIJKLM',
+  /**
+   * Staking rewards wallet (25% of trading fees + 50% of creator fees)
+   * TODO: Replace with the deployed staking program's treasury PDA once the
+   *       $CLETUS token and staking contract are deployed on Solana mainnet.
+   */
+  STAKING_REWARDS: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  /**
+   * Future upgrades wallet (30% of trading fees)
+   * TODO: Replace with a dedicated upgrades multisig wallet before mainnet launch.
+   */
+  FUTURE_UPGRADES: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  /**
+   * Digital bank wallet (25% of trading fees)
+   * TODO: Replace with the digital bank fund wallet before mainnet launch.
+   */
+  DIGITAL_BANK: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  /**
+   * Liquidity pool wallet (50% of creator fees)
+   * TODO: Replace with the Raydium LP wallet address after token launch.
+   */
+  LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
 } as const;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
