@@ -596,7 +596,7 @@ export default function Home() {
               <span className="text-yellow-400">$CLETUS</span> Token
             </h2>
             <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
-              The native token powering the entire Cletus ecosystem. Stake to earn SOL, unlock features, and govern the future of autonomous trading.
+              The native token powering the entire Cletus ecosystem. Hold to participate in governance and shape the future of autonomous trading.
             </p>
           </div>
 
@@ -605,7 +605,7 @@ export default function Home() {
             {[
               { label: 'Total Supply', value: '1,000,000,000', sub: 'fixed forever', icon: '🪙' },
               { label: 'Blockchain', value: 'Solana', sub: '~400ms blocks', icon: '◎' },
-              { label: 'APY Yield', value: '0.5%', sub: 'in SOL rewards', icon: '💰' },
+              { label: 'Community', value: '40%', sub: 'to community', icon: '🪿' },
               { label: 'Token Address', value: 'TBA', sub: 'at public launch', icon: '📋' },
             ].map((stat) => (
               <div key={stat.label} className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-yellow-500/20 bg-yellow-500/5 text-center">
@@ -621,21 +621,21 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16 max-w-5xl mx-auto">
             <div className="glass rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-yellow-500/30 transition-all group">
               <div className="w-12 h-12 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-500/20 transition-all">
-                💎
+                🪿
               </div>
-              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake to Earn SOL</h3>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Community Token</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Lock your $CLETUS and earn real SOL weekly. 0.5% APY calculated every Solana block. Claim anytime, no lockup period.
+                $CLETUS is the community token of the platform. Hold it to participate in governance, access airdrops, and be part of the ecosystem.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm">
                 {[
-                  ['100K CLETUS', '0.005 SOL / week'],
-                  ['1M CLETUS', '0.050 SOL / week'],
-                  ['10M CLETUS', '0.500 SOL / week'],
-                ].map(([stake, reward]) => (
-                  <div key={stake} className="flex justify-between text-xs font-mono">
-                    <span className="text-white/50">{stake}</span>
-                    <span className="text-yellow-400">{reward}</span>
+                  ['Total supply', '1,000,000,000'],
+                  ['Community allocation', '40%'],
+                  ['Team vesting', '2 years'],
+                ].map(([label, value]) => (
+                  <div key={label} className="flex justify-between text-xs font-mono">
+                    <span className="text-white/50">{label}</span>
+                    <span className="text-yellow-400">{value}</span>
                   </div>
                 ))}
               </div>
@@ -648,20 +648,20 @@ export default function Home() {
               <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
                 🔓
               </div>
-              <h3 className="font-bold text-lg sm:text-xl mb-2">Unlock Full Access</h3>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Free Full Access</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Your stake tier determines your trading limits — position sizes, concurrent trades, daily targets, and API access. No monthly fees.
+                Every feature is open to all users — no tiers, no paywalls. Using Cletus and finding great trades is the real reward.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
                 {[
-                  { tier: 'Starter', stake: '100K', color: 'text-gray-400' },
-                  { tier: 'Gold', stake: '5M', color: 'text-yellow-400' },
-                  { tier: 'Diamond', stake: '25M', color: 'text-blue-300' },
-                  { tier: 'Founder', stake: '100M', color: 'text-purple-300' },
-                ].map(({ tier, stake, color }) => (
-                  <div key={tier} className="flex justify-between text-xs font-mono">
-                    <span className={color}>{tier}</span>
-                    <span className="text-white/50">{stake} CLETUS</span>
+                  { feature: 'Live scanner', icon: '📊' },
+                  { feature: 'Unlimited AI chat', icon: '🤖' },
+                  { feature: 'Full signal access', icon: '⚡' },
+                  { feature: 'Dev wallet inspector', icon: '🔍' },
+                ].map(({ feature, icon }) => (
+                  <div key={feature} className="flex items-center gap-2 text-xs font-mono">
+                    <span>{icon}</span>
+                    <span className="text-white/70">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -673,7 +673,7 @@ export default function Home() {
               </div>
               <h3 className="font-bold text-lg sm:text-xl mb-2">Govern the Protocol</h3>
               <p className="text-white/60 text-sm sm:text-base leading-relaxed">
-                Token holders vote on signal algorithms, fee structures, and feature priorities. The more you stake, the more your vote counts.
+                Token holders vote on signal algorithms, fee structures, and feature priorities. The more you hold, the more your vote counts.
               </p>
               <div className="mt-4 pt-4 border-t border-white/10 space-y-2 text-sm text-white/50">
                 {[
@@ -762,7 +762,7 @@ export default function Home() {
             </div>
             <div className="glass rounded-3xl border border-white/10 overflow-hidden">
               {[
-                { label: 'Community Rewards & Ecosystem', pct: 40, color: 'bg-emerald-500', desc: 'Distributed to the community over 4 years' },
+                { label: 'Community Rewards & Ecosystem', pct: 40, color: 'bg-emerald-500', desc: 'Distributed to the community via airdrops and grants' },
                 { label: 'Public Sale / DEX Liquidity', pct: 25, color: 'bg-yellow-400', desc: 'Initial DEX offering + liquidity pool' },
                 { label: 'Team & Advisors', pct: 15, color: 'bg-blue-400', desc: '2-year vesting, 6-month cliff' },
                 { label: 'Ecosystem & Partnerships', pct: 10, color: 'bg-purple-400', desc: 'Grants, integrations, BD' },
@@ -903,7 +903,7 @@ export default function Home() {
                 <span>Join Waitlist</span>
               </button>
             </div>
-            <div className="mt-4 text-xs text-white/50">Limited spots · Staking or trial required for full access</div>
+            <div className="mt-4 text-xs text-white/50">Limited spots · Free to join</div>
           </div>
         </div>
       </div>
