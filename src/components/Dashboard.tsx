@@ -265,13 +265,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           neutral
           icon="🔢"
         />
-        <StatCard
-          label="Staking Tier"
-          value="Gold"
-          sub="5M CLETUS staked"
-          neutral
-          icon="🥇"
-        />
       </div>
 
       {/* Quick Actions */}
@@ -279,7 +272,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         <h2 className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <QuickAction
             icon="📈"
             label="Start Trading"
@@ -300,13 +293,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             description="AI trading intelligence"
             color="hover:border-trading-blue/50"
             onClick={() => onNavigate('ai')}
-          />
-          <QuickAction
-            icon="💎"
-            label="My Staking"
-            description="Rewards & tier status"
-            color="hover:border-trading-purple/50"
-            onClick={() => onNavigate('staking')}
           />
         </div>
       </div>

@@ -40,42 +40,6 @@ export interface SignalBreakdown {
   socialSentiment: number;
 }
 
-export type StakingTier =
-  | 'Starter'
-  | 'Bronze'
-  | 'Silver'
-  | 'Gold'
-  | 'Platinum'
-  | 'Diamond'
-  | 'Founder';
-
-export interface TierInfo {
-  name: StakingTier;
-  minStake: number;
-  apy: number;
-  profitShare: number;
-  color: string;
-  icon: string;
-}
-
-export interface StakingPosition {
-  staked: number;
-  tier: StakingTier;
-  stakedAt: number;
-  pendingRewards: number;
-  pendingSolRewards: number;
-  totalEarned: number;
-  profitShareEarned: number;
-}
-
-export interface DistributionRecord {
-  month: string;
-  solRewards: number;
-  profitShare: number;
-  total: number;
-  claimed: boolean;
-}
-
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
