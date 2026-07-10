@@ -124,6 +124,8 @@ export default function Home() {
     { href: '#features', label: 'Features' },
     { href: '#demo', label: 'Live Demo' },
     { href: '#ai-chat', label: 'AI Chat' },
+    { href: '#pricing', label: 'Pricing' },
+    { href: '#token', label: '$CLETUS' },
     { href: '#comparison', label: 'Compare' },
     { href: '#tech', label: 'Tech' },
   ];
@@ -538,6 +540,358 @@ export default function Home() {
                   →
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing / Subscription */}
+      <div id="pricing" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
+        <div className="text-center mb-10 sm:mb-14">
+          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">PLANS &amp; PRICING</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Start free. Scale with staking.</h2>
+          <p className="mt-3 text-white/60 max-w-md mx-auto text-sm sm:text-base">
+            Every plan includes a 30-day free trial. Full access is gated by on-chain staking — the more you stake, the more you earn.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          {/* Free Trial */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">⏱️</div>
+            <div className="font-bold text-xl mb-1">Free Trial</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">$0</div>
+            <div className="text-white/50 text-xs mb-5">30 days · No credit card</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Live Market Scanner', 'AI Chat (25 msgs/day)', 'Basic signal alerts', 'Community read access', 'Candlestick charts'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+              {['Dev wallet inspector', 'Profit sharing', 'Priority signals'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setShowWaitlist(true)}
+              className="w-full py-3 border border-white/20 hover:bg-white/5 transition-all font-medium rounded-2xl text-sm active:scale-[0.985]"
+            >
+              Start Free Trial →
+            </button>
+          </div>
+
+          {/* Starter Staking */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">🌱</div>
+            <div className="font-bold text-xl mb-1">Starter</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">100K <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Trial', 'Unlimited AI Chat', 'Full signal access', 'Dev wallet inspector', 'Community write access'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+              {['Profit sharing', 'Priority alerts'].map((f) => (
+                <li key={f} className="flex items-start gap-2 opacity-40">
+                  <span className="shrink-0">✗</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 transition-all font-medium rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake Now →
+            </Link>
+          </div>
+
+          {/* Gold / Pro — highlighted */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border-2 border-emerald-500 flex flex-col relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-emerald-500 rounded-full text-xs font-bold text-black whitespace-nowrap">
+              MOST POPULAR
+            </div>
+            <div className="text-2xl mb-3">🥇</div>
+            <div className="font-bold text-xl mb-1">Gold</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">5M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 5% profit share</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Starter', '5% monthly profit share', 'Priority signal alerts', 'Advanced AI analysis', 'Tier badge in community', 'Early feature access'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 transition-all font-semibold rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Stake for Gold →
+            </Link>
+          </div>
+
+          {/* Diamond / Unlimited */}
+          <div className="glass p-6 sm:p-8 rounded-3xl border border-white/10 flex flex-col">
+            <div className="text-2xl mb-3">💎</div>
+            <div className="font-bold text-xl mb-1">Diamond</div>
+            <div className="text-3xl font-bold tracking-tighter mb-1">25M <span className="text-lg font-normal text-white/50">CLETUS</span></div>
+            <div className="text-white/50 text-xs mb-5">Stake to unlock · 5% APY + 20% profit share</div>
+            <ul className="space-y-2 text-sm text-white/70 flex-1 mb-6">
+              {['Everything in Gold', '20% monthly profit share', 'API access', 'Custom signal parameters', 'Direct dev support', 'Diamond badge + perks'].map((f) => (
+                <li key={f} className="flex items-start gap-2">
+                  <span className="text-emerald-400 shrink-0">✓</span>
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/trader?tab=staking" className="w-full py-3 border border-blue-400/40 text-blue-400 hover:bg-blue-400/10 transition-all font-medium rounded-2xl text-sm text-center active:scale-[0.985] block">
+              Go Diamond →
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-8 text-center text-xs text-white/40 max-w-lg mx-auto">
+          Staking provides platform access, not guaranteed returns. All profit sharing depends on Cletus's actual trading performance.
+          7-day unstaking cooldown. <span className="text-white/60 underline cursor-pointer" onClick={() => document.getElementById('comparison')?.scrollIntoView({ behavior: 'smooth' })}>Full tier comparison →</span>
+        </div>
+      </div>
+
+      {/* $CLETUS Token — Coming Soon */}
+      <div id="token" className="border-t border-white/10 relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-yellow-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-16 sm:py-24">
+          {/* Header */}
+          <div className="text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-x-2 bg-yellow-500/10 border border-yellow-500/30 rounded-3xl px-4 py-1.5 text-xs sm:text-sm mb-5 sm:mb-6">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse flex-shrink-0" />
+              <span className="font-semibold text-yellow-400 tracking-widest">COMING SOON · Q3 2026</span>
+            </div>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter mb-4">
+              <span className="text-yellow-400">$CLETUS</span> Token
+            </h2>
+            <p className="text-white/60 text-base sm:text-lg md:text-xl max-w-2xl mx-auto">
+              The native token powering the entire Cletus ecosystem. Stake to earn SOL, unlock features, and govern the future of autonomous trading.
+            </p>
+          </div>
+
+          {/* Token Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto mb-12 sm:mb-16">
+            {[
+              { label: 'Total Supply', value: '1,000,000,000', sub: 'fixed forever', icon: '🪙' },
+              { label: 'Blockchain', value: 'Solana', sub: '~400ms blocks', icon: '◎' },
+              { label: 'APY Yield', value: '5%', sub: 'in SOL rewards', icon: '💰' },
+              { label: 'Token Address', value: 'TBA', sub: 'at public launch', icon: '📋' },
+            ].map((stat) => (
+              <div key={stat.label} className="glass rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-yellow-500/20 bg-yellow-500/5 text-center">
+                <div className="text-2xl mb-2">{stat.icon}</div>
+                <div className="font-bold text-base sm:text-xl tracking-tight text-white">{stat.value}</div>
+                <div className="text-xs text-white/50 mt-0.5 font-medium">{stat.label}</div>
+                <div className="text-xs text-yellow-400/70 mt-0.5">{stat.sub}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Three Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16 max-w-5xl mx-auto">
+            <div className="glass rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-yellow-500/30 transition-all group">
+              <div className="w-12 h-12 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-500/20 transition-all">
+                💎
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Stake to Earn SOL</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+                Lock your $CLETUS and earn real SOL weekly. 5% APY calculated every Solana block. Claim anytime, no lockup period.
+              </p>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5 text-sm">
+                {[
+                  ['100K CLETUS', '0.05 SOL / week'],
+                  ['1M CLETUS', '0.50 SOL / week'],
+                  ['10M CLETUS', '5.00 SOL / week'],
+                ].map(([stake, reward]) => (
+                  <div key={stake} className="flex justify-between text-xs font-mono">
+                    <span className="text-white/50">{stake}</span>
+                    <span className="text-yellow-400">{reward}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass rounded-3xl p-6 sm:p-8 border border-emerald-500/30 hover:border-emerald-500/50 transition-all group bg-emerald-500/5 relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-emerald-500 rounded-full text-xs font-bold text-black whitespace-nowrap">
+                MOST VALUABLE
+              </div>
+              <div className="w-12 h-12 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-emerald-500/20 transition-all">
+                🔓
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Unlock Full Access</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+                Your stake tier determines your trading limits — position sizes, concurrent trades, daily targets, and API access. No monthly fees.
+              </p>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-1.5">
+                {[
+                  { tier: 'Starter', stake: '100K', color: 'text-gray-400' },
+                  { tier: 'Gold', stake: '5M', color: 'text-yellow-400' },
+                  { tier: 'Diamond', stake: '25M', color: 'text-blue-300' },
+                  { tier: 'Founder', stake: '100M', color: 'text-purple-300' },
+                ].map(({ tier, stake, color }) => (
+                  <div key={tier} className="flex justify-between text-xs font-mono">
+                    <span className={color}>{tier}</span>
+                    <span className="text-white/50">{stake} CLETUS</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="glass rounded-3xl p-6 sm:p-8 border border-white/10 hover:border-yellow-500/30 transition-all group">
+              <div className="w-12 h-12 bg-yellow-500/10 border border-yellow-500/30 rounded-2xl flex items-center justify-center text-2xl mb-5 group-hover:bg-yellow-500/20 transition-all">
+                🗳️
+              </div>
+              <h3 className="font-bold text-lg sm:text-xl mb-2">Govern the Protocol</h3>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed">
+                Token holders vote on signal algorithms, fee structures, and feature priorities. The more you stake, the more your vote counts.
+              </p>
+              <div className="mt-4 pt-4 border-t border-white/10 space-y-2 text-sm text-white/50">
+                {[
+                  '⚡ Signal parameter voting',
+                  '💸 Revenue-sharing splits',
+                  '🛠️ Feature roadmap priorities',
+                  '🤝 Partnership decisions',
+                ].map((item) => (
+                  <div key={item} className="text-xs">{item}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Launch Timeline */}
+          <div className="max-w-4xl mx-auto mb-12 sm:mb-16">
+            <div className="text-center mb-8 sm:mb-10">
+              <div className="text-yellow-400 text-xs sm:text-sm font-semibold tracking-widest mb-2">LAUNCH ROADMAP</div>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tighter">Three phases to full launch</h3>
+            </div>
+            <div className="relative">
+              {/* Connector line */}
+              <div className="hidden sm:block absolute top-8 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-gradient-to-r from-emerald-500/50 via-yellow-500/50 to-blue-500/50" />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 relative">
+                {[
+                  {
+                    phase: 'Phase 1',
+                    title: 'Beta Launch',
+                    date: 'Q2 2026',
+                    status: 'LIVE NOW',
+                    statusColor: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
+                    dotColor: 'bg-emerald-500',
+                    items: ['30-day free trial live', 'Trading simulation active', 'Staking contract deployed', '10% supply distributed', 'Community airdrop eligible'],
+                  },
+                  {
+                    phase: 'Phase 2',
+                    title: 'Public Token Launch',
+                    date: 'Q3 2026',
+                    status: 'COMING SOON',
+                    statusColor: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40',
+                    dotColor: 'bg-yellow-500',
+                    items: ['DEX listing on Jupiter', 'Full staking rewards live', 'Token address revealed', 'Premium subscriptions', 'CoinGecko / CMC listing'],
+                  },
+                  {
+                    phase: 'Phase 3',
+                    title: 'Ecosystem Expansion',
+                    date: 'Q4 2026',
+                    status: 'PLANNED',
+                    statusColor: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
+                    dotColor: 'bg-blue-500',
+                    items: ['On-chain governance voting', 'Revenue-sharing mechanism', 'Advanced tools for holders', 'Cross-protocol integrations', 'Mobile app release'],
+                  },
+                ].map((phase) => (
+                  <div key={phase.phase} className="glass rounded-3xl p-6 border border-white/10 flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-xs text-white/40 font-mono">{phase.phase}</div>
+                        <div className="font-bold text-base">{phase.title}</div>
+                        <div className="text-sm text-white/50 font-mono">{phase.date}</div>
+                      </div>
+                      <div className={`relative z-10 w-4 h-4 rounded-full border-2 border-zinc-950 ${phase.dotColor} hidden sm:block`} />
+                    </div>
+                    <span className={`self-start text-xs font-semibold px-2.5 py-1 rounded-full border ${phase.statusColor}`}>
+                      {phase.status}
+                    </span>
+                    <ul className="space-y-1.5 text-sm text-white/60">
+                      {phase.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="text-white/30 shrink-0 mt-0.5">›</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Tokenomics */}
+          <div className="max-w-3xl mx-auto mb-12 sm:mb-16">
+            <div className="text-center mb-6 sm:mb-8">
+              <div className="text-yellow-400 text-xs sm:text-sm font-semibold tracking-widest mb-2">TOKENOMICS</div>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tighter">1,000,000,000 total supply</h3>
+              <p className="text-white/50 text-sm mt-2">Fixed supply. No minting. No inflation.</p>
+            </div>
+            <div className="glass rounded-3xl border border-white/10 overflow-hidden">
+              {[
+                { label: 'Community & Staking Rewards', pct: 40, color: 'bg-emerald-500', desc: 'Distributed to stakers over 4 years' },
+                { label: 'Public Sale / DEX Liquidity', pct: 25, color: 'bg-yellow-400', desc: 'Initial DEX offering + liquidity pool' },
+                { label: 'Team & Advisors', pct: 15, color: 'bg-blue-400', desc: '2-year vesting, 6-month cliff' },
+                { label: 'Ecosystem & Partnerships', pct: 10, color: 'bg-purple-400', desc: 'Grants, integrations, BD' },
+                { label: 'Early Testers Airdrop', pct: 10, color: 'bg-orange-400', desc: 'Beta users & early believers' },
+              ].map((item) => (
+                <div key={item.label} className="p-4 sm:p-5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                  <div className="flex items-center justify-between mb-2 gap-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-3 h-3 rounded-full shrink-0 ${item.color}`} />
+                      <div>
+                        <div className="text-sm font-medium">{item.label}</div>
+                        <div className="text-xs text-white/40">{item.desc}</div>
+                      </div>
+                    </div>
+                    <div className="text-xl sm:text-2xl font-bold font-mono text-white shrink-0">{item.pct}%</div>
+                  </div>
+                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full ${item.color} opacity-70`} style={{ width: `${item.pct}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA — Get Notified */}
+          <div className="text-center">
+            <div className="inline-block glass rounded-3xl border border-yellow-500/30 bg-yellow-500/5 p-8 sm:p-10 max-w-lg w-full">
+              <div className="text-4xl mb-4">🪿</div>
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tighter mb-3">Be first in line</h3>
+              <p className="text-white/60 text-sm sm:text-base mb-6">
+                Early testers get 10% of supply via airdrop. Join the waitlist now to secure your allocation before public launch.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  onClick={() => setShowWaitlist(true)}
+                  className="px-7 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-bold rounded-2xl transition-all active:scale-[0.985] text-sm sm:text-base"
+                >
+                  🎯 Claim Early Allocation
+                </button>
+                <Link
+                  href="/trader?tab=staking"
+                  className="px-7 py-3.5 border border-white/20 hover:bg-white/5 font-medium rounded-2xl transition-all active:scale-[0.985] text-sm sm:text-base text-center"
+                >
+                  View Staking Tiers →
+                </Link>
+              </div>
+              <p className="text-xs text-white/30 mt-4">
+                No purchase required to join waitlist · Token address revealed at launch · Airdrop for beta testers
+              </p>
             </div>
           </div>
         </div>
