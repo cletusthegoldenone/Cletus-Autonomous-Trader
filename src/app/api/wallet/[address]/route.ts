@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const SOLANA_RPC =
-  process.env.NEXT_PUBLIC_HELIUS_RPC_URL ?? 'https://api.mainnet-beta.solana.com';
+// Build Helius URL server-side, keeping the API key out of the client bundle
+function getSolanaRpc(): string {
+  const apiKey = process.env.HELIUS_API_KEY;
+  if (apiKey && apiKey !== 'your_helius_api_key_here') {
+    return `https://mainnet.helius-rpc.com/?api-key=${apiKey}`;
+  }
+  return process.env.NEXT_PUBLIC_HELIUS_RPC_URL ?? 'https://api.mainnet-beta.solana.com';
+}
 
 const SPL_TOKEN_PROGRAM = 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA';
 
@@ -33,6 +39,7 @@ async function getJupiterTokenMap(): Promise<Record<string, { symbol: string; na
 
 // ── Solana JSON-RPC helper ────────────────────────────────────────────────────
 async function rpc<T>(method: string, params: unknown[]): Promise<T> {
+  const SOLANA_RPC = getSolanaRpc();
   const res = await fetch(SOLANA_RPC, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

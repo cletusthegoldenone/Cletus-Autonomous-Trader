@@ -196,3 +196,33 @@ export interface AggregatedFeeDistribution {
   /** Total distributed to digital bank wallet */
   totalDigitalBank: number;
 }
+
+// ── Live trading position (real/dry-run on-chain trade) ───────────────────────
+
+export interface LivePosition {
+  id: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  tokenName: string;
+  direction: 'LONG';
+  entryPrice: number;
+  entryAmountSol: number;
+  tokenAmount: number;
+  openedAt: number;
+  signalScore: number;
+  stopLoss: number;
+  takeProfit: number;
+  entrySignature: string;
+  currentPrice: number;
+  pnlUsd: number;
+  signalBreakdown?: SignalBreakdown;
+  isDryRun: boolean;
+}
+
+export interface ClosedLivePosition extends LivePosition {
+  closedAt: number;
+  exitPrice: number;
+  exitSignature: string;
+  realisedPnlUsd: number;
+  closeReason: 'MANUAL' | 'STOP_LOSS' | 'TAKE_PROFIT' | 'KILL_SWITCH';
+}
