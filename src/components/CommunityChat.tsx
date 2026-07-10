@@ -26,19 +26,11 @@ const TIER_BADGES: Record<string, { label: string; color: string }> = {
 
 const SEED_MESSAGES: CommunityMessage[] = [
   { id: 'm1', user: 'degenGoose', avatar: '🪿', content: 'BONK looking spicy on the 15m, Cletus just flagged a volume spike 🔥', timestamp: Date.now() - 240000, tier: 'Gold', tierColor: 'text-yellow-400' },
-<<<<<<< HEAD
-  { id: 'm2', user: 'solanaHonk', avatar: '🦆', content: 'just staked another 2M, almost at Platinum 👀', timestamp: Date.now() - 195000, tier: 'Silver', tierColor: 'text-gray-300' },
-  { id: 'm3', user: 'rugDetector9', avatar: '🦅', content: '$WEN just got flagged by the rug intelligence engine, dev wallet dumped 40% lol', timestamp: Date.now() - 150000, tier: 'Platinum', tierColor: 'text-cyan-400' },
-  { id: 'm4', user: 'moonGoose', avatar: '🦉', content: 'anyone else catching JTO here? RSI at 38 on 1h', timestamp: Date.now() - 105000, tier: 'Diamond', tierColor: 'text-blue-400' },
-  { id: 'm5', user: 'cletus_fan', avatar: '🐦', content: 'AI signal score just hit 94/100 on $PEPU, entering now', timestamp: Date.now() - 72000, tier: 'Gold', tierColor: 'text-yellow-400' },
-  { id: 'm6', user: 'dexDeegen', avatar: '🦜', content: 'profit share this month was 3.2 SOL, not bad for Silver tier 😤', timestamp: Date.now() - 45000, tier: 'Silver', tierColor: 'text-gray-300' },
-=======
   { id: 'm2', user: 'solanaHonk', avatar: '🦆', content: 'signal score just hit 87 on $PEPU, watching closely', timestamp: Date.now() - 195000, tier: 'Silver', tierColor: 'text-gray-300' },
   { id: 'm3', user: 'rugDetector9', avatar: '🦅', content: '$WEN just got flagged by the rug intelligence engine, dev wallet dumped 40% lol', timestamp: Date.now() - 150000, tier: 'Platinum', tierColor: 'text-cyan-400' },
   { id: 'm4', user: 'moonGoose', avatar: '🦉', content: 'anyone else catching JTO here? RSI at 38 on 1h', timestamp: Date.now() - 105000, tier: 'Diamond', tierColor: 'text-blue-400' },
   { id: 'm5', user: 'cletus_fan', avatar: '🐦', content: 'AI signal score just hit 94/100 on $PEPU, entering now', timestamp: Date.now() - 72000, tier: 'Gold', tierColor: 'text-yellow-400' },
   { id: 'm6', user: 'dexDeegen', avatar: '🦜', content: 'Cletus caught 3 breakouts today, this signal engine is something else', timestamp: Date.now() - 45000, tier: 'Silver', tierColor: 'text-gray-300' },
->>>>>>> origin/main
   { id: 'm7', user: 'honkmaster', avatar: '🪿', content: 'Cletus called the $BONK breakout 8 minutes before it pumped, this AI is cracked', timestamp: Date.now() - 20000, tier: 'Bronze', tierColor: 'text-amber-600' },
 ];
 
@@ -48,19 +40,10 @@ const BOT_RESPONSES = [
   'just refreshed the scanner, 6 green signals rn',
   'dev wallet on that one is sketchy, checked rugcheck already',
   'volume/mcap ratio is insane on $BONK rn',
-<<<<<<< HEAD
-  'staking rewards hitting different this month fr',
-=======
->>>>>>> origin/main
   'DYOR but Cletus AI has been right 3 times today already',
   'anyone in $JTO? entry looking clean',
   'the rug database update saved me from a $2k loss earlier',
   'Diamond tier whale just entered chat 👀',
-<<<<<<< HEAD
-  'trial users missing out on the real signals ngl',
-  'ngmi without staking, just saying 💎',
-=======
->>>>>>> origin/main
 ];
 
 const BOT_USERS = [
@@ -239,11 +222,7 @@ export default function CommunityChat() {
           </button>
         </div>
         <div className="text-xs text-gray-600 mt-1.5 text-center">
-<<<<<<< HEAD
-          Goose-themed · Staking tier verified · Press Enter to send
-=======
           Goose-themed · Press Enter to send
->>>>>>> origin/main
         </div>
       </div>
     </div>

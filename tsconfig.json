@@ -36,11 +36,6 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-<<<<<<< HEAD
-    "node_modules",
-    "staking-contract"
-=======
     "node_modules"
->>>>>>> origin/main
   ]
 }
