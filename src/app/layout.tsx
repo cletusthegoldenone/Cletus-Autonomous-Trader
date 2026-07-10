@@ -6,7 +6,7 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Cletus | AI Autonomous Trader',
   description:
-    'Cletus is an AI-powered autonomous trading system for Solana tokens. Real-time signals, automated execution, and profit sharing.',
+    'Cletus is an AI-powered autonomous trading system for Solana tokens. Real-time signals, automated execution, and free full access for all users.',
   keywords: ['Solana', 'AI Trading', 'Autonomous Trader', 'DeFi', 'Crypto'],
   authors: [{ name: 'Cletus AI' }],
   openGraph: {

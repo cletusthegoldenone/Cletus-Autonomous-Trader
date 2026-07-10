@@ -13,10 +13,7 @@ const SUGGESTED_QUESTIONS = [
   'Explain your signal scoring system',
   'What is the best timeframe for trading meme coins?',
   'How do you manage risk on volatile tokens?',
-  'What makes a good staking decision?',
-  'Explain the 7 staking tiers',
   'What are your current active positions?',
-  'How does profit sharing work?',
 ];
 
 const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }> = {
@@ -60,29 +57,6 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
 - ⚪ WEAK (<60): Watchlist only`,
     citations: ['TRADING_PARAMETERS.env#signal-weights'],
   },
-  staking: {
-    content: `**Staking in Cletus** has two reward streams:
-
-**1. APY Rewards (5% annually in SOL)**
-- Calculated on your CLETUS stake value
-- Distributed monthly based on protocol fees
-- NOT profit-dependent — paid from fee pool
-
-**2. Profit Sharing**
-- Only activated if Cletus generates profits
-- Your share % depends on your tier (0%–35%)
-- Distributed at end of each calendar month
-- **Zero if Cletus has a losing month**
-
-**Important Disclaimers:**
-- Cletus is an AI. AI systems make mistakes.
-- Profit sharing is NOT guaranteed
-- 7-day unstaking cooldown
-- Early withdrawal may incur penalties
-
-The honest truth: staking CLETUS is a bet that an AI trading system will be profitable long-term. This is a high-risk proposition.`,
-    citations: ['STAKING_REWARDS_STRUCTURE.md', 'TOKEN_ECOSYSTEM.md'],
-  },
   risk: {
     content: `**Risk Management Framework:**
 
@@ -121,9 +95,6 @@ function findBestResponse(question: string): { content: string; citations?: stri
   if (q.includes('signal') || q.includes('score') || q.includes('indicator')) {
     return CLETUS_RESPONSES.signals;
   }
-  if (q.includes('stak') || q.includes('tier') || q.includes('reward') || q.includes('apy')) {
-    return CLETUS_RESPONSES.staking;
-  }
   if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) {
     return CLETUS_RESPONSES.risk;
   }
@@ -147,31 +118,6 @@ function findBestResponse(question: string): { content: string; citations?: stri
 ⚠️ **Meme coin reality:** 80% of them go to zero eventually. Position sizing and stop losses are non-negotiable. I never hold meme coins overnight without tight stops.`,
     };
   }
-  if (q.includes('profit shar') || q.includes('how does profit')) {
-    return {
-      content: `**Profit Sharing Mechanism:**
-
-Every month, here's what happens:
-
-1. **Calculate Net Profit** from all trades
-2. **Reserve Treasury** (20% of profits)
-3. **Pay APY** from fee pool (SOL rewards)
-4. **Distribute Remaining** to tier-eligible stakers
-
-**Your Share Calculation:**
-\`\`\`
-Your Share = (Your Stake / Total Eligible Stake) × Tier Multiplier × Monthly Profit Pool
-\`\`\`
-
-**Honest Warning:** 
-- If Cletus has a losing month → $0 profit share
-- If Cletus loses big → no distributions until recovered
-- This has happened to real AI trading systems before
-
-The 5% APY SOL rewards are separate and more reliable (paid from fees, not profits).`,
-      citations: ['STAKING_REWARDS_STRUCTURE.md'],
-    };
-  }
 
   // Default response
   return {
@@ -183,7 +129,6 @@ As Cletus, I can tell you that I'm continuously analyzing the Solana ecosystem t
 - Trading strategy explanations
 - Signal analysis and interpretation
 - Risk management concepts
-- Staking and tokenomics
 - DeFi education
 
 **What I cannot do:**
@@ -191,7 +136,7 @@ As Cletus, I can tell you that I'm continuously analyzing the Solana ecosystem t
 - Predict the future with certainty
 - Give personalized financial advice
 
-Try asking me about my signal scoring system, risk management approach, or how staking tiers work!
+Try asking me about my signal scoring system or risk management approach!
 
 *Remember: Cletus is an AI. Always DYOR and never invest more than you can afford to lose.*`,
   };
@@ -307,7 +252,6 @@ I'm an AI autonomous trading system operating on Solana. I analyze market signal
 **I can help you understand:**
 - My trading strategy and signal detection
 - Risk management and position sizing
-- Staking tiers and reward mechanics
 - DeFi concepts and Solana ecosystem
 - Current market conditions
 
@@ -467,7 +411,7 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Cletus about trading, signals, staking, DeFi..."
+            placeholder="Ask Cletus about trading, signals, DeFi..."
             rows={1}
             className="flex-1 bg-trading-card border border-trading-border rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-trading-green resize-none transition-all"
             style={{ maxHeight: '120px' }}
