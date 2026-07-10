@@ -8,11 +8,7 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-<<<<<<< HEAD
 import type { TradingConfig, SimulatedPosition, AggressionLevel, FeeDistribution, AggregatedFeeDistribution } from '@/types';
-=======
-import type { TradingConfig, SimulatedPosition, AggressionLevel } from '@/types';
->>>>>>> origin/main
 
 // ── Fee configuration ─────────────────────────────────────────────────────────
 
@@ -22,7 +18,6 @@ export const TRADE_FEE_PERCENT = 1.0;
 /** Wallet address that receives all trade fees */
 export const FEE_WALLET = '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';
 
-<<<<<<< HEAD
 // ── Fee Distribution Model ────────────────────────────────────────────────────
 
 /** Trading Fee Distribution (1% of each trade) */
@@ -76,8 +71,6 @@ export function calculateFeeDistribution(totalFee: number): FeeDistribution {
   };
 }
 
-=======
->>>>>>> origin/main
 // ── Aggression presets ────────────────────────────────────────────────────────
 
 export const AGGRESSION_PRESETS: Record<
@@ -167,11 +160,8 @@ export interface SimulationStats {
   allTimeRealizedPnl: number;
   /** Cumulative platform fees collected across all closed trades */
   totalFeesCollected: number;
-<<<<<<< HEAD
   /** Aggregated fee distribution across all wallets */
   feeDistribution: AggregatedFeeDistribution;
-=======
->>>>>>> origin/main
   winCount: number;
   lossCount: number;
   isRunning: boolean;
@@ -238,7 +228,6 @@ function makeInitialStats(config: TradingConfig): SimulationStats {
     dailyRealizedPnl: 0,
     allTimeRealizedPnl: 0,
     totalFeesCollected: 0,
-<<<<<<< HEAD
     feeDistribution: {
       totalFeesCollected: 0,
       totalDeveloper: 0,
@@ -246,8 +235,6 @@ function makeInitialStats(config: TradingConfig): SimulationStats {
       totalFutureUpgrades: 0,
       totalDigitalBank: 0,
     },
-=======
->>>>>>> origin/main
     winCount: 0,
     lossCount: 0,
     isRunning: false,
@@ -332,10 +319,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
       if (!pos) return prev;
 
       const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
-<<<<<<< HEAD
       const feeDistribution = calculateFeeDistribution(feeUsd);
-=======
->>>>>>> origin/main
       const pnl = pos.pnlUsd - feeUsd;
       const closedPos: SimulatedPosition = {
         ...pos,
@@ -344,10 +328,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         closingPrice: pos.currentPrice,
         closingPnlUsd: pnl,
         feeUsd,
-<<<<<<< HEAD
         feeDistribution,
-=======
->>>>>>> origin/main
       };
 
       const newDailyPnl = prev.dailyRealizedPnl + pnl;
@@ -361,7 +342,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         dailyRealizedPnl: newDailyPnl,
         allTimeRealizedPnl: newAllTimePnl,
         totalFeesCollected: prev.totalFeesCollected + feeUsd,
-<<<<<<< HEAD
         feeDistribution: {
           totalFeesCollected: prev.feeDistribution.totalFeesCollected + feeDistribution.totalFee,
           totalDeveloper: prev.feeDistribution.totalDeveloper + feeDistribution.developer,
@@ -369,8 +349,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           totalFutureUpgrades: prev.feeDistribution.totalFutureUpgrades + feeDistribution.futureUpgrades,
           totalDigitalBank: prev.feeDistribution.totalDigitalBank + feeDistribution.digitalBank,
         },
-=======
->>>>>>> origin/main
         winCount: pnl > 0 ? prev.winCount + 1 : prev.winCount,
         lossCount: pnl <= 0 ? prev.lossCount + 1 : prev.lossCount,
       };
@@ -395,7 +373,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         let newLosses = 0;
         let releasedCash = 0;
         let totalFeesDelta = 0;
-<<<<<<< HEAD
         let aggregatedFeeDist = {
           totalFee: 0,
           developer: 0,
@@ -403,8 +380,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           futureUpgrades: 0,
           digitalBank: 0,
         };
-=======
->>>>>>> origin/main
 
         for (const pos of prev.openPositions) {
           // Realistic random walk: ±0.3%–2.5% per tick, slight upward bias
@@ -441,10 +416,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
                 : (pos.entryPrice - closingPrice) / pos.entryPrice;
             const grossPnl = pos.positionSizeUsd * closingMult;
             const feeUsd = pos.positionSizeUsd * (TRADE_FEE_PERCENT / 100);
-<<<<<<< HEAD
             const feeDistribution = calculateFeeDistribution(feeUsd);
-=======
->>>>>>> origin/main
             const closingPnl = grossPnl - feeUsd;
 
             newlyClosed.push({
@@ -457,22 +429,16 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
               closingPrice,
               closingPnlUsd: closingPnl,
               feeUsd,
-<<<<<<< HEAD
               feeDistribution,
-=======
->>>>>>> origin/main
             });
             realizedPnlDelta += closingPnl;
             releasedCash += pos.positionSizeUsd + closingPnl;
             totalFeesDelta += feeUsd;
-<<<<<<< HEAD
             aggregatedFeeDist.totalFee += feeDistribution.totalFee;
             aggregatedFeeDist.developer += feeDistribution.developer;
             aggregatedFeeDist.stakingRewards += feeDistribution.stakingRewards;
             aggregatedFeeDist.futureUpgrades += feeDistribution.futureUpgrades;
             aggregatedFeeDist.digitalBank += feeDistribution.digitalBank;
-=======
->>>>>>> origin/main
             if (closingPnl > 0) newWins++; else newLosses++;
           } else {
             stillOpen.push(updatedPos);
@@ -506,7 +472,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
           dailyRealizedPnl: newDailyPnl,
           allTimeRealizedPnl: newAllTimePnl,
           totalFeesCollected: prev.totalFeesCollected + totalFeesDelta,
-<<<<<<< HEAD
           feeDistribution: {
             totalFeesCollected: prev.feeDistribution.totalFeesCollected + aggregatedFeeDist.totalFee,
             totalDeveloper: prev.feeDistribution.totalDeveloper + aggregatedFeeDist.developer,
@@ -514,8 +479,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
             totalFutureUpgrades: prev.feeDistribution.totalFutureUpgrades + aggregatedFeeDist.futureUpgrades,
             totalDigitalBank: prev.feeDistribution.totalDigitalBank + aggregatedFeeDist.digitalBank,
           },
-=======
->>>>>>> origin/main
           winCount: prev.winCount + newWins,
           lossCount: prev.lossCount + newLosses,
           isRunning,
