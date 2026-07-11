@@ -16,7 +16,7 @@ import type { TradingConfig, SimulatedPosition, AggressionLevel, FeeDistribution
 export const TRADE_FEE_PERCENT = 1.0;
 
 /** Wallet address that receives all trade fees */
-export const FEE_WALLET = '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7';
+export const FEE_WALLET = (process.env.NEXT_PUBLIC_FEE_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7') as string;
 
 // ── Fee Distribution Model ────────────────────────────────────────────────────
 
@@ -41,31 +41,31 @@ export const CREATOR_FEE_DISTRIBUTION = {
 } as const;
 
 /** Wallet addresses for fee distribution */
-export const FEE_DISTRIBUTION_WALLETS = {
+export const FEE_DISTRIBUTION_WALLETS = Object.freeze({
   /** Developer wallet (20% of trading fees) — live wallet */
-  DEVELOPER: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  DEVELOPER: process.env.NEXT_PUBLIC_DEVELOPER_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
   /**
    * Staking rewards wallet (25% of trading fees + 50% of creator fees)
    * TODO: Replace with the deployed staking program's treasury PDA once the
    *       $CLETUS token and staking contract are deployed on Solana mainnet.
    */
-  STAKING_REWARDS: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  STAKING_REWARDS: process.env.NEXT_PUBLIC_STAKING_REWARDS_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
   /**
    * Future upgrades wallet (30% of trading fees)
    * TODO: Replace with a dedicated upgrades multisig wallet before mainnet launch.
    */
-  FUTURE_UPGRADES: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  FUTURE_UPGRADES: process.env.NEXT_PUBLIC_FUTURE_UPGRADES_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
   /**
    * Digital bank wallet (25% of trading fees)
    * TODO: Replace with the digital bank fund wallet before mainnet launch.
    */
-  DIGITAL_BANK: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+  DIGITAL_BANK: process.env.NEXT_PUBLIC_DIGITAL_BANK_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
   /**
    * Liquidity pool wallet (50% of creator fees)
    * TODO: Replace with the Raydium LP wallet address after token launch.
    */
-  LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
-} as const;
+  LIQUIDITY: process.env.NEXT_PUBLIC_LIQUIDITY_WALLET || '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
+});
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
