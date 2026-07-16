@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { TierInfo } from '@/types';
-import { useSimulation } from '@/context/SimulationContext';
+import { useSimulation, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 const TIERS: TierInfo[] = [
   { name: 'Starter', minStake: 100_000, apy: 0.5, profitShare: 0, color: '#6b7280', icon: '🌱' },
@@ -224,7 +224,7 @@ export default function StakingDashboard() {
                     <span style={{ color: activeTier.color }}>{activeTier.name} Tier</span>
                   </>
                 ) : (
-                  <span className="text-gray-400">None (minimum 100,000 CLETUS)</span>
+                  <span className="text-gray-400">None (minimum {MIN_STARTER_TIER_STAKE.toLocaleString()} CLETUS)</span>
                 )}
               </div>
             </div>

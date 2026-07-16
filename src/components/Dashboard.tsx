@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import { useSimulation, TRIAL_EXPIRED_ALERT_MSG } from '@/context/SimulationContext';
+import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
 const UPWARD_BIAS_FACTOR = 0.48;
@@ -245,7 +245,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                   <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-green/20 text-trading-green border border-trading-green/30 animate-pulse">
                     FREE TRIAL ACTIVE
                   </span>
-                ) : stakedAmount >= 100000 ? (
+                ) : stakedAmount >= MIN_STARTER_TIER_STAKE ? (
                   <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-purple/20 text-trading-purple border border-trading-purple/30">
                     STAKED ACCESS ACTIVE
                   </span>
@@ -259,10 +259,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <p className="text-sm text-gray-400 mt-1.5 max-w-2xl">
                 {isTrialActive ? (
                   `You are in your 30-day free trial. All features, including autonomous live trading and premium on-chain signals, are fully unlocked. No Cletus token staking is required during your trial period.`
-                ) : stakedAmount >= 100000 ? (
+                ) : stakedAmount >= MIN_STARTER_TIER_STAKE ? (
                   `Your free trial has expired, but your live trading access remains active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
                 ) : (
-                  `Your 30-day free trial has expired. To resume live trading and on-chain swaps, you must stake a minimum of 100,000 $CLETUS (Starter Tier) in the Staking tab.`
+                  `Your 30-day free trial has expired. To resume live trading and on-chain swaps, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
                 )}
               </p>
 

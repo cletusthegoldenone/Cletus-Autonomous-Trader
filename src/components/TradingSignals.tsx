@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { TradingSignal } from '@/types';
-import { useSimulation, TRIAL_EXPIRED_ALERT_MSG } from '@/context/SimulationContext';
+import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 function StrengthBadge({ strength }: { strength: TradingSignal['strength'] }) {
   const config = {
@@ -335,7 +335,7 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
 
                 {!hasLiveAccess ? (
                   <div className="bg-trading-red/10 border border-trading-red/30 rounded-lg p-3 text-xs text-trading-red font-semibold">
-                    ❌ Live Trading Locked: Your free trial has expired. To unlock live execution and on-chain routing, you must stake a minimum of 100,000 $CLETUS (Starter Tier).
+                    ❌ Live Trading Locked: Your free trial has expired. To unlock live execution and on-chain routing, you must stake a minimum of {MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier).
                   </div>
                 ) : (
                   <div className="bg-trading-yellow/10 border border-trading-yellow/30 rounded-lg p-3 text-xs text-trading-yellow">

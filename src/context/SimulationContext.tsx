@@ -69,6 +69,7 @@ export const FEE_DISTRIBUTION_WALLETS = {
 } as const;
 
 export const TRIAL_EXPIRED_ALERT_MSG = 'Your free trial has expired! Please stake $CLETUS to resume live trading and trade execution.';
+export const MIN_STARTER_TIER_STAKE = 100000;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
@@ -313,7 +314,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
   });
 
   const [cletusBalance, setCletusBalance] = useState<number>(() => {
-    if (typeof window === 'undefined') return 1000000; // start with 1,000,000 mock Cletus
+    if (typeof window === 'undefined') return 1000000; // start with 1,000,000 mock $CLETUS tokens
     try {
       const saved = localStorage.getItem('cletus_balance');
       if (saved) return parseFloat(saved);
@@ -332,8 +333,8 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     );
   }, [trialStartDate]);
   const isTrialActive = trialDaysRemaining > 0;
-  // Starter tier minimum stake is 100,000 CLETUS
-  const hasLiveAccess = isTrialActive || stakedAmount >= 100000;
+  // Starter tier minimum stake is MIN_STARTER_TIER_STAKE CLETUS
+  const hasLiveAccess = isTrialActive || stakedAmount >= MIN_STARTER_TIER_STAKE;
 
   // Refs so the interval callback always reads current values without re-subscribing
   const configRef = useRef(config);
