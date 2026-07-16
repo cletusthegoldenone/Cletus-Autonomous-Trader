@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { TradingSignal } from '@/types';
-import { useSimulation } from '@/context/SimulationContext';
+import { useSimulation, TRIAL_EXPIRED_ALERT_MSG } from '@/context/SimulationContext';
 
 function StrengthBadge({ strength }: { strength: TradingSignal['strength'] }) {
   const config = {
@@ -211,7 +211,7 @@ function SignalCard({
           <button
             onClick={() => {
               if (!hasLiveAccess) {
-                alert('Your free trial has expired! Please stake $CLETUS to execute trades.');
+                alert(TRIAL_EXPIRED_ALERT_MSG);
                 return;
               }
               onExecute(signal);
@@ -245,7 +245,7 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
 
   const handleExecute = async () => {
     if (!hasLiveAccess) {
-      alert('Your free trial has expired! Please stake $CLETUS to execute trades.');
+      alert(TRIAL_EXPIRED_ALERT_MSG);
       return;
     }
     setExecuting(true);

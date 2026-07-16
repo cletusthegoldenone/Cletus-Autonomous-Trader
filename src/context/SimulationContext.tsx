@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useRef,
   useCallback,
+  useMemo,
 } from 'react';
 import type { TradingConfig, SimulatedPosition, AggressionLevel, FeeDistribution, AggregatedFeeDistribution } from '@/types';
 
@@ -66,6 +67,8 @@ export const FEE_DISTRIBUTION_WALLETS = {
    */
   LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
 } as const;
+
+export const TRIAL_EXPIRED_ALERT_MSG = 'Your free trial has expired! Please stake $CLETUS to resume live trading and trade execution.';
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
@@ -322,10 +325,12 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
   });
 
   // Derived values for Trial & Staking
-  const trialDaysRemaining = Math.max(
-    0,
-    parseFloat((30 - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
-  );
+  const trialDaysRemaining = useMemo(() => {
+    return Math.max(
+      0,
+      parseFloat((30 - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
+    );
+  }, [trialStartDate]);
   const isTrialActive = trialDaysRemaining > 0;
   // Starter tier minimum stake is 100,000 CLETUS
   const hasLiveAccess = isTrialActive || stakedAmount >= 100000;

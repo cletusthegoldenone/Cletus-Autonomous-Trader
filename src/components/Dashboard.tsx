@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import { useSimulation } from '@/context/SimulationContext';
+import { useSimulation, TRIAL_EXPIRED_ALERT_MSG } from '@/context/SimulationContext';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
 const UPWARD_BIAS_FACTOR = 0.48;
@@ -212,7 +212,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <button
                 onClick={() => {
                   if (!hasLiveAccess) {
-                    alert('Your free trial has expired! Please stake $CLETUS to resume live trading.');
+                    alert(TRIAL_EXPIRED_ALERT_MSG);
                     onNavigate('staking');
                     return;
                   }

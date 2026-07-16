@@ -224,7 +224,7 @@ export default function StakingDashboard() {
                     <span style={{ color: activeTier.color }}>{activeTier.name} Tier</span>
                   </>
                 ) : (
-                  <span className="text-gray-400">None (minimum 100k CLETUS)</span>
+                  <span className="text-gray-400">None (minimum 100,000 CLETUS)</span>
                 )}
               </div>
             </div>
