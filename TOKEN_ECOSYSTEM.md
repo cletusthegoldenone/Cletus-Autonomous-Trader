@@ -92,7 +92,13 @@ interface StakingInfo {
 }
 
 // Monthly reward calculation
-monthlyReward = (stakedTokens / 1_000_000_000) * 50_000 * (0.5 / 12);
+// Constants:
+// - stakedTokens: The amount of CLETUS tokens staked by the user.
+// - 1_000_000_000: Total token supply of CLETUS (used as the denominator for pool share).
+// - 120_000: Assumed annual SOL reward pool size (in SOL) at full staking capacity.
+// - 0.5: The APY scaling factor (0.5%).
+// - 12: Months in a year (converts the annual pool allocation to a monthly reward payout).
+monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
 // Example: 1,000,000 CLETUS = ~5.0 SOL per month
 ```
 

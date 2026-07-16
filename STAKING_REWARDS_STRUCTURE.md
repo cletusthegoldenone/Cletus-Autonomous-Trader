@@ -91,10 +91,10 @@ If Cletus loses money that month → no distribution, no profit
 
 #### Scenario 1: Good Month
 ```
-Cletus monthly trading profit: $75,000
-5M staker (Gold) receives: ~$10,000
-10M staker (Platinum) receives: ~$20,000
-25M staker (Diamond) receives: ~$50,000
+Cletus monthly trading profit: $200,000
+5M staker (Gold, 5% pool share) receives: ~$10,000
+10M staker (Platinum, 10% pool share) receives: ~$20,000
+25M staker (Diamond, 20% pool share) receives: ~$40,000
 
 (Note: Actual payouts depend on the total number of participants in each profit-sharing tier.)
 ```
@@ -154,7 +154,7 @@ Use for: Core access & basic testing
 Investment (at $0.10/token): ~$50,000
 Monthly SOL Reward: 2.5 SOL (~$25)
 Profit Share: 1%
-Expected Monthly Profit Share: ~$1,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$1,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $25
@@ -173,7 +173,7 @@ Worst Case Scenario (Bad months):
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
-- Your staked capital: Down to $48,000
+- Your staked capital: Down to $45,000 (10% loss)
 - Monthly: Negative
 
 ⚠️ NEVER stake more than you can afford to lose entirely.
@@ -187,7 +187,7 @@ Loss Scenario (Catastrophic):
 Investment (at $0.10/token): ~$100,000
 Monthly SOL Reward: 5.0 SOL (~$50)
 Profit Share: 2%
-Expected Monthly Profit Share: ~$2,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$2,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $50
@@ -206,7 +206,7 @@ Worst Case Scenario (Bad months):
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
-- Your staked capital: Down to $96,000
+- Your staked capital: Down to $90,000 (10% loss)
 - Monthly: Negative
 
 ⚠️ NEVER stake more than you can afford to lose entirely.
@@ -220,7 +220,7 @@ Loss Scenario (Catastrophic):
 Investment (at $0.10/token): ~$500,000
 Monthly SOL Reward: 25.0 SOL (~$250)
 Profit Share: 5%
-Expected Monthly Profit Share: ~$5,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$5,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $250
@@ -239,7 +239,7 @@ Worst Case Scenario (Bad months):
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
-- Your staked capital: Down to $480,000
+- Your staked capital: Down to $450,000 (10% loss)
 - Monthly: Negative
 
 ⚠️ NEVER stake more than you can afford to lose entirely.
@@ -253,7 +253,7 @@ Loss Scenario (Catastrophic):
 Investment (at $0.10/token): ~$1,000,000
 Monthly SOL Reward: 50.0 SOL (~$500)
 Profit Share: 10%
-Expected Monthly Profit Share: ~$10,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$10,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $500
@@ -272,7 +272,7 @@ Worst Case Scenario (Bad months):
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
-- Your staked capital: Down to $960,000
+- Your staked capital: Down to $900,000 (10% loss)
 - Monthly: Negative
 
 ⚠️ NEVER stake more than you can afford to lose entirely.
@@ -286,7 +286,7 @@ Loss Scenario (Catastrophic):
 Investment (at $0.10/token): ~$2,500,000
 Monthly SOL Reward: 125.0 SOL (~$1,250)
 Profit Share: 20%
-Expected Monthly Profit Share: ~$20,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$20,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $1,250
@@ -305,7 +305,7 @@ Worst Case Scenario (Bad months):
 
 Loss Scenario (Catastrophic):
 - Cletus suffers catastrophic failure
-- Your staked capital: Down to $2,400,000+
+- Your staked capital: Down to $2,250,000 (10% loss)
 - Monthly: Significant losses
 
 ⚠️ This is NOT a retirement account.
@@ -319,7 +319,7 @@ Loss Scenario (Catastrophic):
 Investment (at $0.10/token): ~$10,000,000
 Monthly SOL Reward: 500.0 SOL (~$5,000)
 Profit Share: 35%
-Expected Monthly Profit Share: ~$35,000* (*NOT guaranteed, highly variable)
+Expected Monthly Profit Share: ~$35,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
 - SOL rewards: $5,000
@@ -342,7 +342,7 @@ Worst Case (Bad months):
 
 Catastrophic Loss:
 - Smart contract exploit, AI failure, RPC disaster
-- Staked capital: Down to $9,000,000
+- Your staked capital: Down to $9,000,000 (10% loss)
 - You lose $1,000,000+
 
 ⚠️ Even large stakes are not protected from loss.
