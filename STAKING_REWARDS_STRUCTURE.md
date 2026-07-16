@@ -138,10 +138,10 @@ All stakers suffer proportional loss
 
 ## Tier Details & Expected Returns (Not Guaranteed)
 
-*The Expected Monthly Profit Share calculations below are illustrative estimates based on an assumed total monthly platform profit pool of $100,000 for Realistic/Expected Cases, and $200,000 for Best Case Scenarios, distributed proportionally according to each tier's profit-sharing percentage.*
+*The Expected Monthly Profit Share calculations below are illustrative estimates based on an assumed total gross monthly platform profit pool of $100,000 for Realistic/Expected Cases, and $200,000 for Best Case Scenarios, distributed proportionally according to each tier's profit-sharing percentage.*
 
 **Note on Pool Distribution & Math:**
-The profit-sharing percentages assigned to each tier (e.g., Bronze 1%, Silver 2%, Gold 5%, Platinum 10%, Diamond 20%, Founder 35%) represent the **total collective pool allocation** for that entire tier, not for any individual stakers. The total pool allocated across all tiers is 73% (with the remaining 27% retained for treasury, security insurance, and system expansion). 
+The profit-sharing percentages assigned to each tier (e.g., Bronze 1%, Silver 2%, Gold 5%, Platinum 10%, Diamond 20%, Founder 35%) represent the **total collective pool allocation** for that entire tier, not for any individual stakers. These percentages are calculated as a share of the **total gross monthly platform profit** (e.g., in a $100,000 gross profit month, Bronze stakers collectively share $1,000, Silver share $2,000, and so on). The total pool allocated across all tiers is 73% of gross profit, with the remaining 27% retained for treasury, security insurance, and system expansion. 
 For any given tier, the allocated portion of the profit pool is divided proportionally among all active stakers in that specific tier based on their individual staked amount relative to the total staked amount in that tier. Therefore, the "Expected Monthly Profit Share" figures shown in the individual tier sections below are illustrative examples assuming a single qualifier or a proportional share in a highly sparsely populated tier. If multiple stakers occupy the same tier, their individual payouts will be reduced proportionally (e.g., if there are 2 equal stakers in the Gold tier, each receives 2.5% of the total profit pool instead of 5%).
 
 ### **Tier 1: Starter (100,000 CLETUS)**
