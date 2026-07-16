@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
+import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE, TRIAL_DURATION_DAYS } from '@/context/SimulationContext';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
 const UPWARD_BIAS_FACTOR = 0.48;
@@ -258,11 +258,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               
               <p className="text-sm text-gray-400 mt-1.5 max-w-2xl">
                 {isTrialActive ? (
-                  `You are in your 30-day free trial. All features, including autonomous live trading and premium on-chain signals, are fully unlocked. No Cletus token staking is required during your trial period.`
+                  `You are in your ${TRIAL_DURATION_DAYS}-day free trial. All features, including autonomous live trading and premium on-chain signals, are fully unlocked. No Cletus token staking is required during your trial period.`
                 ) : stakedAmount >= MIN_STARTER_TIER_STAKE ? (
                   `Your free trial has expired, but your live trading access remains active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
                 ) : (
-                  `Your 30-day free trial has expired. To resume live trading and on-chain swaps, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
+                  `Your ${TRIAL_DURATION_DAYS}-day free trial has expired. To resume live trading and on-chain swaps, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
                 )}
               </p>
 
@@ -277,7 +277,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                     <div className="h-2 bg-trading-surface rounded-full overflow-hidden border border-trading-border">
                       <div 
                         className="h-full bg-trading-green rounded-full transition-all duration-500" 
-                        style={{ width: `${(trialDaysRemaining / 30) * 100}%` }}
+                        style={{ width: `${(trialDaysRemaining / TRIAL_DURATION_DAYS) * 100}%` }}
                       />
                     </div>
                   </div>
@@ -308,11 +308,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               </div>
               <div className="grid grid-cols-3 gap-1">
                 <button
-                  onClick={() => resetTrial(30)}
+                  onClick={() => resetTrial(TRIAL_DURATION_DAYS)}
                   className="px-1 py-1 rounded bg-trading-surface border border-trading-border hover:border-trading-green/40 text-[9px] font-semibold text-gray-300"
-                  title="Reset trial to 30 days"
+                  title={`Reset trial to ${TRIAL_DURATION_DAYS} days`}
                 >
-                  30d Trial
+                  {TRIAL_DURATION_DAYS}d Trial
                 </button>
                 <button
                   onClick={() => resetTrial(5)}

@@ -14,6 +14,9 @@ const TIERS: TierInfo[] = [
   { name: 'Founder', minStake: 100_000_000, apy: 0.5, profitShare: 35, color: '#c084fc', icon: '👑' },
 ];
 
+const INACTIVE_TIER_OPACITY_CLASS = 'opacity-60';
+const NEXT_TIER_OPACITY_CLASS = 'opacity-80';
+
 
 function TierCard({
   tier,
@@ -30,8 +33,8 @@ function TierCard({
         isActive
           ? 'border-2 glow-green'
           : isNext
-          ? 'border-dashed opacity-80'
-          : 'opacity-60'
+          ? `border-dashed ${NEXT_TIER_OPACITY_CLASS}`
+          : INACTIVE_TIER_OPACITY_CLASS
       }`}
       style={isActive ? { borderColor: tier.color, boxShadow: `0 0 20px ${tier.color}20` } : {}}
     >

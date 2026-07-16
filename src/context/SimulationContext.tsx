@@ -70,6 +70,7 @@ export const FEE_DISTRIBUTION_WALLETS = {
 
 export const TRIAL_EXPIRED_ALERT_MSG = 'Your free trial has expired! Please stake $CLETUS to resume live trading and trade execution.';
 export const MIN_STARTER_TIER_STAKE = 100000;
+export const TRIAL_DURATION_DAYS = 30;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
@@ -329,7 +330,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
   const trialDaysRemaining = useMemo(() => {
     return Math.max(
       0,
-      parseFloat((30 - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
+      parseFloat((TRIAL_DURATION_DAYS - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
     );
   }, [trialStartDate]);
   const isTrialActive = trialDaysRemaining > 0;
