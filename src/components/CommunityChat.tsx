@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSimulation } from '@/context/SimulationContext';
 
 interface CommunityMessage {
   id: string;
@@ -14,14 +15,22 @@ interface CommunityMessage {
 
 const GOOSE_AVATARS = ['🪿', '🦆', '🐧', '🦅', '🦉', '🦜', '🐦', '🦚', '🦩', '🦢'];
 
+const FOUNDER_STAKE_THRESHOLD = 100_000_000;
+const DIAMOND_STAKE_THRESHOLD = 25_000_000;
+const PLATINUM_STAKE_THRESHOLD = 10_000_000;
+const GOLD_STAKE_THRESHOLD = 5_000_000;
+const SILVER_STAKE_THRESHOLD = 1_000_000;
+const BRONZE_STAKE_THRESHOLD = 500_000;
+const STARTER_STAKE_THRESHOLD = 100_000;
+
 const TIER_BADGES: Record<string, { label: string; color: string }> = {
+  Founder: { label: '👑 Founder', color: 'text-purple-400' },
   Diamond: { label: '💎 Diamond', color: 'text-blue-400' },
   Platinum: { label: '💠 Platinum', color: 'text-cyan-400' },
   Gold: { label: '🥇 Gold', color: 'text-yellow-400' },
   Silver: { label: '🥈 Silver', color: 'text-gray-300' },
   Bronze: { label: '🥉 Bronze', color: 'text-amber-600' },
   Starter: { label: '🌱 Starter', color: 'text-green-500' },
-  Trial: { label: '⏱ Trial', color: 'text-white/50' },
 };
 
 const SEED_MESSAGES: CommunityMessage[] = [
@@ -101,6 +110,7 @@ function MessageRow({ msg, isSelf }: MessageRowProps) {
 }
 
 export default function CommunityChat() {
+  const { stakedAmount } = useSimulation();
   const [messages, setMessages] = useState<CommunityMessage[]>(SEED_MESSAGES);
   const [input, setInput] = useState('');
   const [onlineCount, setOnlineCount] = useState(142);
@@ -137,14 +147,35 @@ export default function CommunityChat() {
   const sendMessage = () => {
     const text = input.trim();
     if (!text) return;
+
+    let userTier: string | undefined = undefined;
+
+    if (stakedAmount >= FOUNDER_STAKE_THRESHOLD) {
+      userTier = 'Founder';
+    } else if (stakedAmount >= DIAMOND_STAKE_THRESHOLD) {
+      userTier = 'Diamond';
+    } else if (stakedAmount >= PLATINUM_STAKE_THRESHOLD) {
+      userTier = 'Platinum';
+    } else if (stakedAmount >= GOLD_STAKE_THRESHOLD) {
+      userTier = 'Gold';
+    } else if (stakedAmount >= SILVER_STAKE_THRESHOLD) {
+      userTier = 'Silver';
+    } else if (stakedAmount >= BRONZE_STAKE_THRESHOLD) {
+      userTier = 'Bronze';
+    } else if (stakedAmount >= STARTER_STAKE_THRESHOLD) {
+      userTier = 'Starter';
+    }
+
+    const userTierColor = userTier ? TIER_BADGES[userTier]?.color : undefined;
+
     const newMsg: CommunityMessage = {
       id: Date.now().toString(),
       user: 'You',
       avatar: GOOSE_AVATARS[Math.floor(Math.random() * GOOSE_AVATARS.length)],
       content: text,
       timestamp: Date.now(),
-      tier: 'Trial',
-      tierColor: 'text-white/50',
+      tier: userTier,
+      tierColor: userTierColor,
     };
     setMessages((prev) => [...prev, newMsg]);
     setInput('');

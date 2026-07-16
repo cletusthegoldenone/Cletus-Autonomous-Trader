@@ -12,10 +12,11 @@ import DevWalletInspector from '@/components/DevWalletInspector';
 import TradingConfig from '@/components/TradingConfig';
 import SimulationDashboard from '@/components/SimulationDashboard';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
+import StakingDashboard from '@/components/StakingDashboard';
 
-type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'community' | 'inspect' | 'config' | 'simulate';
+type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'community' | 'inspect' | 'config' | 'simulate' | 'staking';
 
-const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'community', 'inspect', 'config', 'simulate'];
+const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'community', 'inspect', 'config', 'simulate', 'staking'];
 
 const AI_MODEL_LABEL = process.env.NEXT_PUBLIC_AI_MODEL_LABEL ?? 'Gemini AI';
 
@@ -24,6 +25,7 @@ const TABS: { id: Tab; label: string; icon: string; badge?: string }[] = [
   { id: 'chart', label: 'Chart', icon: '📈' },
   { id: 'signals', label: 'Signals', icon: '⚡', badge: 'LIVE' },
   { id: 'ai', label: 'Cletus AI', icon: '🤖' },
+  { id: 'staking', label: 'Staking', icon: '🥩', badge: 'STAKE' },
   { id: 'simulate', label: 'Simulate', icon: '🎮', badge: 'BETA' },
   { id: 'config', label: 'Config', icon: '⚙️' },
   { id: 'community', label: 'Community', icon: '🪿' },
@@ -128,6 +130,7 @@ function TraderInner() {
         {activeTab === 'chart' && <CandlestickChart />}
         {activeTab === 'signals' && <TradingSignals />}
         {activeTab === 'ai' && <AIBrainChat />}
+        {activeTab === 'staking' && <StakingDashboard />}
         {activeTab === 'simulate' && <SimulationDashboard />}
         {activeTab === 'config' && <TradingConfig />}
         {activeTab === 'community' && <CommunityChat />}
