@@ -92,11 +92,17 @@ If Cletus loses money that month → no distribution, no profit
 #### Scenario 1: Good Month
 ```
 Cletus monthly trading profit: $200,000
-5M staker (Gold, 5% pool share) receives: ~$10,000
-10M staker (Platinum, 10% pool share) receives: ~$20,000
-25M staker (Diamond, 20% pool share) receives: ~$40,000
 
-(Note: Actual payouts depend on the total number of participants in each profit-sharing tier.)
+Total distribution of the monthly profit pool (73% allocated to stakers, 27% retained for treasury & insurance):
+- Bronze Tier (1% total share): $2,000 collectively split among Bronze stakers
+- Silver Tier (2% total share): $4,000 collectively split among Silver stakers
+- Gold Tier (5% total share): $10,000 collectively split among Gold stakers
+- Platinum Tier (10% total share): $20,000 collectively split among Platinum stakers
+- Diamond Tier (20% total share): $40,000 collectively split among Diamond stakers
+- Founder Tier (35% total share): $70,000 collectively split among Founder stakers
+- Retained Platform Treasury (27% share): $54,000
+
+(Note: Individual payouts within each tier depend on the total number of participants in that tier. If there is only one staker in a tier, they receive the full tier-wide allocation. If there are multiple stakers, the allocation is divided proportionally based on their relative stake.)
 ```
 
 #### Scenario 2: Terrible Month (AI Failure)
@@ -133,6 +139,10 @@ All stakers suffer proportional loss
 ## Tier Details & Expected Returns (Not Guaranteed)
 
 *The Expected Monthly Profit Share calculations below are illustrative estimates based on an assumed total monthly platform profit pool of $100,000 for Realistic/Expected Cases, and $200,000 for Best Case Scenarios, distributed proportionally according to each tier's profit-sharing percentage.*
+
+**Note on Pool Distribution & Math:**
+The profit-sharing percentages assigned to each tier (e.g., Bronze 1%, Silver 2%, Gold 5%, Platinum 10%, Diamond 20%, Founder 35%) represent the **total collective pool allocation** for that entire tier, not for any individual stakers. The total pool allocated across all tiers is 73% (with the remaining 27% retained for treasury, security insurance, and system expansion). 
+For any given tier, the allocated portion of the profit pool is divided proportionally among all active stakers in that specific tier based on their individual staked amount relative to the total staked amount in that tier. Therefore, the "Expected Monthly Profit Share" figures shown in the individual tier sections below are illustrative examples assuming a single qualifier or a proportional share in a highly sparsely populated tier. If multiple stakers occupy the same tier, their individual payouts will be reduced proportionally (e.g., if there are 2 equal stakers in the Gold tier, each receives 2.5% of the total profit pool instead of 5%).
 
 ### **Tier 1: Starter (100,000 CLETUS)**
 
