@@ -130,7 +130,7 @@ function fallbackSignals() {
         id: Math.random().toString(36).slice(2),
         tokenName: token.name,
         tokenAddress: token.address,
-        marketCap: 10_000 + Math.random() * 490_000,
+        marketCap: 25_000 + Math.random() * (1_000_000_000 - 25_000),
         volume24h: 5_000 + Math.random() * 300_000,
         compositeScore: score,
         priceChange24h: -5 + Math.random() * 25,

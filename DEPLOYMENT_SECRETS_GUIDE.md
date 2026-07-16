@@ -76,8 +76,8 @@ DATABASE_LOG_QUERIES=false
 # ============================================================================
 # TRADING PARAMETERS
 # ============================================================================
-MIN_MARKET_CAP=10000
-MAX_MARKET_CAP=500000
+MIN_MARKET_CAP=25000
+MAX_MARKET_CAP=1000000000
 MIN_VOLUME_USD=5000
 SLIPPAGE_TOLERANCE=0.05
 MAX_POSITION_SIZE_USD=5000
@@ -270,8 +270,8 @@ These can be in `vercel.json` or GitHub:
 {
   "env": {
     "SOLANA_NETWORK": "mainnet-beta",
-    "MIN_MARKET_CAP": "10000",
-    "MAX_MARKET_CAP": "500000",
+    "MIN_MARKET_CAP": "25000",
+    "MAX_MARKET_CAP": "1000000000",
     "LOG_LEVEL": "info",
     "NODE_ENV": "production"
   }
