@@ -1,0 +1,43 @@
+name: Cleanup Unused Branches
+
+on:
+  workflow_dispatch:
+    inputs:
+      delete:
+        description: 'Actually delete the branches (uncheck for dry-run)'
+        type: boolean
+        required: true
+        default: false
+      all:
+        description: 'Remove ALL branches except main (uncheck to only remove merged branches)'
+        type: boolean
+        required: true
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Run Branch Cleanup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history and branches
+
+      - name: Make cleanup script executable
+        run: chmod +x scripts/cleanup-branches.sh
+
+      - name: Run Cleanup Script
+        run: |
+          if [ "${{ inputs.all }}" = "true" ] && [ "${{ inputs.delete }}" = "true" ]; then
+            ./scripts/cleanup-branches.sh --all --delete
+          elif [ "${{ inputs.all }}" = "true" ]; then
+            ./scripts/cleanup-branches.sh --all
+          elif [ "${{ inputs.delete }}" = "true" ]; then
+            ./scripts/cleanup-branches.sh --delete
+          else
+            ./scripts/cleanup-branches.sh
+          fi
