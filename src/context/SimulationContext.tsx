@@ -198,6 +198,18 @@ interface SimulationContextValue {
   pauseSimulation: () => void;
   resetSimulation: () => void;
   closePosition: (id: string) => void;
+  
+  // ── Free Trial & Staking State ──────────────────────────────────────────────
+  trialStartDate: number;
+  stakedAmount: number;
+  cletusBalance: number;
+  trialDaysRemaining: number;
+  isTrialActive: boolean;
+  hasLiveAccess: boolean;
+  resetTrial: (daysRemaining?: number) => void;
+  stakeTokens: (amount: number) => void;
+  unstakeTokens: (amount: number) => void;
+  faucetCletus: () => void;
 }
 
 const SimulationContext = createContext<SimulationContextValue | null>(null);
@@ -273,6 +285,51 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
 
   const [stats, setStats] = useState<SimulationStats>(() => makeInitialStats(DEFAULT_CONFIG));
 
+  // ── Free Trial & Staking State Initialization ──────────────────────────────
+  const [trialStartDate, setTrialStartDate] = useState<number>(() => {
+    if (typeof window === 'undefined') return Date.now();
+    try {
+      const saved = localStorage.getItem('cletus_trial_start_date');
+      if (saved) return parseInt(saved, 10);
+      const now = Date.now();
+      localStorage.setItem('cletus_trial_start_date', now.toString());
+      return now;
+    } catch {
+      return Date.now();
+    }
+  });
+
+  const [stakedAmount, setStakedAmount] = useState<number>(() => {
+    if (typeof window === 'undefined') return 0;
+    try {
+      const saved = localStorage.getItem('cletus_staked_amount');
+      return saved ? parseFloat(saved) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const [cletusBalance, setCletusBalance] = useState<number>(() => {
+    if (typeof window === 'undefined') return 1000000; // start with 1,000,000 mock Cletus
+    try {
+      const saved = localStorage.getItem('cletus_balance');
+      if (saved) return parseFloat(saved);
+      localStorage.setItem('cletus_balance', '1000000');
+      return 1000000;
+    } catch {
+      return 1000000;
+    }
+  });
+
+  // Derived values for Trial & Staking
+  const trialDaysRemaining = Math.max(
+    0,
+    parseFloat((30 - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
+  );
+  const isTrialActive = trialDaysRemaining > 0;
+  // Starter tier minimum stake is 100,000 CLETUS
+  const hasLiveAccess = isTrialActive || stakedAmount >= 100000;
+
   // Refs so the interval callback always reads current values without re-subscribing
   const configRef = useRef(config);
   const statsRef = useRef(stats);
@@ -286,6 +343,61 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     stats.openPositions.reduce((sum, p) => sum + p.positionSizeUsd + p.pnlUsd, 0);
 
   // ── Public actions ──────────────────────────────────────────────────────────
+
+  const resetTrial = useCallback((daysRemaining?: number) => {
+    let newStartDate = Date.now();
+    if (daysRemaining !== undefined) {
+      newStartDate = Date.now() - (30 - daysRemaining) * 24 * 60 * 60 * 1000;
+    }
+    setTrialStartDate(newStartDate);
+    try {
+      localStorage.setItem('cletus_trial_start_date', newStartDate.toString());
+    } catch { /* ignore */ }
+  }, []);
+
+  const stakeTokens = useCallback((amount: number) => {
+    if (amount <= 0) return;
+    setCletusBalance((prevBal) => {
+      const actualAmount = Math.min(amount, prevBal);
+      const nextBal = prevBal - actualAmount;
+      setStakedAmount((prevStaked) => {
+        const nextStaked = prevStaked + actualAmount;
+        try {
+          localStorage.setItem('cletus_staked_amount', nextStaked.toString());
+          localStorage.setItem('cletus_balance', nextBal.toString());
+        } catch { /* ignore */ }
+        return nextStaked;
+      });
+      return nextBal;
+    });
+  }, []);
+
+  const unstakeTokens = useCallback((amount: number) => {
+    if (amount <= 0) return;
+    setStakedAmount((prevStaked) => {
+      const actualAmount = Math.min(amount, prevStaked);
+      const nextStaked = prevStaked - actualAmount;
+      setCletusBalance((prevBal) => {
+        const nextBal = prevBal + actualAmount;
+        try {
+          localStorage.setItem('cletus_staked_amount', nextStaked.toString());
+          localStorage.setItem('cletus_balance', nextBal.toString());
+        } catch { /* ignore */ }
+        return nextBal;
+      });
+      return nextStaked;
+    });
+  }, []);
+
+  const faucetCletus = useCallback(() => {
+    setCletusBalance((prevBal) => {
+      const nextBal = prevBal + 1000000;
+      try {
+        localStorage.setItem('cletus_balance', nextBal.toString());
+      } catch { /* ignore */ }
+      return nextBal;
+    });
+  }, []);
 
   const updateConfig = useCallback((updates: Partial<TradingConfig>) => {
     setConfig((prev) => {
@@ -588,6 +700,16 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         pauseSimulation,
         resetSimulation,
         closePosition,
+        trialStartDate,
+        stakedAmount,
+        cletusBalance,
+        trialDaysRemaining,
+        isTrialActive,
+        hasLiveAccess,
+        resetTrial,
+        stakeTokens,
+        unstakeTokens,
+        faucetCletus,
       }}
     >
       {children}

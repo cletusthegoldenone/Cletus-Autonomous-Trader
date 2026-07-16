@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { TradingSignal } from '@/types';
+import { useSimulation } from '@/context/SimulationContext';
 
 function StrengthBadge({ strength }: { strength: TradingSignal['strength'] }) {
   const config = {
@@ -55,6 +56,7 @@ function SignalCard({
   onToggle: () => void;
   onExecute: (signal: TradingSignal) => void;
 }) {
+  const { hasLiveAccess } = useSimulation();
   const formatNum = (n: number) => {
     if (n >= 1e6) return `$${(n / 1e6).toFixed(1)}M`;
     if (n >= 1e3) return `$${(n / 1e3).toFixed(1)}K`;
@@ -207,10 +209,20 @@ function SignalCard({
 
           {/* Execute Button */}
           <button
-            onClick={() => onExecute(signal)}
-            className="w-full py-2.5 rounded-lg font-bold text-sm transition-all duration-200 active:scale-[0.98] bg-trading-green text-black hover:bg-trading-green/90"
+            onClick={() => {
+              if (!hasLiveAccess) {
+                alert('Your free trial has expired! Please stake $CLETUS to execute trades.');
+                return;
+              }
+              onExecute(signal);
+            }}
+            className={`w-full py-2.5 rounded-lg font-bold text-sm transition-all duration-200 active:scale-[0.98] ${
+              hasLiveAccess
+                ? 'bg-trading-green text-black hover:bg-trading-green/90'
+                : 'bg-trading-surface border border-trading-border text-gray-500 cursor-not-allowed'
+            }`}
           >
-            ⚡ Execute {signal.direction} Trade
+            {hasLiveAccess ? `⚡ Execute ${signal.direction} Trade` : `🔒 Live Trading Locked (Expired)`}
           </button>
         </div>
       )}
@@ -224,6 +236,7 @@ interface ExecutionModalProps {
 }
 
 function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
+  const { hasLiveAccess } = useSimulation();
   const [amount, setAmount] = useState('1.5');
   const [executing, setExecuting] = useState(false);
   const [executed, setExecuted] = useState(false);
@@ -231,6 +244,10 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
   if (!signal) return null;
 
   const handleExecute = async () => {
+    if (!hasLiveAccess) {
+      alert('Your free trial has expired! Please stake $CLETUS to execute trades.');
+      return;
+    }
     setExecuting(true);
     await new Promise((r) => setTimeout(r, 2000));
     setExecuting(false);
@@ -316,18 +333,28 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
                   />
                 </div>
 
-                <div className="bg-trading-yellow/10 border border-trading-yellow/30 rounded-lg p-3 text-xs text-trading-yellow">
-                  ⚠️ This will execute a live trade. Ensure you understand the risks. Max
-                  loss: ${(parseFloat(amount) * signal.currentPrice * 0.1).toFixed(2)} (10%
-                  stop)
-                </div>
+                {!hasLiveAccess ? (
+                  <div className="bg-trading-red/10 border border-trading-red/30 rounded-lg p-3 text-xs text-trading-red font-semibold">
+                    ❌ Live Trading Locked: Your free trial has expired. To unlock live execution and on-chain routing, you must stake a minimum of 100,000 $CLETUS (Starter Tier).
+                  </div>
+                ) : (
+                  <div className="bg-trading-yellow/10 border border-trading-yellow/30 rounded-lg p-3 text-xs text-trading-yellow">
+                    ⚠️ This will execute a live trade. Ensure you understand the risks. Max
+                    loss: ${(parseFloat(amount) * signal.currentPrice * 0.1).toFixed(2)} (10%
+                    stop)
+                  </div>
+                )}
 
                 <button
                   onClick={handleExecute}
-                  disabled={executing}
-                  className="w-full py-3 rounded-lg font-bold text-sm transition-all bg-trading-green text-black hover:bg-trading-green/90 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={executing || !hasLiveAccess}
+                  className={`w-full py-3 rounded-lg font-bold text-sm transition-all ${
+                    hasLiveAccess
+                      ? 'bg-trading-green text-black hover:bg-trading-green/90'
+                      : 'bg-trading-surface border border-trading-border text-gray-500 cursor-not-allowed'
+                  } disabled:opacity-50`}
                 >
-                  {executing ? '⏳ Executing...' : `⚡ Confirm ${signal.direction} Trade`}
+                  {executing ? '⏳ Executing...' : !hasLiveAccess ? '🔒 Live Trading Locked' : `⚡ Confirm ${signal.direction} Trade`}
                 </button>
               </div>
             </>
