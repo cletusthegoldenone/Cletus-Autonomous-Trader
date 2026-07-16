@@ -56,8 +56,8 @@ function buildBreakdown(pair: DexPair) {
 
 export async function GET() {
   const minScore = parseFloat(process.env.MIN_COMPOSITE_SCORE ?? '0.65');
-  const minMcap  = parseInt(process.env.MIN_MARKET_CAP ?? '10000', 10);
-  const maxMcap  = parseInt(process.env.MAX_MARKET_CAP ?? '500000', 10);
+  const minMcap  = parseInt(process.env.MIN_MARKET_CAP ?? '25000', 10);
+  const maxMcap  = parseInt(process.env.MAX_MARKET_CAP ?? '1000000000', 10);
 
   try {
     // Step 1: Top boosted Solana tokens
