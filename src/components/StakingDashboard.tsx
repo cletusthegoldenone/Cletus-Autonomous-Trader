@@ -73,8 +73,6 @@ export default function StakingDashboard() {
     stakeTokens,
     unstakeTokens,
     faucetCletus,
-    isTrialActive,
-    trialDaysRemaining,
   } = useSimulation();
 
   const [stakeInput, setStakeInput] = useState('');

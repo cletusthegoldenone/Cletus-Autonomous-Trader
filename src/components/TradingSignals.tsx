@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import type { TradingSignal } from '@/types';
-import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
+import { useSimulation, STAKING_REQUIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 function StrengthBadge({ strength }: { strength: TradingSignal['strength'] }) {
   const config = {
@@ -211,7 +211,7 @@ function SignalCard({
           <button
             onClick={() => {
               if (!hasLiveAccess) {
-                alert(TRIAL_EXPIRED_ALERT_MSG);
+                alert(STAKING_REQUIRED_ALERT_MSG);
                 return;
               }
               onExecute(signal);
@@ -222,7 +222,7 @@ function SignalCard({
                 : 'bg-trading-surface border border-trading-border text-gray-500 cursor-not-allowed'
             }`}
           >
-            {hasLiveAccess ? `⚡ Execute ${signal.direction} Trade` : `🔒 Live Trading Locked (Expired)`}
+            {hasLiveAccess ? `⚡ Execute ${signal.direction} Trade` : `🔒 Live Trading Locked`}
           </button>
         </div>
       )}
@@ -245,7 +245,7 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
 
   const handleExecute = async () => {
     if (!hasLiveAccess) {
-      alert(TRIAL_EXPIRED_ALERT_MSG);
+      alert(STAKING_REQUIRED_ALERT_MSG);
       return;
     }
     setExecuting(true);
@@ -335,7 +335,7 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
 
                 {!hasLiveAccess ? (
                   <div className="bg-trading-red/10 border border-trading-red/30 rounded-lg p-3 text-xs text-trading-red font-semibold">
-                    ❌ Live Trading Locked: Your free trial has expired. To unlock live execution and on-chain routing, you must stake a minimum of {MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier).
+                    ❌ Live Trading Locked: To unlock live execution and on-chain routing, you must stake a minimum of {MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.
                   </div>
                 ) : (
                   <div className="bg-trading-yellow/10 border border-trading-yellow/30 rounded-lg p-3 text-xs text-trading-yellow">

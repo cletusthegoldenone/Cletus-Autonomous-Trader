@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import { useSimulation, TRIAL_EXPIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE, TRIAL_DURATION_DAYS } from '@/context/SimulationContext';
+import { useSimulation, STAKING_REQUIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
 const UPWARD_BIAS_FACTOR = 0.48;
@@ -86,12 +86,8 @@ interface DashboardProps {
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
   const {
-    trialStartDate,
     stakedAmount,
-    trialDaysRemaining,
-    isTrialActive,
     hasLiveAccess,
-    resetTrial,
   } = useSimulation();
 
   const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
@@ -212,7 +208,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <button
                 onClick={() => {
                   if (!hasLiveAccess) {
-                    alert(TRIAL_EXPIRED_ALERT_MSG);
+                    alert(STAKING_REQUIRED_ALERT_MSG);
                     onNavigate('staking');
                     return;
                   }
@@ -231,7 +227,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         </div>
       </div>
 
-      {/* Access & Free Trial Management Panel */}
+      {/* Live Trading Access & Staking Status Panel */}
       <div className="trading-card p-5 relative overflow-hidden border border-trading-border/60 bg-trading-surface/40">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
@@ -241,56 +237,35 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             <div>
               <div className="flex items-center gap-2.5">
                 <span className="font-bold text-base text-white">Live Trading Access Status</span>
-                {isTrialActive ? (
-                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-green/20 text-trading-green border border-trading-green/30 animate-pulse">
-                    FREE TRIAL ACTIVE
-                  </span>
-                ) : stakedAmount >= MIN_STARTER_TIER_STAKE ? (
+                {hasLiveAccess ? (
                   <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-purple/20 text-trading-purple border border-trading-purple/30">
                     STAKED ACCESS ACTIVE
                   </span>
                 ) : (
                   <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-red/20 text-trading-red border border-trading-red/30">
-                    TRIAL EXPIRED (LOCKED)
+                    LOCKED - STAKING REQUIRED
                   </span>
                 )}
               </div>
               
               <p className="text-sm text-gray-400 mt-1.5 max-w-2xl">
-                {isTrialActive ? (
-                  `You are in your ${TRIAL_DURATION_DAYS}-day free trial. All features, including autonomous live trading and premium on-chain signals, are fully unlocked. No Cletus token staking is required during your trial period.`
-                ) : stakedAmount >= MIN_STARTER_TIER_STAKE ? (
-                  `Your free trial has expired, but your live trading access remains active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
+                {hasLiveAccess ? (
+                  `Your live trading access is active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
                 ) : (
-                  `Your ${TRIAL_DURATION_DAYS}-day free trial has expired. To resume live trading and on-chain swaps, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
+                  `To unlock autonomous live trading and premium on-chain signals, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
                 )}
               </p>
 
-              {/* Progress bar / info */}
+              {/* Staked Info */}
               <div className="mt-3 flex items-center gap-4 text-xs font-mono">
-                {isTrialActive ? (
-                  <div className="w-full max-w-xs space-y-1">
-                    <div className="flex justify-between text-gray-500">
-                      <span>Trial Time Remaining</span>
-                      <span className="text-white font-bold">{trialDaysRemaining} days</span>
-                    </div>
-                    <div className="h-2 bg-trading-surface rounded-full overflow-hidden border border-trading-border">
-                      <div 
-                        className="h-full bg-trading-green rounded-full transition-all duration-500" 
-                        style={{ width: `${(trialDaysRemaining / TRIAL_DURATION_DAYS) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-gray-400">
-                    Staked: <span className="text-white font-bold">{stakedAmount.toLocaleString()} CLETUS</span>
-                  </div>
-                )}
+                <div className="text-gray-400">
+                  Staked: <span className="text-white font-bold">{stakedAmount.toLocaleString()} CLETUS</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Actions / Trial control (for reviewers/testers) */}
+          {/* Actions */}
           <div className="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto shrink-0 md:items-end">
             {!hasLiveAccess && (
               <button
@@ -300,36 +275,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 🥩 Go Stake CLETUS
               </button>
             )}
-            
-            {/* Testing control panel */}
-            <div className="border border-trading-border/50 bg-trading-bg/60 rounded-lg p-2.5 space-y-1.5 w-full sm:w-auto min-w-[200px]">
-              <div className="text-[10px] text-gray-500 uppercase tracking-widest font-mono font-bold text-center">
-                🧪 Developer Testing Panel
-              </div>
-              <div className="grid grid-cols-3 gap-1">
-                <button
-                  onClick={() => resetTrial(TRIAL_DURATION_DAYS)}
-                  className="px-1 py-1 rounded bg-trading-surface border border-trading-border hover:border-trading-green/40 text-[9px] font-semibold text-gray-300"
-                  title={`Reset trial to ${TRIAL_DURATION_DAYS} days`}
-                >
-                  {TRIAL_DURATION_DAYS}d Trial
-                </button>
-                <button
-                  onClick={() => resetTrial(5)}
-                  className="px-1 py-1 rounded bg-trading-surface border border-trading-border hover:border-trading-yellow/40 text-[9px] font-semibold text-gray-300"
-                  title="Set trial to 5 days"
-                >
-                  5d Trial
-                </button>
-                <button
-                  onClick={() => resetTrial(0)}
-                  className="px-1 py-1 rounded bg-trading-surface border border-trading-border hover:border-trading-red/40 text-[9px] font-semibold text-trading-red"
-                  title="Set trial to expired (0 days)"
-                >
-                  Expire
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

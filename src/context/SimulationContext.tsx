@@ -68,9 +68,8 @@ export const FEE_DISTRIBUTION_WALLETS = {
   LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
 } as const;
 
-export const TRIAL_EXPIRED_ALERT_MSG = 'Your free trial has expired! Please stake $CLETUS to resume live trading and trade execution.';
+export const STAKING_REQUIRED_ALERT_MSG = 'Please stake a minimum of 100,000 $CLETUS to resume live trading and trade execution.';
 export const MIN_STARTER_TIER_STAKE = 100000;
-export const TRIAL_DURATION_DAYS = 30;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
@@ -204,14 +203,10 @@ interface SimulationContextValue {
   resetSimulation: () => void;
   closePosition: (id: string) => void;
   
-  // ── Free Trial & Staking State ──────────────────────────────────────────────
-  trialStartDate: number;
+  // ── Staking State ──────────────────────────────────────────────
   stakedAmount: number;
   cletusBalance: number;
-  trialDaysRemaining: number;
-  isTrialActive: boolean;
   hasLiveAccess: boolean;
-  resetTrial: (daysRemaining?: number) => void;
   stakeTokens: (amount: number) => void;
   unstakeTokens: (amount: number) => void;
   faucetCletus: () => void;
@@ -290,20 +285,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
 
   const [stats, setStats] = useState<SimulationStats>(() => makeInitialStats(DEFAULT_CONFIG));
 
-  // ── Free Trial & Staking State Initialization ──────────────────────────────
-  const [trialStartDate, setTrialStartDate] = useState<number>(() => {
-    if (typeof window === 'undefined') return Date.now();
-    try {
-      const saved = localStorage.getItem('cletus_trial_start_date');
-      if (saved) return parseInt(saved, 10);
-      const now = Date.now();
-      localStorage.setItem('cletus_trial_start_date', now.toString());
-      return now;
-    } catch {
-      return Date.now();
-    }
-  });
-
+  // ── Staking State Initialization ──────────────────────────────
   const [stakedAmount, setStakedAmount] = useState<number>(() => {
     if (typeof window === 'undefined') return 0;
     try {
@@ -326,16 +308,8 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     }
   });
 
-  // Derived values for Trial & Staking
-  const trialDaysRemaining = useMemo(() => {
-    return Math.max(
-      0,
-      parseFloat((TRIAL_DURATION_DAYS - (Date.now() - trialStartDate) / (1000 * 60 * 60 * 24)).toFixed(2))
-    );
-  }, [trialStartDate]);
-  const isTrialActive = trialDaysRemaining > 0;
   // Starter tier minimum stake is MIN_STARTER_TIER_STAKE CLETUS
-  const hasLiveAccess = isTrialActive || stakedAmount >= MIN_STARTER_TIER_STAKE;
+  const hasLiveAccess = stakedAmount >= MIN_STARTER_TIER_STAKE;
 
   // Refs so the interval callback always reads current values without re-subscribing
   const configRef = useRef(config);
@@ -350,17 +324,6 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     stats.openPositions.reduce((sum, p) => sum + p.positionSizeUsd + p.pnlUsd, 0);
 
   // ── Public actions ──────────────────────────────────────────────────────────
-
-  const resetTrial = useCallback((daysRemaining?: number) => {
-    let newStartDate = Date.now();
-    if (daysRemaining !== undefined) {
-      newStartDate = Date.now() - (30 - daysRemaining) * 24 * 60 * 60 * 1000;
-    }
-    setTrialStartDate(newStartDate);
-    try {
-      localStorage.setItem('cletus_trial_start_date', newStartDate.toString());
-    } catch { /* ignore */ }
-  }, []);
 
   const stakeTokens = useCallback((amount: number) => {
     if (amount <= 0) return;
@@ -707,13 +670,9 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         pauseSimulation,
         resetSimulation,
         closePosition,
-        trialStartDate,
         stakedAmount,
         cletusBalance,
-        trialDaysRemaining,
-        isTrialActive,
         hasLiveAccess,
-        resetTrial,
         stakeTokens,
         unstakeTokens,
         faucetCletus,
