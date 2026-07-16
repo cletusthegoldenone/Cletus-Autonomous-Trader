@@ -207,11 +207,13 @@ Combined, this creates a robust reward system independent of individual trade pe
 
 | Tier | Staked Amount | SOL Rewards | Profit Share Eligible |
 |------|--------------|-------------|----------------------|
-| Starter | 1,000 CLETUS | 0.5% APY | No |
-| Pro | 5,000 CLETUS | 0.5% APY | No |
-| Elite | 10,000 CLETUS | 0.5% APY | No |
-| Whale | 50,000 CLETUS | 0.5% APY | No |
-| Profit Sharer | 2,500,000+ CLETUS | 0.5% APY | Yes |
+| Starter | 100,000 CLETUS | 0.5% APY | No |
+| Bronze | 500,000 CLETUS | 0.5% APY | Yes (1%) |
+| Silver | 1,000,000 CLETUS | 0.5% APY | Yes (2%) |
+| Gold | 5,000,000 CLETUS | 0.5% APY | Yes (5%) |
+| Platinum | 10,000,000 CLETUS | 0.5% APY | Yes (10%) |
+| Diamond | 25,000,000 CLETUS | 0.5% APY | Yes (20%) |
+| Founder | 100,000,000+ CLETUS | 0.5% APY | Yes (35%) |
 
 **See STAKING_REWARDS_STRUCTURE.md for complete details.**
 

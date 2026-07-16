@@ -20,24 +20,28 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 
 #### Staking Rewards Structure
 
-**Stake Your CLETUS Tokens → Earn SOL Weekly**
+**Stake Your CLETUS Tokens → Earn SOL Monthly**
 
-| Staked Amount | Free Usage Tier | Weekly SOL Reward | Reward Rate |
-|---------------|-----------------|-------------------|------------|
-| 1,000 CLETUS | Starter | 0.005 SOL | 0.5% APY |
-| 5,000 CLETUS | Pro | 0.030 SOL | 0.5% APY |
-| 10,000 CLETUS | Elite | 0.070 SOL | 0.5% APY |
-| 50,000 CLETUS | Whale | 0.350 SOL | 0.5% APY |
-| 100,000+ CLETUS | Founder | 0.700+ SOL | 0.5% APY |
+| Staked Amount | Free Usage Tier | Monthly SOL Reward | Reward Rate |
+|---------------|-----------------|--------------------|------------|
+| 100,000 CLETUS | Starter | 0.5 SOL | 0.5% APY |
+| 500,000 CLETUS | Bronze | 2.5 SOL | 0.5% APY |
+| 1,000,000 CLETUS | Silver | 5.0 SOL | 0.5% APY |
+| 5,000,000 CLETUS | Gold | 25.0 SOL | 0.5% APY |
+| 10,000,000 CLETUS | Platinum | 50.0 SOL | 0.5% APY |
+| 25,000,000 CLETUS | Diamond | 125.0 SOL | 0.5% APY |
+| 100,000,000+ CLETUS | Founder | 500.0+ SOL | 0.5% APY |
 
 #### Free Usage by Tier
 
 | Tier | Max Position | Open Positions | Daily Target | API Access |
 |------|-------------|----------------|--------------|-----------|
 | Starter | $5K | 3 | $1K | No |
-| Pro | $15K | 10 | $5K | Read-only |
-| Elite | $50K | 20 | $20K | Full |
-| Whale | $100K | 50 | Unlimited | Full + Priority |
+| Bronze | $15K | 5 | $2.5K | No |
+| Silver | $50K | 10 | $5K | Read-only |
+| Gold | $100K | 15 | $10K | Read-only |
+| Platinum | $250K | 25 | $25K | Full |
+| Diamond | $500K | 50 | $50K | Full + Priority |
 | Founder | Unlimited | Unlimited | Unlimited | Full + Priority + Custom |
 
 #### How Staking Works
@@ -46,7 +50,7 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 ┌─────────────────────────────────────────────────────────┐
 │ Step 1: Buy CLETUS Tokens                              │
 │ Purchase on DEX or Jupiter (link at launch)             │
-│ Min 1,000 CLETUS (~$100-500 depending on price)        │
+│ Min 100,000 CLETUS (~$10,000 depending on price)        │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -83,13 +87,13 @@ interface StakingInfo {
   stakingStartDate: number;  // Unix timestamp
   lastRewardClaim: number;   // Last withdrawal timestamp
   accumulatedRewards: number; // Pending SOL rewards
-  tier: 'STARTER' | 'PRO' | 'ELITE' | 'WHALE' | 'FOUNDER';
+  tier: 'STARTER' | 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM' | 'DIAMOND' | 'FOUNDER';
   unlocked: boolean;         // Free usage enabled
 }
 
-// Weekly reward calculation
-weeklyReward = (stakedTokens / 1_000_000_000) * 50_000 * (0.5 / 52);
-// Example: 10,000 CLETUS = ~0.070 SOL per week
+// Monthly reward calculation
+monthlyReward = (stakedTokens / 1_000_000_000) * 50_000 * (0.5 / 12);
+// Example: 1,000,000 CLETUS = ~5.0 SOL per month
 ```
 
 #### Gas-Free Staking
