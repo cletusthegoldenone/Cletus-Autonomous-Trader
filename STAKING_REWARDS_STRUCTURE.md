@@ -404,8 +404,8 @@ Catastrophic Loss:
 ## What You're Getting
 
 ### Staking Rewards (Guaranteed, separate from profit share)
-- ✅ **5% APY in SOL** - Regardless of trading performance
-- ✅ **Weekly distribution** - SOL deposited to your wallet
+- ✅ **0.5% APY in SOL** - Regardless of trading performance
+- ✅ **Monthly distribution** - SOL deposited to your wallet
 - ✅ **No lockup period** - Unstake anytime
 
 ### Profit Sharing (NOT Guaranteed)

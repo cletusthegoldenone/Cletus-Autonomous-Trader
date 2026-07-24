@@ -88,13 +88,13 @@
 ### 4. Staking Dashboard ✓
 - [x] 7 tier display:
   - [x] Starter (100K CLETUS)
-  - [x] Pro (500K CLETUS)
-  - [x] Elite (1M CLETUS)
-  - [x] Whale (5M CLETUS)
-  - [x] Profit Sharer Tier 1 (2.5M CLETUS)
-  - [x] Profit Sharer Tier 2 (5M CLETUS)
+  - [x] Bronze (500K CLETUS)
+  - [x] Silver (1M CLETUS)
+  - [x] Gold (5M CLETUS)
+  - [x] Platinum (10M CLETUS)
+  - [x] Diamond (25M CLETUS)
   - [x] Founder (100M+ CLETUS)
-- [x] SOL APY rewards calculation (5% annual)
+- [x] SOL APY rewards calculation (0.5% annual)
 - [x] Profit share earnings tracker
 - [x] Monthly distribution history
 - [x] Claim rewards button
@@ -151,7 +151,7 @@
 #### Core Features
 - [x] SPL token staking program (Anchor/Rust)
 - [x] 7 staking tiers with different benefits
-- [x] 5% APY calculation logic
+- [x] 0.5% APY calculation logic
 - [x] Profit sharing mechanism
 - [x] 7-day unstaking cooldown
 - [x] Early withdrawal penalty (2%)
@@ -388,7 +388,7 @@ Lint time:  ~5 seconds
 | Staking Dashboard | ✅ | 400+ | 7 tiers, rewards, modals |
 | AI Brain Chat | ✅ | 300+ | Chat, markdown, citations |
 | API Routes | ✅ | - | Prices, signals, AI |
-| Smart Contract | ✅ | - | 7 tiers, 5% APY, multisig |
+| Smart Contract | ✅ | - | 7 tiers, 0.5% APY, multisig |
 | Deployment Scripts | ✅ | - | Deploy + init + validation |
 
 ### Code Quality ✅

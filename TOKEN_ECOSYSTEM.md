@@ -61,9 +61,9 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Step 3: Earn Weekly SOL Rewards                        │
+│ Step 3: Earn Monthly SOL Rewards                       │
 │ Rewards calculated every block (~400ms on Solana)       │
-│ Claim weekly or auto-compound                           │
+│ Claim monthly or auto-compound                          │
 │ SOL sent directly to your wallet                        │
 └─────────────────────────────────────────────────────────┘
                          ↓
@@ -230,7 +230,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 **A:** Yes! Unstaking is instant with no lockup period. No penalties, no delays.
 
 ### Q: How often are staking rewards distributed?
-**A:** Rewards accrue every Solana block (~400ms) but are typically claimed weekly. You can claim anytime.
+**A:** Rewards accrue every Solana block (~400ms) but are typically claimed monthly. You can claim anytime.
 
 ### Q: What if Cletus stops being profitable?
 **A:** The staking rewards are guaranteed by the protocol, separate from trading performance. Even if trading stops, staking continues generating SOL.
