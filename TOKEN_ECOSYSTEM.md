@@ -233,7 +233,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 **A:** Rewards accrue every Solana block (~400ms) but are typically claimed monthly. You can claim anytime.
 
 ### Q: What if Cletus stops being profitable?
-**A:** The staking rewards are guaranteed by the protocol, separate from trading performance. Even if trading stops, staking continues generating SOL.
+**A:** The staking rewards are supported by the dedicated Staking Rewards Fund (funded by 25% of all platform trading fees and 50% of token creator fees), separate from trading performance. This ensures sufficient on-chain reserves exist to maintain the 0.5% APY payout even if trading stops or performance varies.
 
 ### Q: Is there a maximum number of CLETUS tokens I can stake?
 **A:** No maximum! Larger stakes unlock higher tiers with more benefits.

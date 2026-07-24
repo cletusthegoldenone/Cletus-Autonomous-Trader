@@ -404,7 +404,7 @@ Catastrophic Loss:
 ## What You're Getting
 
 ### Staking Rewards (Guaranteed, separate from profit share)
-- ✅ **0.5% APY in SOL** - Regardless of trading performance
+- ✅ **0.5% APY in SOL** - Supported by the protocol's Staking Rewards Fund, regardless of trading performance (corrected from previous typo of 5% to match the on-chain smart contract configuration)
 - ✅ **Monthly distribution** - SOL deposited to your wallet
 - ✅ **Flexible terms** - 7-day cooldown on unstaking, with a 2% early penalty if withdrawn within 30 days
 
