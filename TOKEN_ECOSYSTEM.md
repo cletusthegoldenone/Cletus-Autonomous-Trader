@@ -63,9 +63,9 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Step 3: Earn SOL Rewards                                │
-│ Rewards calculated every block (approximately every 400-500ms)│
-│ Claim weekly, monthly, or at any cadence of your choice │
+│ Step 3: Earn Monthly SOL Rewards                       │
+│ Rewards calculated every block (~400ms on Solana)       │
+│ Claim monthly or auto-compound                          │
 │ SOL sent directly to your wallet                        │
 └─────────────────────────────────────────────────────────┘
                          ↓
@@ -95,22 +95,19 @@ interface StakingInfo {
 
 // Monthly reward calculation
 // Constants:
-// - stakedTokens: The amount of CLETUS tokens staked by the user.
-// - 1_000_000_000: Total token supply of CLETUS (used as the denominator for pool share).
-// - 12_000_000: Base annual reward pool scaling factor (in SOL).
-// - 0.005: APY Coefficient
-//   - Represents 0.5% APY expressed as a decimal
-//   - Yields 60,000 SOL annually at 100% capacity (12,000,000 * 0.005)
-//   - Yields 5,000 SOL monthly at 100% capacity (60,000 / 12)
-// - 12: Months in a year.
-monthlyReward = (stakedTokens / 1_000_000_000) * 12_000_000 * (0.005 / 12);
-// Example: 1,000,000 CLETUS = ~5.0 SOL per month
+// - stakedTokens: CLETUS tokens staked by the user.
+// - 1_000_000_000: Total supply of CLETUS (used as the denominator for pool share).
+// - 120_000: Base annual reward pool scaling factor in SOL.
+// - 0.5: APY coefficient (0.5%).
+// - 12: Months per year.
+monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
+// Example: 1,000,000 CLETUS (Silver Tier) = ~5.0 SOL/month
 ```
 
 #### Gas-Free Staking
 
 - **No deposit fees** - Stake directly without costs
-- **No withdrawal fees** - Unstake anytime with no penalty
+- **Standard Unstaking** - 7-day cooldown period required; 2% penalty applies if unstaking within 30 days of initial stake.
 - **Auto-compound option** - Reinvest rewards automatically
 
 ---
@@ -231,13 +228,13 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 - Monitoring contract security audits (published on GitHub)
 
 ### Q: Can I unstake anytime?
-**A:** Yes! Unstaking is instant with no lockup period. No penalties, no delays.
+**A:** Yes, but unstaking requires a 7-day cooldown period before funds are available. In addition, an early unstaking penalty of 2% is applied if you unstake within 30 days of your initial stake.
 
 ### Q: How often are staking rewards distributed?
-**A:** Rewards accrue every Solana block (approximately every 400-500ms) but are typically claimed weekly. You can claim anytime.
+**A:** Rewards accrue every Solana block (~400ms) but are typically claimed monthly. You can claim anytime.
 
 ### Q: What if Cletus stops being profitable?
-**A:** The staking rewards are guaranteed by the protocol, separate from trading performance. Even if trading stops, staking continues generating SOL.
+**A:** The staking rewards are supported by the dedicated Staking Rewards Fund (funded by 25% of all platform trading fees and 50% of token creator fees), separate from trading performance. Sufficient on-chain reserves are maintained to ensure the 0.5% APY payout continues even if trading stops or performance varies.
 
 ### Q: Is there a maximum number of CLETUS tokens I can stake?
 **A:** No maximum! Larger stakes unlock higher tiers with more benefits.

@@ -163,7 +163,7 @@ All fee distribution logic is:
 ### Staking Rewards Fund (25%)
 
 **Used For:**
-- Weekly SOL distributions to stakers
+- Monthly SOL distributions to stakers
 - Maintaining 0.5% APY for all staking tiers
 - Additional bonus rewards during high-profit months
 - Covering gas fees for reward distributions
@@ -267,7 +267,7 @@ Any changes will be:
 **A:** Yes, but only through governance votes by Founder-tier stakers and with 60-day notice.
 
 ### Q: How often are fees distributed?
-**A:** Trading fees are distributed in real-time on every trade close. Staking rewards are claimed weekly.
+**A:** Trading fees are distributed in real-time on every trade close. Staking rewards are claimed monthly.
 
 ### Q: What if a wallet gets compromised?
 **A:** All distribution wallets use multi-sig (3-of-5) for major transactions. Single compromises cannot drain funds.
