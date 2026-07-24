@@ -406,7 +406,7 @@ Catastrophic Loss:
 ### Staking Rewards (Guaranteed, separate from profit share)
 - ✅ **0.5% APY in SOL** - Regardless of trading performance
 - ✅ **Monthly distribution** - SOL deposited to your wallet
-- ✅ **No lockup period** - Unstake anytime
+- ✅ **Flexible terms** - 7-day cooldown on unstaking, with a 2% early penalty if withdrawn within 30 days
 
 ### Profit Sharing (NOT Guaranteed)
 - ❓ **Varies month-to-month** - Could be $0 to very high

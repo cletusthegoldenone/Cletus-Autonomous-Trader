@@ -106,7 +106,7 @@ monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
 #### Gas-Free Staking
 
 - **No deposit fees** - Stake directly without costs
-- **No withdrawal fees** - Unstake anytime with no penalty
+- **Standard Unstaking** - Unstake after a 7-day cooldown. A 2% penalty applies to early unstaking within 30 days.
 - **Auto-compound option** - Reinvest rewards automatically
 
 ---
@@ -227,7 +227,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 - Monitoring contract security audits (published on GitHub)
 
 ### Q: Can I unstake anytime?
-**A:** Yes! Unstaking is instant with no lockup period. No penalties, no delays.
+**A:** Yes, but unstaking requires a 7-day cooldown period before funds are available. In addition, an early unstaking penalty of 2% is applied if you unstake within 30 days of your initial stake.
 
 ### Q: How often are staking rewards distributed?
 **A:** Rewards accrue every Solana block (~400ms) but are typically claimed monthly. You can claim anytime.
