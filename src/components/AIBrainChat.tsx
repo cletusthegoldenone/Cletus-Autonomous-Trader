@@ -336,6 +336,15 @@ What do you want to learn?`,
   const [streamingId, setStreamingId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messagesRef = useRef(messages);
+  const typewriterTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  // Clear all pending typewriter timers on unmount to prevent memory leaks.
+  useEffect(() => () => typewriterTimersRef.current.forEach(clearTimeout), []);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -364,7 +373,8 @@ What do you want to learn?`,
         prev.map((m) => (m.id === msgId ? { ...m, content: partial } : m))
       );
       if (i < fullText.length) {
-        setTimeout(tick, TYPEWRITER_DELAY_MS);
+        const timerId = setTimeout(tick, TYPEWRITER_DELAY_MS);
+        typewriterTimersRef.current.push(timerId);
       } else {
         setMessages((prev) =>
           prev.map((m) => (m.id === msgId ? { ...m, content: fullText } : m))
@@ -372,7 +382,8 @@ What do you want to learn?`,
         setStreamingId(null);
       }
     };
-    setTimeout(tick, TYPEWRITER_DELAY_MS);
+    const timerId = setTimeout(tick, TYPEWRITER_DELAY_MS);
+    typewriterTimersRef.current.push(timerId);
   }, []);
 
   const sendMessage = useCallback(
@@ -394,7 +405,7 @@ What do you want to learn?`,
       // Build history for the API.
       // Exclude UI-only system messages (welcome/new-session) and cap at 20 turns
       // to stay within Gemini's context window without sending excessive tokens.
-      const historySnapshot = [...messages, userMsg]
+      const historySnapshot = [...messagesRef.current, userMsg]
         .filter((m) => m.id !== 'welcome' && m.id !== 'new-session')
         .slice(-20)
         .map((m) => ({ role: m.role, content: m.content }));
@@ -440,7 +451,7 @@ What do you want to learn?`,
         typewriterEffect(aiMsgId, response.content + '\n\n*⚠️ Running in offline mode — AI API unavailable.*');
       }
     },
-    [messages, isTyping, streamingId, typewriterEffect]
+    [isTyping, streamingId, typewriterEffect]
   );
 
   const handleSubmit = (e: React.FormEvent) => {

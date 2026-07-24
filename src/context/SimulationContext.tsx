@@ -308,7 +308,7 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     }
   });
 
-  // Starter tier minimum stake is MIN_STARTER_TIER_STAKE CLETUS
+  // Starter tier minimum stake is MIN_STARTER_TIER_STAKE $CLETUS
   const hasLiveAccess = stakedAmount >= MIN_STARTER_TIER_STAKE;
 
   // Refs so the interval callback always reads current values without re-subscribing
