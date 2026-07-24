@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auditToken } from '@/lib/pre-trade-audit';
 import { buyTokenWithSol, loadTradingKeypair, WSOL_MINT } from '@/lib/jupiter';
-import { openPosition } from '@/lib/position-store';
+import { openPosition, getOpenPositions, getClosedPositions } from '@/lib/position-store';
 import { applyWeights } from '@/lib/pattern-memory';
+import { runSecComplianceChecks } from '@/lib/sec-compliance';
+import type { TradeRecord } from '@/lib/sec-compliance';
 import type { SignalBreakdown } from '@/types';
 
 // ── Auth helper ───────────────────────────────────────────────────────────────
@@ -39,6 +41,10 @@ interface ExecuteRequest {
   stopLossPct?: number;
   /** Take-profit % above entry (e.g. 0.25 = 25%) — defaults to env TAKE_PROFIT_PERCENTAGE */
   takeProfitPct?: number;
+  /** Token 24h trading volume in USD — used for SEC position-concentration check */
+  volume24hUsd?: number;
+  /** Token pool liquidity in USD — used for SEC position-concentration check */
+  liquidityUsd?: number;
 }
 
 // ── POST /api/trade/execute ───────────────────────────────────────────────────
@@ -109,6 +115,51 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // ── SEC compliance checks ─────────────────────────────────────────────────
+  // Build a recent-trade ledger from open and closed positions for wash-trade
+  // and velocity checks (Exchange Act § 9 / Rule 10b-5).
+  let secCompliance: ReturnType<typeof runSecComplianceChecks> = {
+    compliant: true,
+    violations: [],
+    warnings: [],
+    rules: [],
+  };
+  try {
+    const [openPos, closedPos] = await Promise.all([
+      getOpenPositions(),
+      getClosedPositions(),
+    ]);
+    const recentTrades: TradeRecord[] = [
+      ...openPos.map((p) => ({ tokenAddress: p.tokenAddress, side: 'buy' as const, timestamp: p.openedAt })),
+      ...closedPos.map((p) => ({ tokenAddress: p.tokenAddress, side: 'buy' as const, timestamp: p.openedAt })),
+      ...closedPos
+        .filter((p) => p.closedAt != null)
+        .map((p) => ({ tokenAddress: p.tokenAddress, side: 'sell' as const, timestamp: p.closedAt })),
+    ];
+    const defaultSolPrice = parseFloat(process.env.SEC_DEFAULT_SOL_PRICE_USD ?? '180');
+    const amountUsd = amountSol * defaultSolPrice;
+    secCompliance = runSecComplianceChecks({
+      tokenAddress,
+      amountUsd,
+      tokenVolume24hUsd: body.volume24hUsd ?? 0,
+      tokenLiquidityUsd: body.liquidityUsd ?? 0,
+      recentTrades,
+    });
+  } catch (err) {
+    console.error('SEC compliance check error (non-blocking):', err);
+  }
+
+  if (!secCompliance.compliant) {
+    return NextResponse.json(
+      { error: 'Trade blocked by SEC compliance check', secCompliance },
+      { status: 422 },
+    );
+  }
+
+  if (secCompliance.warnings.length > 0) {
+    console.warn('SEC compliance warnings:', secCompliance.warnings);
+  }
+
   // ── Stop-loss / take-profit levels ────────────────────────────────────────
   const stopLossPct  = body.stopLossPct  ?? parseFloat(process.env.STOP_LOSS_PERCENTAGE  ?? '10') / 100;
   const takeProfitPct = body.takeProfitPct ?? parseFloat(process.env.TAKE_PROFIT_PERCENTAGE ?? '25') / 100;
@@ -162,6 +213,7 @@ export async function POST(req: NextRequest) {
     success: true,
     position,
     audit,
+    secCompliance,
     isDryRun,
     mode: isDryRun ? (isLive ? 'dry-run (no keypair)' : 'simulation') : 'live',
   });
