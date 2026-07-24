@@ -7,6 +7,7 @@ import React, {
   useEffect,
   useRef,
   useCallback,
+  useMemo,
 } from 'react';
 import type { TradingConfig, SimulatedPosition, AggressionLevel, FeeDistribution, AggregatedFeeDistribution } from '@/types';
 
@@ -66,6 +67,9 @@ export const FEE_DISTRIBUTION_WALLETS = {
    */
   LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
 } as const;
+
+export const STAKING_REQUIRED_ALERT_MSG = 'Please stake a minimum of 100,000 $CLETUS to resume live trading and trade execution.';
+export const MIN_STARTER_TIER_STAKE = 100000;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
@@ -198,6 +202,14 @@ interface SimulationContextValue {
   pauseSimulation: () => void;
   resetSimulation: () => void;
   closePosition: (id: string) => void;
+  
+  // ── Staking State ──────────────────────────────────────────────
+  stakedAmount: number;
+  cletusBalance: number;
+  hasLiveAccess: boolean;
+  stakeTokens: (amount: number) => void;
+  unstakeTokens: (amount: number) => void;
+  faucetCletus: () => void;
 }
 
 const SimulationContext = createContext<SimulationContextValue | null>(null);
@@ -273,6 +285,32 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
 
   const [stats, setStats] = useState<SimulationStats>(() => makeInitialStats(DEFAULT_CONFIG));
 
+  // ── Staking State Initialization ──────────────────────────────
+  const [stakedAmount, setStakedAmount] = useState<number>(() => {
+    if (typeof window === 'undefined') return 0;
+    try {
+      const saved = localStorage.getItem('cletus_staked_amount');
+      return saved ? parseFloat(saved) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const [cletusBalance, setCletusBalance] = useState<number>(() => {
+    if (typeof window === 'undefined') return 1000000; // start with 1,000,000 mock $CLETUS tokens
+    try {
+      const saved = localStorage.getItem('cletus_balance');
+      if (saved) return parseFloat(saved);
+      localStorage.setItem('cletus_balance', '1000000');
+      return 1000000;
+    } catch {
+      return 1000000;
+    }
+  });
+
+  // Starter tier minimum stake is MIN_STARTER_TIER_STAKE CLETUS
+  const hasLiveAccess = stakedAmount >= MIN_STARTER_TIER_STAKE;
+
   // Refs so the interval callback always reads current values without re-subscribing
   const configRef = useRef(config);
   const statsRef = useRef(stats);
@@ -286,6 +324,50 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
     stats.openPositions.reduce((sum, p) => sum + p.positionSizeUsd + p.pnlUsd, 0);
 
   // ── Public actions ──────────────────────────────────────────────────────────
+
+  const stakeTokens = useCallback((amount: number) => {
+    if (amount <= 0) return;
+    setCletusBalance((prevBal) => {
+      const actualAmount = Math.min(amount, prevBal);
+      const nextBal = prevBal - actualAmount;
+      setStakedAmount((prevStaked) => {
+        const nextStaked = prevStaked + actualAmount;
+        try {
+          localStorage.setItem('cletus_staked_amount', nextStaked.toString());
+          localStorage.setItem('cletus_balance', nextBal.toString());
+        } catch { /* ignore */ }
+        return nextStaked;
+      });
+      return nextBal;
+    });
+  }, []);
+
+  const unstakeTokens = useCallback((amount: number) => {
+    if (amount <= 0) return;
+    setStakedAmount((prevStaked) => {
+      const actualAmount = Math.min(amount, prevStaked);
+      const nextStaked = prevStaked - actualAmount;
+      setCletusBalance((prevBal) => {
+        const nextBal = prevBal + actualAmount;
+        try {
+          localStorage.setItem('cletus_staked_amount', nextStaked.toString());
+          localStorage.setItem('cletus_balance', nextBal.toString());
+        } catch { /* ignore */ }
+        return nextBal;
+      });
+      return nextStaked;
+    });
+  }, []);
+
+  const faucetCletus = useCallback(() => {
+    setCletusBalance((prevBal) => {
+      const nextBal = prevBal + 1000000;
+      try {
+        localStorage.setItem('cletus_balance', nextBal.toString());
+      } catch { /* ignore */ }
+      return nextBal;
+    });
+  }, []);
 
   const updateConfig = useCallback((updates: Partial<TradingConfig>) => {
     setConfig((prev) => {
@@ -588,6 +670,12 @@ export function SimulationProvider({ children }: { children: React.ReactNode }) 
         pauseSimulation,
         resetSimulation,
         closePosition,
+        stakedAmount,
+        cletusBalance,
+        hasLiveAccess,
+        stakeTokens,
+        unstakeTokens,
+        faucetCletus,
       }}
     >
       {children}
