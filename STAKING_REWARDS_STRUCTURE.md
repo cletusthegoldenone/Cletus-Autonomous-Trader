@@ -61,13 +61,13 @@ Crypto markets are adversarial, zero-sum, and frequently irrational. Even the be
 
 | Staked Amount | Tier Name | Expected Monthly Profit* | Staking APY | Features |
 |---------------|-----------|-------------------------|------------|----------|
-| 100,000 CLETUS | Starter | None | 0.5% SOL | Core access (0% profit share) |
-| 500,000 CLETUS | Bronze | ~$1,000* (NOT guaranteed) | 0.5% SOL | 1% profit share + Limited features |
-| 1,000,000 CLETUS | Silver | ~$2,000* (NOT guaranteed) | 0.5% SOL | 2% profit share + Full access |
-| 5,000,000 CLETUS | Gold | ~$5,000* (NOT guaranteed) | 0.5% SOL | 5% profit share + Priority support |
-| 10,000,000 CLETUS | Platinum | ~$10,000* (NOT guaranteed) | 0.5% SOL | 10% profit share + Premium insights |
-| 25,000,000 CLETUS | Diamond | ~$20,000* (NOT guaranteed) | 0.5% SOL | 20% profit share + High-net-worth perks |
-| 100,000,000+ CLETUS | Founder | ~$35,000* (NOT guaranteed) | 0.5% SOL | 35% profit share + Board level voting |
+| 100,000 CLETUS | Starter | None | 0.5% APY (paid in SOL) | Core access (0% profit share) |
+| 500,000 CLETUS | Bronze | ~$1,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 1% profit share + Limited features |
+| 1,000,000 CLETUS | Silver | ~$2,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 2% profit share + Full access |
+| 5,000,000 CLETUS | Gold | ~$5,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 5% profit share + Priority support |
+| 10,000,000 CLETUS | Platinum | ~$10,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 10% profit share + Premium insights |
+| 25,000,000 CLETUS | Diamond | ~$20,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 20% profit share + High-net-worth perks |
+| 100,000,000+ CLETUS | Founder | ~$35,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 35% profit share + Board level voting |
 
 **\*These are ESTIMATES based on historical performance. They are NOT guaranteed. Actual profits could be significantly higher or lower (including negative/loss months).**
 
@@ -93,7 +93,7 @@ If Cletus loses money that month → no distribution, no profit
 ```
 Cletus monthly trading profit: $200,000 (Total Gross Profit)
 
-Total distribution of the total gross monthly platform profit of $200,000 (73% of gross profit is allocated directly to stakers across all tiers, and the remaining 27% of gross profit is retained by the platform treasury):
+Total distribution of the total gross monthly platform profit of $200,000 (73% of gross profit is allocated directly to stakers across all profit-sharing tiers (Bronze–Founder), with Starter excluded, and the remaining 27% of gross profit is retained by the platform treasury):
 - Bronze Tier (1% of gross profit): $2,000 collectively split among Bronze stakers
 - Silver Tier (2% of gross profit): $4,000 collectively split among Silver stakers
 - Gold Tier (5% of gross profit): $10,000 collectively split among Gold stakers
@@ -140,9 +140,30 @@ All stakers suffer proportional loss
 
 *The Expected Monthly Profit Share calculations below are illustrative estimates based on an assumed total gross monthly platform profit pool of $100,000 for Realistic/Expected Cases, and $200,000 for Best Case Scenarios, distributed proportionally according to each tier's profit-sharing percentage.*
 
-**Note on Pool Distribution & Math:**
-The profit-sharing percentages assigned to each tier (e.g., Bronze 1%, Silver 2%, Gold 5%, Platinum 10%, Diamond 20%, Founder 35%) represent **direct percentages of the total gross monthly platform profit**, not percentages of a sub-pool. Summing these tier-wide allocations, exactly 73% of the total gross monthly platform profit is distributed directly to stakers, while the remaining 27% of gross monthly profit is retained by the platform treasury for development, security insurance, and system expansion.
-For any given tier, the allocated portion of the profit pool (which is the direct percentage of the total gross monthly platform profit) is divided proportionally among all active stakers in that specific tier based on their individual staked amount relative to the total staked amount in that tier. Therefore, the "Expected Monthly Profit Share" figures shown in the individual tier sections below are illustrative examples assuming a single qualifier or a proportional share in a highly sparsely populated tier. If multiple stakers occupy the same tier, their individual payouts will be reduced proportionally (e.g., if there are 2 equal stakers in the Gold tier, each receives a proportional share of the 5% gross profit allocation, totaling 2.5% of gross profit each instead of 5%).
+**Note on Pool Distribution, On-Chain Implementation, and Platform Retained Math:**
+
+### Monthly Gross Platform Profit Distribution (100% Total)
+
+| Recipient / Allocation Area | Percentage of Gross Profit | Implementation Layer / Purpose |
+|-----------------------------|----------------------------|--------------------------------|
+| **On-Chain Treasury Fee** | 20% | On-chain contract fee (`TREASURY_FEE_BPS = 2_000`, where 10,000 BPS = 100%) reserved directly in the global treasury account for protocol liquidity and insurance. |
+| **Operations Buffer** | 7% | Retained as an off-chain operations buffer to fund developer hosting infrastructure and premium RPC services. |
+| **Bronze Tier** | 1% | Collectively split among Bronze stakers (on-chain profit share). |
+| **Silver Tier** | 2% | Collectively split among Silver stakers (on-chain profit share). |
+| **Gold Tier** | 5% | Collectively split among Gold stakers (on-chain profit share). |
+| **Platinum Tier** | 10% | Collectively split among Platinum stakers (on-chain profit share). |
+| **Diamond Tier** | 20% | Collectively split among Diamond stakers (on-chain profit share). |
+| **Founder Tier** | 35% | Collectively split among Founder stakers (on-chain profit share). |
+| **Starter Tier** | 0% | Excluded from profit sharing (Starter tier has core system access only). |
+| **Total** | **100%** | **73% collective staker allocation + 27% platform-retained portion.** |
+
+The profit-sharing percentages assigned to each tier represent **direct percentages of the total gross monthly platform profit**, not percentages of a sub-pool. When summed, these tier-wide allocations total exactly 73% of the total gross monthly platform profit. The remaining 27% is retained by the platform: 20% as an on-chain treasury fee and 7% as an operations buffer for development, security insurance, and system expansion.
+
+Each tier's profit-sharing is governed by the following rules:
+- **Direct Tier Allocation:** The allocated portion of the profit pool represents a direct percentage of the total gross monthly platform profit.
+- **Proportional Division:** This portion is divided proportionally among all active stakers in that specific tier, based on their individual staked amount relative to the total staked amount in that tier.
+- **Illustrative Figures:** The "Expected Monthly Profit Share" figures shown in the individual tier sections below are illustrative examples assuming a single staker (or a highly sparsely populated tier).
+- **Proportional Reduction:** If multiple stakers occupy the same tier, their individual payouts will be reduced proportionally. For example, if there are two equal stakers in the Gold tier, each receives a proportional share of the 5% gross profit allocation, totaling 2.5% of gross profit each instead of 5%.
 
 ### **Tier 1: Starter (100,000 CLETUS)**
 
