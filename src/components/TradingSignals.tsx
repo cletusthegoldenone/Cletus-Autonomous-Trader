@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { TradingSignal } from '@/types';
 import { useSimulation, STAKING_REQUIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
@@ -240,6 +240,10 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
   const [amount, setAmount] = useState('1.5');
   const [executing, setExecuting] = useState(false);
   const [executed, setExecuted] = useState(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear the close timer if the modal unmounts before it fires
+  useEffect(() => () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); }, []);
 
   if (!signal) return null;
 
@@ -252,7 +256,7 @@ function ExecutionModal({ signal, onClose }: ExecutionModalProps) {
     await new Promise((r) => setTimeout(r, 2000));
     setExecuting(false);
     setExecuted(true);
-    setTimeout(onClose, 2000);
+    closeTimerRef.current = setTimeout(onClose, 2000);
   };
 
   const formatPrice = (p: number) => {

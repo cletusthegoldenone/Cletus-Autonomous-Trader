@@ -213,8 +213,15 @@ Ask me anything — from "explain the yield curve" to "how do I read a balance s
   };
 }
 
-function parseMarkdown(text: string): string {
+function escapeHtml(text: string): string {
   return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function parseMarkdown(text: string): string {
+  return escapeHtml(text)
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/`([^`]+)`/g, '<code class="bg-trading-surface px-1 py-0.5 rounded text-trading-green text-xs font-mono">$1</code>')
@@ -467,6 +474,9 @@ What do you want to learn?`,
   };
 
   const clearChat = () => {
+    // Cancel all pending typewriter timers to prevent stale state updates
+    typewriterTimersRef.current.forEach(clearTimeout);
+    typewriterTimersRef.current = [];
     setStreamingId(null);
     setMessages([
       {
@@ -515,7 +525,7 @@ What do you want to learn?`,
               key={chip.label}
               onClick={() => sendMessage(chip.starter)}
               disabled={isBusy}
-              className="text-xs bg-trading-surface border border-trading-border rounded-full px-3 py-1.5 text-gray-400 hover:text-white hover:border-trading-green/50 transition-all disabled:opacity-40"
+              className="text-xs bg-trading-surface border border-trading-border rounded-full px-3 py-1.5 text-gray-400 hover:text-white hover:border-trading-green/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {chip.label}
             </button>
@@ -541,7 +551,8 @@ What do you want to learn?`,
               <button
                 key={q}
                 onClick={() => sendMessage(q)}
-                className="text-xs bg-trading-surface border border-trading-border rounded-full px-3 py-1.5 text-gray-400 hover:text-white hover:border-trading-green/50 transition-all"
+                disabled={isBusy}
+                className="text-xs bg-trading-surface border border-trading-border rounded-full px-3 py-1.5 text-gray-400 hover:text-white hover:border-trading-green/50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {q}
               </button>
