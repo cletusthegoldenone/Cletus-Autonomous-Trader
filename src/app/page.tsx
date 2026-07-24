@@ -42,7 +42,7 @@ export default function Home() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: "Hey! I'm **Cletus AI**, your Solana DeFi intelligence assistant. Ask me about token signals, market patterns, or anything DeFi-related. 🚀",
+      content: "Hey! I'm **Cletus** — your AI with master's-level expertise in economics, accounting, business strategy, stocks, options, and Solana DeFi. Ask me anything. 🚀",
     },
   ]);
   const [chatInput, setChatInput] = useState('');
@@ -85,13 +85,17 @@ export default function Home() {
     const msg = chatInput.trim();
     if (!msg || chatLoading) return;
     setChatInput('');
-    setChatMessages((prev) => [...prev, { role: 'user', content: msg }]);
+    const updatedMessages = [...chatMessages, { role: 'user' as const, content: msg }];
+    setChatMessages(updatedMessages);
     setChatLoading(true);
     try {
       const res = await fetch('/api/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: msg }),
+        body: JSON.stringify({
+          message: msg,
+          history: chatMessages.slice(-20),
+        }),
       });
       const data = await res.json();
       setChatMessages((prev) => [
@@ -455,10 +459,10 @@ export default function Home() {
       {/* AI Chat */}
       <div id="ai-chat" className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 border-t border-white/10">
         <div className="text-center mb-8 sm:mb-10">
-          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">POWERED BY GEMINI</div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Ask Cletus AI</h2>
-          <p className="mt-3 text-white/60 text-sm sm:text-base max-w-md mx-auto">
-            Real-time AI assistant for Solana DeFi. Ask about signals, tokens, strategies, or market conditions.
+          <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">POWERED BY GEMINI · MASTER-LEVEL KNOWLEDGE</div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Ask Cletus Anything</h2>
+          <p className="mt-3 text-white/60 text-sm sm:text-base max-w-lg mx-auto">
+            Economics · Accounting · Business Strategy · Stocks · Options · Solana DeFi — master&apos;s-degree-level expertise, ask anything.
           </p>
         </div>
 
