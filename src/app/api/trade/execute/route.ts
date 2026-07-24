@@ -132,10 +132,12 @@ export async function POST(req: NextRequest) {
     const recentTrades: TradeRecord[] = [
       ...openPos.map((p) => ({ tokenAddress: p.tokenAddress, side: 'buy' as const, timestamp: p.openedAt })),
       ...closedPos.map((p) => ({ tokenAddress: p.tokenAddress, side: 'buy' as const, timestamp: p.openedAt })),
-      ...closedPos.map((p) => ({ tokenAddress: p.tokenAddress, side: 'sell' as const, timestamp: p.closedAt })),
+      ...closedPos
+        .filter((p) => p.closedAt != null)
+        .map((p) => ({ tokenAddress: p.tokenAddress, side: 'sell' as const, timestamp: p.closedAt })),
     ];
-    const solPriceUsd = 180; // conservative estimate; overridden by liquidity/volume if provided
-    const amountUsd = amountSol * solPriceUsd;
+    const defaultSolPrice = parseFloat(process.env.SEC_DEFAULT_SOL_PRICE_USD ?? '180');
+    const amountUsd = amountSol * defaultSolPrice;
     secCompliance = runSecComplianceChecks({
       tokenAddress,
       amountUsd,

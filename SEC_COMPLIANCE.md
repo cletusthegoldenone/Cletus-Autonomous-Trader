@@ -144,6 +144,10 @@ SEC_WASH_TRADE_WINDOW_MINUTES=60
 
 # Maximum number of trades in any 5-minute window (default: 8)
 SEC_MAX_TRADES_PER_5MIN=8
+
+# Approximate SOL price in USD for position-size calculations (default: 180)
+# Update periodically or set to a conservative value.
+SEC_DEFAULT_SOL_PRICE_USD=180
 ```
 
 ---
