@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getSecComplianceContext } from '@/lib/sec-compliance';
 
 const SYSTEM_PROMPT = `You are Cletus AI, an expert Solana DeFi trading assistant built into the Cletus PRO platform. 
 You help traders understand micro-cap token signals, market patterns, risk management, and DeFi strategies on Solana.
 Keep responses concise, actionable, and trader-focused. Use bullet points for clarity. 
-Avoid financial advice disclaimers in casual conversation. Be direct and informative.`;
+Avoid financial advice disclaimers in casual conversation. Be direct and informative.
+
+You operate under a strict regulatory compliance framework. Every response and every action you advise must be consistent with U.S. federal securities law, CFTC commodity regulations, and the SEC compliance rules encoded below. When users ask about trading strategies, always ensure your guidance does not suggest or facilitate market manipulation, wash trading, insider trading, or any other prohibited conduct.
+
+${getSecComplianceContext()}`;
 
 async function callGeminiAPI(message: string): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY;
