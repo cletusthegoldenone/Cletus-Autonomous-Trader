@@ -95,16 +95,13 @@ interface StakingInfo {
 
 // Monthly reward calculation
 // Constants:
-// - stakedTokens: The amount of CLETUS tokens staked by the user.
-// - 1_000_000_000: Total token supply of CLETUS (used as the denominator for pool share).
-// - 12_000_000: Base annual reward pool scaling factor (in SOL).
-// - 0.005: APY Coefficient
-//   - Represents 0.5% APY expressed as a decimal
-//   - Yields 60,000 SOL annually at 100% capacity (12,000,000 * 0.005)
-//   - Yields 5,000 SOL monthly at 100% capacity (60,000 / 12)
-// - 12: Months in a year.
-monthlyReward = (stakedTokens / 1_000_000_000) * 12_000_000 * (0.005 / 12);
-// Example: 1,000,000 CLETUS = ~5.0 SOL per month
+// - stakedTokens: CLETUS tokens staked by the user.
+// - 1_000_000_000: Total supply of CLETUS (used as the denominator for pool share).
+// - 120_000: Base annual reward pool scaling factor in SOL.
+// - 0.5: APY coefficient (0.5%).
+// - 12: Months per year.
+monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
+// Example: 1,000,000 CLETUS (Silver Tier) = ~5.0 SOL/month
 ```
 
 #### Gas-Free Staking
