@@ -92,11 +92,21 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
   },
 };
 
+// Typewriter speed constants
+const TYPEWRITER_CHARS_PER_TICK = 6;
+const TYPEWRITER_DELAY_MS = 16;
+
 function findBestResponse(question: string): { content: string; citations?: string[] } {
   const q = question.toLowerCase();
-  if (q.includes('strateg') || q.includes('current') || q.includes('approach')) return CLETUS_RESPONSES.strategy;
-  if (q.includes('signal') || q.includes('score') || q.includes('indicator')) return CLETUS_RESPONSES.signals;
-  if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) return CLETUS_RESPONSES.risk;
+  if (q.includes('strateg') || q.includes('current') || q.includes('approach')) {
+    return CLETUS_RESPONSES.strategy;
+  }
+  if (q.includes('signal') || q.includes('score') || q.includes('indicator')) {
+    return CLETUS_RESPONSES.signals;
+  }
+  if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) {
+    return CLETUS_RESPONSES.risk;
+  }
   if (q.includes('timeframe') || q.includes('meme') || q.includes('memecoin')) {
     return {
       content: `**Optimal Timeframes for Meme Coins on Solana:**
@@ -347,16 +357,14 @@ What do you want to learn?`,
   const typewriterEffect = useCallback((msgId: string, fullText: string) => {
     setStreamingId(msgId);
     let i = 0;
-    const CHUNK = 6; // characters per tick
-    const DELAY = 16; // ms
     const tick = () => {
-      i += CHUNK;
+      i += TYPEWRITER_CHARS_PER_TICK;
       const partial = fullText.slice(0, i);
       setMessages((prev) =>
         prev.map((m) => (m.id === msgId ? { ...m, content: partial } : m))
       );
       if (i < fullText.length) {
-        setTimeout(tick, DELAY);
+        setTimeout(tick, TYPEWRITER_DELAY_MS);
       } else {
         setMessages((prev) =>
           prev.map((m) => (m.id === msgId ? { ...m, content: fullText } : m))
@@ -364,12 +372,13 @@ What do you want to learn?`,
         setStreamingId(null);
       }
     };
-    setTimeout(tick, DELAY);
+    setTimeout(tick, TYPEWRITER_DELAY_MS);
   }, []);
 
   const sendMessage = useCallback(
     async (content: string) => {
-      if (!content.trim() || isTyping) return;
+      // Prevent sending while typing or while typewriter animation is in progress
+      if (!content.trim() || isTyping || streamingId !== null) return;
 
       const userMsg: ChatMessage = {
         id: Date.now().toString(),
@@ -382,7 +391,9 @@ What do you want to learn?`,
       setInput('');
       setIsTyping(true);
 
-      // Build history for the API (exclude welcome message, send last 20 turns max)
+      // Build history for the API.
+      // Exclude UI-only system messages (welcome/new-session) and cap at 20 turns
+      // to stay within Gemini's context window without sending excessive tokens.
       const historySnapshot = [...messages, userMsg]
         .filter((m) => m.id !== 'welcome' && m.id !== 'new-session')
         .slice(-20)
@@ -429,7 +440,7 @@ What do you want to learn?`,
         typewriterEffect(aiMsgId, response.content + '\n\n*⚠️ Running in offline mode — AI API unavailable.*');
       }
     },
-    [messages, isTyping, typewriterEffect]
+    [messages, isTyping, streamingId, typewriterEffect]
   );
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -462,7 +462,7 @@ export default function Home() {
           <div className="text-emerald-400 text-xs sm:text-sm font-semibold tracking-widest">POWERED BY GEMINI · MASTER-LEVEL KNOWLEDGE</div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter mt-2">Ask Cletus Anything</h2>
           <p className="mt-3 text-white/60 text-sm sm:text-base max-w-lg mx-auto">
-            Economics · Accounting · Business Strategy · Stocks · Options · Solana DeFi — master&#39;s-degree-level expertise, ask anything.
+            Economics · Accounting · Business Strategy · Stocks · Options · Solana DeFi — master&apos;s-degree-level expertise, ask anything.
           </p>
         </div>
 

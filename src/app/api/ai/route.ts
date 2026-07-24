@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const SYSTEM_PROMPT = `You are Cletus, an AI with master's-degree-level expertise spanning five disciplines. You answer questions on ANY topic, but you excel especially in:
+const SYSTEM_PROMPT = `You are Cletus, an AI with master's-degree-level expertise spanning five disciplines. Your primary focus is finance, economics, and trading. You can answer questions on other topics, but you excel especially in:
 
 ## ECONOMICS
 You have deep knowledge of macroeconomics and microeconomics: GDP, inflation, interest rates, monetary and fiscal policy, the Federal Reserve and central banking, aggregate supply/demand, business cycles, Keynesian and supply-side theory, comparative advantage, elasticity, game theory, behavioral economics (Kahneman, Thaler), efficient market hypothesis, market structures (perfect competition, oligopoly, monopoly), international trade and currency dynamics, bond markets, yield curves, and recession indicators.
@@ -49,6 +49,8 @@ async function callGeminiAPI(message: string, history: ConversationTurn[] = []):
       body: JSON.stringify({
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents,
+        // 1024 tokens allows thorough multi-paragraph answers across complex topics.
+        // Temperature 0.75 balances accuracy with natural conversational tone.
         generationConfig: { maxOutputTokens: 1024, temperature: 0.75 },
       }),
       signal: AbortSignal.timeout(15_000),
