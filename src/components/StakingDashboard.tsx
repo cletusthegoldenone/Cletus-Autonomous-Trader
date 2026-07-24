@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { TierInfo } from '@/types';
 import { useSimulation, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
@@ -79,6 +79,10 @@ export default function StakingDashboard() {
   const [unstakeInput, setUnstakeInput] = useState('');
   const [stakingMode, setStakingMode] = useState<'stake' | 'unstake'>('stake');
   const [successMsg, setSuccessMsg] = useState('');
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear success message timer on unmount to prevent memory leaks
+  useEffect(() => () => { if (successTimerRef.current) clearTimeout(successTimerRef.current); }, []);
 
   // Find active tier
   let activeTier: typeof TIERS[number] | null = null;
@@ -111,7 +115,8 @@ export default function StakingDashboard() {
     stakeTokens(amount);
     setStakeInput('');
     setSuccessMsg(`Successfully staked ${amount.toLocaleString()} CLETUS!`);
-    setTimeout(() => setSuccessMsg(''), 4000);
+    if (successTimerRef.current) clearTimeout(successTimerRef.current);
+    successTimerRef.current = setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   const handleUnstake = (e: React.FormEvent) => {
@@ -125,7 +130,8 @@ export default function StakingDashboard() {
     unstakeTokens(amount);
     setUnstakeInput('');
     setSuccessMsg(`Successfully unstaked ${amount.toLocaleString()} CLETUS!`);
-    setTimeout(() => setSuccessMsg(''), 4000);
+    if (successTimerRef.current) clearTimeout(successTimerRef.current);
+    successTimerRef.current = setTimeout(() => setSuccessMsg(''), 4000);
   };
 
   return (

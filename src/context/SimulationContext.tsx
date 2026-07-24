@@ -68,8 +68,8 @@ export const FEE_DISTRIBUTION_WALLETS = {
   LIQUIDITY: '9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7',
 } as const;
 
-export const STAKING_REQUIRED_ALERT_MSG = 'Please stake a minimum of 100,000 $CLETUS to resume live trading and trade execution.';
 export const MIN_STARTER_TIER_STAKE = 100000;
+export const STAKING_REQUIRED_ALERT_MSG = `Please stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS to resume live trading and trade execution.`;
 
 // ── Fee Distribution Helper ───────────────────────────────────────────────────
 
