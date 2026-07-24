@@ -3,17 +3,26 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { ChatMessage } from '@/types';
 
-const SYSTEM_CONTEXT = `You are Cletus, an AI autonomous trading system specialized in Solana token trading.
-You have deep knowledge of DeFi, technical analysis, risk management, and Solana ecosystem.
-You are honest about your limitations as an AI and never guarantee profits.
-You provide educational information about trading strategies, market analysis, and DeFi concepts.`;
+const TOPIC_CHIPS = [
+  { label: '📊 Economics', starter: 'Explain how the Federal Reserve uses interest rates to control inflation' },
+  { label: '📒 Accounting', starter: 'Walk me through how to read a company\'s balance sheet' },
+  { label: '🏢 Business', starter: 'Explain Porter\'s Five Forces and how I can use them to analyze a company' },
+  { label: '📈 Stocks', starter: 'Explain the key stock valuation metrics like P/E, EV/EBITDA, and how to use them' },
+  { label: '⚙️ Options', starter: 'Explain options Greeks — delta, gamma, theta, vega — in simple terms' },
+  { label: '💼 Portfolio', starter: 'Explain Modern Portfolio Theory and the Sharpe ratio' },
+  { label: '⚡ Solana DeFi', starter: 'How does Cletus score and rank Solana tokens for trading?' },
+  { label: '🛡️ Risk', starter: 'What are the best risk management strategies for trading volatile assets?' },
+];
 
 const SUGGESTED_QUESTIONS = [
-  'What is your current trading strategy?',
-  'Explain your signal scoring system',
-  'What is the best timeframe for trading meme coins?',
-  'How do you manage risk on volatile tokens?',
-  'What are your current active positions?',
+  'What causes a yield curve inversion and why does it predict recessions?',
+  'Explain how DCF valuation works step by step',
+  'What is the difference between a call and put option?',
+  'How do I calculate a company\'s intrinsic value?',
+  'What is the Kelly Criterion and how is it used in trading?',
+  'Explain competitive moats — what makes a business defensible?',
+  'What is your current trading strategy for Solana tokens?',
+  'How do you detect rug pulls before they happen?',
 ];
 
 const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }> = {
@@ -64,7 +73,6 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
 - Kelly Criterion adapted for crypto volatility
 - Never more than 2% of portfolio per trade
 - Max 4 simultaneous positions
-- Correlation-aware (avoid holding correlated tokens)
 
 **Stop Loss Strategy:**
 - Hard stops: Always set before entry
@@ -76,69 +84,122 @@ const CLETUS_RESPONSES: Record<string, { content: string; citations?: string[] }
 - Top 10 holders > 70%
 - Liquidity < $10K
 - Contract not renounced
-- No trading history (< 1 hour old)
 
 **Circuit Breakers:**
 - Trading paused if daily loss > $2,000
-- System halt if weekly loss > $5,000
-- Emergency kill switch available`,
+- System halt if weekly loss > $5,000`,
     citations: ['TRADING_PARAMETERS.env#risk-management'],
   },
 };
 
 function findBestResponse(question: string): { content: string; citations?: string[] } {
   const q = question.toLowerCase();
-
-  if (q.includes('strateg') || q.includes('current') || q.includes('approach')) {
-    return CLETUS_RESPONSES.strategy;
-  }
-  if (q.includes('signal') || q.includes('score') || q.includes('indicator')) {
-    return CLETUS_RESPONSES.signals;
-  }
-  if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) {
-    return CLETUS_RESPONSES.risk;
-  }
+  if (q.includes('strateg') || q.includes('current') || q.includes('approach')) return CLETUS_RESPONSES.strategy;
+  if (q.includes('signal') || q.includes('score') || q.includes('indicator')) return CLETUS_RESPONSES.signals;
+  if (q.includes('risk') || q.includes('stop') || q.includes('position') || q.includes('manag')) return CLETUS_RESPONSES.risk;
   if (q.includes('timeframe') || q.includes('meme') || q.includes('memecoin')) {
     return {
       content: `**Optimal Timeframes for Meme Coins on Solana:**
 
-**Primary:** 15m & 1h charts
-- Meme coins move fast — 1h gives cleaner signals
-- 15m for precise entry timing after 1h confirmation
-
-**Secondary:** 4h for trend direction
-- Never trade against the 4h trend
-- "The trend is your friend" applies doubly to meme coins
+**Primary:** 15m & 1h charts — meme coins move fast; 15m for entry, 1h for confirmation.
+**Secondary:** 4h for trend direction. Never trade against the 4h trend.
 
 **What I Watch:**
 - 15m Volume spike = potential entry signal
 - 1h RSI crossing 50 from below = momentum confirmation
 - 4h showing higher lows = bullish structure
 
-⚠️ **Meme coin reality:** 80% of them go to zero eventually. Position sizing and stop losses are non-negotiable. I never hold meme coins overnight without tight stops.`,
+⚠️ 80% of meme coins eventually go to zero. Position sizing and stops are non-negotiable.`,
     };
   }
+  if (q.includes('inflation') || q.includes('fed') || q.includes('gdp') || q.includes('econom') || q.includes('interest rate')) {
+    return {
+      content: `**Economics Overview:**
 
-  // Default response
+**GDP** = C + I + G + (X – M). The Fed targets ~2% inflation.
+
+**Key Rate Tools:**
+- Federal Funds Rate (benchmark short-term rate)
+- Quantitative Easing / Tightening (expanding/contracting the money supply)
+
+**Yield Curve:** When short-term rates exceed long-term rates (inversion), a recession typically follows within 12–18 months — one of the most reliable leading indicators in macro.
+
+**Inflation vs Markets:** Rising inflation → Fed hikes rates → bond prices fall → high-P/E growth stocks reprice lower → commodities often outperform.`,
+    };
+  }
+  if (q.includes('accounting') || q.includes('balance sheet') || q.includes('p/e') || q.includes('dcf') || q.includes('ebitda') || q.includes('ratio')) {
+    return {
+      content: `**Accounting & Valuation Fundamentals:**
+
+**The Three Financial Statements:**
+- **Income Statement** → Revenue, Gross Profit, EBITDA, Net Income
+- **Balance Sheet** → Assets = Liabilities + Equity
+- **Cash Flow Statement** → Operating, Investing, Financing
+
+**Key Valuation Ratios:**
+| Metric | Formula | Use |
+|--------|---------|-----|
+| P/E | Price / EPS | Earnings multiple |
+| EV/EBITDA | EV / EBITDA | Business value |
+| ROE | Net Income / Equity | Profitability |
+| Debt/Equity | Debt / Equity | Leverage |
+
+**DCF:** Discount all future free cash flows at WACC. Extremely sensitive to terminal growth rate.`,
+    };
+  }
+  if (q.includes('option') || q.includes('call') || q.includes('put') || q.includes('greek') || q.includes('delta') || q.includes('theta') || q.includes('stock') || q.includes('equit')) {
+    return {
+      content: `**Stock & Options Fundamentals:**
+
+**Stocks:** Common stock = ownership + voting rights. Intrinsic value = PV of all future cash flows.
+
+**Options Greeks:**
+| Greek | Meaning |
+|-------|---------|
+| Delta (Δ) | $ change per $1 move in underlying |
+| Gamma (Γ) | Rate of delta change |
+| Theta (Θ) | Daily time decay (options lose value daily) |
+| Vega (ν) | Sensitivity to implied volatility |
+
+**Popular Strategies:**
+- Covered call: own stock + sell call → income generation
+- Iron condor: sell OTM call + OTM put → profits in range-bound markets
+- Long straddle: buy call + put → profits from big moves either direction`,
+    };
+  }
+  if (q.includes('porter') || q.includes('strategy') || q.includes('moat') || q.includes('business')) {
+    return {
+      content: `**Business Strategy Frameworks:**
+
+**Porter's Five Forces:**
+1. Threat of new entrants
+2. Supplier bargaining power
+3. Buyer bargaining power
+4. Threat of substitutes
+5. Industry rivalry intensity
+
+**Competitive Moats (Buffett):**
+- Network effects (Visa, Mastercard)
+- Cost advantages (Walmart, Amazon)
+- Switching costs (Salesforce, Oracle)
+- Intangible assets (patents, brands)
+- Efficient scale (regulated utilities)
+
+**Blue Ocean Strategy:** Create uncontested market space rather than competing in saturated markets.`,
+    };
+  }
   return {
-    content: `That's a great question about **"${question}"**. 
+    content: `That's a great question. As Cletus, I have master's-level expertise in:
 
-As Cletus, I can tell you that I'm continuously analyzing the Solana ecosystem to find optimal trading opportunities. 
+**📊 Economics** — macro/micro theory, Fed policy, inflation, yield curves, business cycles
+**📒 Accounting** — financial statements, ratios, DCF valuation, GAAP
+**🏢 Business** — strategy, Porter's Five Forces, competitive moats, M&A
+**📈 Stocks & Options** — equities, Greeks, portfolio theory, CAPM, Sharpe ratio
+**⚡ Solana DeFi** — signal scoring, momentum trading, rug detection
 
-**What I can help you with:**
-- Trading strategy explanations
-- Signal analysis and interpretation
-- Risk management concepts
-- DeFi education
+Ask me anything — from "explain the yield curve" to "how do I read a balance sheet" to "what's your current trading strategy."
 
-**What I cannot do:**
-- Guarantee profits (no one can)
-- Predict the future with certainty
-- Give personalized financial advice
-
-Try asking me about my signal scoring system or risk management approach!
-
-*Remember: Cletus is an AI. Always DYOR and never invest more than you can afford to lose.*`,
+*Remember: I'm an AI. Always do your own research.*`,
   };
 }
 
@@ -160,7 +221,7 @@ function parseMarkdown(text: string): string {
     });
 }
 
-function MessageBubble({ message }: { message: ChatMessage }) {
+function MessageBubble({ message, isStreaming }: { message: ChatMessage; isStreaming?: boolean }) {
   const isUser = message.role === 'user';
   const timeStr = new Date(message.timestamp).toLocaleTimeString('en-US', {
     hour: '2-digit',
@@ -182,9 +243,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
       <div className={`max-w-[85%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
         <div
           className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-            isUser
-              ? 'chat-bubble-user text-white'
-              : 'chat-bubble-ai text-gray-200'
+            isUser ? 'chat-bubble-user text-white' : 'chat-bubble-ai text-gray-200'
           }`}
         >
           {isUser ? (
@@ -194,6 +253,9 @@ function MessageBubble({ message }: { message: ChatMessage }) {
               className="prose prose-invert prose-sm max-w-none"
               dangerouslySetInnerHTML={{ __html: parseMarkdown(message.content) }}
             />
+          )}
+          {isStreaming && (
+            <span className="inline-block w-2 h-4 bg-trading-green/70 ml-0.5 animate-pulse rounded-sm" />
           )}
         </div>
 
@@ -229,9 +291,7 @@ function TypingIndicator() {
             <div
               key={i}
               className="w-1.5 h-1.5 rounded-full bg-gray-400"
-              style={{
-                animation: `pulseGreen 1s ease-in-out ${i * 0.3}s infinite`,
-              }}
+              style={{ animation: `pulseGreen 1s ease-in-out ${i * 0.3}s infinite` }}
             />
           ))}
         </div>
@@ -245,28 +305,25 @@ export default function AIBrainChat() {
     {
       id: 'welcome',
       role: 'assistant',
-      content: `**Greetings. I am Cletus.** 🤖
+      content: `**Hey — I'm Cletus.** 🤖
 
-I'm an AI autonomous trading system operating on Solana. I analyze market signals, execute trades, and manage risk — all autonomously.
+I've got master's-degree-level knowledge across five disciplines and I'm ready to go deep on any of them:
 
-**I can help you understand:**
-- My trading strategy and signal detection
-- Risk management and position sizing
-- DeFi concepts and Solana ecosystem
-- Current market conditions
+📊 **Economics** — macro theory, Fed policy, inflation, recessions, yield curves
+📒 **Accounting** — reading financial statements, valuation (P/E, DCF, EV/EBITDA), ratio analysis
+🏢 **Business Management** — strategy frameworks, competitive moats, Porter's Five Forces, M&A
+📈 **Stocks & Options** — equities, Greeks, portfolio theory, CAPM, Sharpe ratio, fundamental & technical analysis
+⚡ **Solana DeFi** — token signals, momentum trading, rug detection, liquidity analysis
 
-**What I am NOT:**
-- A financial advisor
-- A guarantee of profits
-- Infallible — I make mistakes
+**You can ask me absolutely anything** — from "explain the yield curve" to "what is an iron condor?" to "how do I read a 10-K?" to "what's your current trading strategy."
 
-Ask me anything about trading, DeFi, or how I work. What would you like to know?`,
+What do you want to learn?`,
       timestamp: Date.now() - 5000,
-      citations: ['SECURITY.md'],
     },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [streamingId, setStreamingId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -278,9 +335,41 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
     scrollToBottom();
   }, [messages, isTyping, scrollToBottom]);
 
+  // Auto-resize textarea
+  useEffect(() => {
+    const ta = inputRef.current;
+    if (!ta) return;
+    ta.style.height = 'auto';
+    ta.style.height = `${Math.min(ta.scrollHeight, 120)}px`;
+  }, [input]);
+
+  // Typewriter effect for AI messages
+  const typewriterEffect = useCallback((msgId: string, fullText: string) => {
+    setStreamingId(msgId);
+    let i = 0;
+    const CHUNK = 6; // characters per tick
+    const DELAY = 16; // ms
+    const tick = () => {
+      i += CHUNK;
+      const partial = fullText.slice(0, i);
+      setMessages((prev) =>
+        prev.map((m) => (m.id === msgId ? { ...m, content: partial } : m))
+      );
+      if (i < fullText.length) {
+        setTimeout(tick, DELAY);
+      } else {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === msgId ? { ...m, content: fullText } : m))
+        );
+        setStreamingId(null);
+      }
+    };
+    setTimeout(tick, DELAY);
+  }, []);
+
   const sendMessage = useCallback(
     async (content: string) => {
-      if (!content.trim()) return;
+      if (!content.trim() || isTyping) return;
 
       const userMsg: ChatMessage = {
         id: Date.now().toString(),
@@ -293,40 +382,54 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
       setInput('');
       setIsTyping(true);
 
+      // Build history for the API (exclude welcome message, send last 20 turns max)
+      const historySnapshot = [...messages, userMsg]
+        .filter((m) => m.id !== 'welcome' && m.id !== 'new-session')
+        .slice(-20)
+        .map((m) => ({ role: m.role, content: m.content }));
+
       try {
         const res = await fetch('/api/ai', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: content.trim() }),
-          signal: AbortSignal.timeout(12_000),
+          body: JSON.stringify({
+            message: content.trim(),
+            history: historySnapshot.slice(0, -1), // exclude the current user message (already in `message`)
+          }),
+          signal: AbortSignal.timeout(15_000),
         });
         if (!res.ok) throw new Error(`API error ${res.status}`);
         const data = await res.json();
-        const answer = typeof data?.answer === 'string' && data.answer
-          ? data.answer
-          : findBestResponse(content).content;
+        const answer =
+          typeof data?.answer === 'string' && data.answer
+            ? data.answer
+            : findBestResponse(content).content;
+        const aiMsgId = (Date.now() + 1).toString();
         const aiMsg: ChatMessage = {
-          id: (Date.now() + 1).toString(),
+          id: aiMsgId,
           role: 'assistant',
-          content: answer,
+          content: '', // start empty for typewriter
           timestamp: Date.now(),
         };
         setMessages((prev) => [...prev, aiMsg]);
+        setIsTyping(false);
+        typewriterEffect(aiMsgId, answer);
       } catch {
         const response = findBestResponse(content);
+        const aiMsgId = (Date.now() + 1).toString();
         const aiMsg: ChatMessage = {
-          id: (Date.now() + 1).toString(),
+          id: aiMsgId,
           role: 'assistant',
-          content: response.content + '\n\n*⚠️ Running in offline mode — AI API unavailable.*',
+          content: '',
           timestamp: Date.now(),
           citations: response.citations,
         };
         setMessages((prev) => [...prev, aiMsg]);
-      } finally {
         setIsTyping(false);
+        typewriterEffect(aiMsgId, response.content + '\n\n*⚠️ Running in offline mode — AI API unavailable.*');
       }
     },
-    []
+    [messages, isTyping, typewriterEffect]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -341,6 +444,20 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
     }
   };
 
+  const clearChat = () => {
+    setStreamingId(null);
+    setMessages([
+      {
+        id: 'new-session',
+        role: 'assistant',
+        content: 'Session cleared. What would you like to explore — economics, accounting, business strategy, stocks, or Solana DeFi?',
+        timestamp: Date.now(),
+      },
+    ]);
+  };
+
+  const isBusy = isTyping || streamingId !== null;
+
   return (
     <div className="flex flex-col h-[calc(100vh-200px)] min-h-[500px] animate-fade-in">
       {/* Header */}
@@ -354,21 +471,12 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
               <div className="font-bold">Cletus AI Brain</div>
               <div className="flex items-center gap-1.5 text-xs">
                 <div className="w-2 h-2 rounded-full bg-trading-green status-dot-live" />
-                <span className="text-trading-green">Online · Gemini 2.5 Flash</span>
+                <span className="text-trading-green">Online · Gemini 2.0 Flash · Master-Level Knowledge</span>
               </div>
             </div>
           </div>
           <button
-            onClick={() => {
-              setMessages([
-                {
-                  id: 'new-session',
-                  role: 'assistant',
-                  content: 'Session cleared. How can I help you?',
-                  timestamp: Date.now(),
-                },
-              ]);
-            }}
+            onClick={clearChat}
             className="text-xs text-gray-500 hover:text-white bg-trading-surface border border-trading-border px-3 py-1.5 rounded-lg transition-colors"
           >
             🗑️ Clear
@@ -376,19 +484,36 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
         </div>
       </div>
 
+      {/* Topic Chips */}
+      <div className="mb-3 shrink-0">
+        <div className="text-xs text-gray-500 mb-2">Quick topics:</div>
+        <div className="flex flex-wrap gap-2">
+          {TOPIC_CHIPS.map((chip) => (
+            <button
+              key={chip.label}
+              onClick={() => sendMessage(chip.starter)}
+              disabled={isBusy}
+              className="text-xs bg-trading-surface border border-trading-border rounded-full px-3 py-1.5 text-gray-400 hover:text-white hover:border-trading-green/50 transition-all disabled:opacity-40"
+            >
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-1">
         {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+          <MessageBubble key={msg.id} message={msg} isStreaming={streamingId === msg.id} />
         ))}
         {isTyping && <TypingIndicator />}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Suggested Questions */}
+      {/* Suggested Questions (only early in conversation) */}
       {messages.length <= 2 && (
         <div className="mb-4 shrink-0">
-          <div className="text-xs text-gray-500 mb-2">Suggested questions:</div>
+          <div className="text-xs text-gray-500 mb-2">Try asking:</div>
           <div className="flex flex-wrap gap-2">
             {SUGGESTED_QUESTIONS.slice(0, 4).map((q) => (
               <button
@@ -405,27 +530,27 @@ Ask me anything about trading, DeFi, or how I work. What would you like to know?
 
       {/* Input */}
       <form onSubmit={handleSubmit} className="shrink-0">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Cletus about trading, signals, DeFi..."
+            placeholder="Ask Cletus anything — economics, accounting, stocks, options, DeFi..."
             rows={1}
             className="flex-1 bg-trading-card border border-trading-border rounded-xl px-4 py-3 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-trading-green resize-none transition-all"
             style={{ maxHeight: '120px' }}
           />
           <button
             type="submit"
-            disabled={!input.trim() || isTyping}
+            disabled={!input.trim() || isBusy}
             className="px-4 py-3 rounded-xl bg-trading-green text-black font-bold text-sm hover:bg-trading-green/90 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] shrink-0"
           >
             {isTyping ? '⏳' : '↑'}
           </button>
         </div>
         <div className="text-xs text-gray-600 mt-2 text-center">
-          Press Enter to send · Shift+Enter for new line · Not financial advice
+          Enter to send · Shift+Enter for new line · Ask anything — economics, finance, business, crypto
         </div>
       </form>
     </div>
