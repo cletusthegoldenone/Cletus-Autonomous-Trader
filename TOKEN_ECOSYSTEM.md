@@ -106,7 +106,7 @@ monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
 #### Gas-Free Staking
 
 - **No deposit fees** - Stake directly without costs
-- **Standard Unstaking** - Unstake after a 7-day cooldown. A 2% penalty applies to early unstaking within 30 days.
+- **Standard Unstaking** - 7-day cooldown period required; 2% penalty applies if unstaking within 30 days of initial stake.
 - **Auto-compound option** - Reinvest rewards automatically
 
 ---
