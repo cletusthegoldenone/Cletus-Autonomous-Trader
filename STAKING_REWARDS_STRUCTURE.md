@@ -61,13 +61,13 @@ Crypto markets are adversarial, zero-sum, and frequently irrational. Even the be
 
 | Staked Amount | Tier Name | Expected Monthly Profit* | Staking APY | Features |
 |---------------|-----------|-------------------------|------------|----------|
-| 100,000 CLETUS | Starter | None | 0.5% SOL | Core access |
-| 500,000 CLETUS | Bronze | None | 0.5% SOL | Limited features |
-| 1,000,000 CLETUS | Silver | None | 0.5% SOL | Full access |
-| 5,000,000 CLETUS | Gold | None | 0.5% SOL | Priority support |
-| 10,000,000 CLETUS | Platinum | None | 0.5% SOL | Premium insights |
-| 25,000,000 CLETUS | Diamond | None | 0.5% SOL | Profit share eligibility |
-| 100,000,000+ CLETUS | Founder | Variable* | 0.5% SOL | Profit share eligibility |
+| 100,000 CLETUS | Starter | None | 0.5% APY (paid in SOL) | Core access (0% profit share) |
+| 500,000 CLETUS | Bronze | ~$1,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 1% profit share + Limited features |
+| 1,000,000 CLETUS | Silver | ~$2,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 2% profit share + Full access |
+| 5,000,000 CLETUS | Gold | ~$5,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 5% profit share + Priority support |
+| 10,000,000 CLETUS | Platinum | ~$10,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 10% profit share + Premium insights |
+| 25,000,000 CLETUS | Diamond | ~$20,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 20% profit share + High-net-worth perks |
+| 100,000,000+ CLETUS | Founder | ~$35,000* (NOT guaranteed) | 0.5% APY (paid in SOL) | 35% profit share + Board level voting |
 
 **\*These are ESTIMATES based on historical performance. They are NOT guaranteed. Actual profits could be significantly higher or lower (including negative/loss months).**
 
@@ -91,19 +91,27 @@ If Cletus loses money that month → no distribution, no profit
 
 #### Scenario 1: Good Month
 ```
-Cletus monthly trading profit: $75,000
-2.5M staker receives: ~$5,000
-5M staker receives: ~$10,000
-10M staker receives: ~$10,000+
+Cletus monthly trading profit: $200,000 (Total Gross Profit)
+
+Total distribution of the total gross monthly platform profit of $200,000 (73% of gross profit is allocated directly to stakers across all profit-sharing tiers (Bronze–Founder), with Starter excluded, and the remaining 27% of gross profit is retained by the platform treasury):
+- Bronze Tier (1% of gross profit): $2,000 collectively split among Bronze stakers
+- Silver Tier (2% of gross profit): $4,000 collectively split among Silver stakers
+- Gold Tier (5% of gross profit): $10,000 collectively split among Gold stakers
+- Platinum Tier (10% of gross profit): $20,000 collectively split among Platinum stakers
+- Diamond Tier (20% of gross profit): $40,000 collectively split among Diamond stakers
+- Founder Tier (35% of gross profit): $70,000 collectively split among Founder stakers
+- Retained Platform Treasury (27% of gross profit): $54,000
+
+(Note: Individual payouts within each tier depend on the total number of participants in that tier. If there is only one staker in a tier, they receive the full tier-wide allocation. If there are multiple stakers, the allocation is divided proportionally based on their relative stake.)
 ```
 
 #### Scenario 2: Terrible Month (AI Failure)
 ```
 Cletus gets exploited by a pump-and-dump scheme
 Losses: -$50,000
-2.5M staker receives: $0 (plus their 0.5% SOL reward)
-5M staker receives: $0 (plus their 0.5% SOL reward)
-10M staker receives: $0 (plus their 0.5% SOL reward)
+5M staker (Gold) receives: $0 (plus their 0.5% SOL reward)
+10M staker (Platinum) receives: $0 (plus their 0.5% SOL reward)
+25M staker (Diamond) receives: $0 (plus their 0.5% SOL reward)
 
 Your staked tokens are still there, but no profit share that month.
 ```
@@ -130,87 +138,73 @@ All stakers suffer proportional loss
 
 ## Tier Details & Expected Returns (Not Guaranteed)
 
-### **Tier 1: Starter (1,000 CLETUS)**
+*The Expected Monthly Profit Share calculations below are illustrative estimates based on an assumed total gross monthly platform profit pool of $100,000 for Realistic/Expected Cases, and $200,000 for Best Case Scenarios, distributed proportionally according to each tier's profit-sharing percentage.*
+
+**Note on Pool Distribution, On-Chain Implementation, and Platform Retained Math:**
+
+### Monthly Gross Platform Profit Distribution (100% Total)
+
+| Recipient / Allocation Area | Percentage of Gross Profit | Implementation Layer / Purpose |
+|-----------------------------|----------------------------|--------------------------------|
+| **On-Chain Treasury Fee** | 20% | On-chain contract fee (`TREASURY_FEE_BPS = 2_000`, where 10,000 BPS = 100%) reserved directly in the global treasury account for protocol liquidity and insurance. |
+| **Operations Buffer** | 7% | Retained as an off-chain operations buffer to fund developer hosting infrastructure and premium RPC services. |
+| **Bronze Tier** | 1% | Collectively split among Bronze stakers (on-chain profit share). |
+| **Silver Tier** | 2% | Collectively split among Silver stakers (on-chain profit share). |
+| **Gold Tier** | 5% | Collectively split among Gold stakers (on-chain profit share). |
+| **Platinum Tier** | 10% | Collectively split among Platinum stakers (on-chain profit share). |
+| **Diamond Tier** | 20% | Collectively split among Diamond stakers (on-chain profit share). |
+| **Founder Tier** | 35% | Collectively split among Founder stakers (on-chain profit share). |
+| **Starter Tier** | 0% | Excluded from profit sharing (Starter tier has core system access only). |
+| **Total** | **100%** | **73% collective staker allocation + 27% platform-retained portion.** |
+
+The profit-sharing percentages assigned to each tier represent **direct percentages of the total gross monthly platform profit**, not percentages of a sub-pool. When summed, these tier-wide allocations total exactly 73% of the total gross monthly platform profit. The remaining 27% is retained by the platform: 20% as an on-chain treasury fee and 7% as an operations buffer for development, security insurance, and system expansion.
+
+Each tier's profit-sharing is governed by the following rules:
+- **Direct Tier Allocation:** The allocated portion of the profit pool represents a direct percentage of the total gross monthly platform profit.
+- **Proportional Division:** This portion is divided proportionally among all active stakers in that specific tier, based on their individual staked amount relative to the total staked amount in that tier.
+- **Illustrative Figures:** The "Expected Monthly Profit Share" figures shown in the individual tier sections below are illustrative examples assuming a single staker (or a highly sparsely populated tier).
+- **Proportional Reduction:** If multiple stakers occupy the same tier, their individual payouts will be reduced proportionally. For example, if there are two equal stakers in the Gold tier, each receives a proportional share of the 5% gross profit allocation, totaling 2.5% of gross profit each instead of 5%.
+
+### **Tier 1: Starter (100,000 CLETUS)**
 
 ```
-Investment (at $0.10/token): ~$100
-Monthly SOL Reward: 0.005 SOL (~$0.05)
+Investment (at $0.10/token): ~$10,000
+Monthly SOL Reward: 0.5 SOL (~$5)
 Profit Share: None
 
-Realistic expectation: $0.05/month in SOL
+Realistic expectation: $5/month in SOL
 Don't expect: Riches
-Use for: Testing/experimenting
+Use for: Core access & basic testing
 ```
 
 ---
 
-### **Tier 2: Pro (5,000 CLETUS)**
+### **Tier 2: Bronze (500,000 CLETUS)**
 
 ```
-Investment (at $0.10/token): ~$500
-Monthly SOL Reward: 0.030 SOL (~$0.30)
-Profit Share: None
-
-Realistic expectation: $0.30/month in SOL
-Don't expect: Significant returns
-Use for: Light usage
-```
-
----
-
-### **Tier 3: Elite (10,000 CLETUS)**
-
-```
-Investment (at $0.10/token): ~$1,000
-Monthly SOL Reward: 0.070 SOL (~$0.70)
-Profit Share: None
-
-Realistic expectation: $0.70/month in SOL
-Don't expect: Guaranteed anything
-Use for: Active traders
-```
-
----
-
-### **Tier 4: Whale (50,000 CLETUS)**
-
-```
-Investment (at $0.10/token): ~$5,000
-Monthly SOL Reward: 0.35 SOL (~$3.50)
-Profit Share: None
-
-Realistic expectation: $3.50/month in SOL
-Don't expect: Profits beyond staking rewards
-Use for: Large capital traders
-```
-
----
-
-### **Tier 5: Profit Sharer Tier 1 (2,500,000 CLETUS)**
-
-```
-Investment (at $0.10/token): ~$250,000
-Monthly SOL Reward: 12.5 SOL (~$125)
-Expected Monthly Profit Share: ~$5,000* (*NOT guaranteed, highly variable)
+Investment (at $0.10/token): ~$50,000
+Monthly SOL Reward: 2.5 SOL (~$25)
+Profit Share: 1%
+Expected Monthly Profit Share: ~$1,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
 Best Case Scenario (Good months):
-- SOL rewards: $125
-- Profit share: $5,000
-- Total: $5,125/month
+- SOL rewards: $25
+- Profit share: $2,000
+- Total: $2,025/month
 
 Realistic Case (Mixed months):
-- SOL rewards: $125
-- Profit share: $2,000 (some loss months)
-- Average: $2,125/month
+- SOL rewards: $25
+- Profit share: $1,000
+- Average: $1,025/month
 
 Worst Case Scenario (Bad months):
-- SOL rewards: $125
+- SOL rewards: $25
 - Profit share: $0 (Cletus loses money)
-- Total: $125/month
+- Total: $25/month
 
 Loss Scenario (Catastrophic):
 - RPC failure, contract bug, AI error
-- Your staked capital: Down to $240,000
+- Your staked capital: Down to $45,000 (10% loss)
 - Monthly: Negative
 
 ⚠️ NEVER stake more than you can afford to lose entirely.
@@ -218,31 +212,131 @@ Loss Scenario (Catastrophic):
 
 ---
 
-### **Tier 6: Profit Sharer Tier 2 (5,000,000 CLETUS)**
+### **Tier 3: Silver (1,000,000 CLETUS)**
+
+```
+Investment (at $0.10/token): ~$100,000
+Monthly SOL Reward: 5.0 SOL (~$50)
+Profit Share: 2%
+Expected Monthly Profit Share: ~$2,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
+
+Best Case Scenario (Good months):
+- SOL rewards: $50
+- Profit share: $4,000
+- Total: $4,050/month
+
+Realistic Case (Mixed months):
+- SOL rewards: $50
+- Profit share: $2,000
+- Average: $2,050/month
+
+Worst Case Scenario (Bad months):
+- SOL rewards: $50
+- Profit share: $0 (Cletus loses money)
+- Total: $50/month
+
+Loss Scenario (Catastrophic):
+- RPC failure, contract bug, AI error
+- Your staked capital: Down to $90,000 (10% loss)
+- Monthly: Negative
+
+⚠️ NEVER stake more than you can afford to lose entirely.
+```
+
+---
+
+### **Tier 4: Gold (5,000,000 CLETUS)**
 
 ```
 Investment (at $0.10/token): ~$500,000
-Monthly SOL Reward: 25 SOL (~$250)
-Expected Monthly Profit Share: ~$10,000* (*NOT guaranteed, highly variable)
+Monthly SOL Reward: 25.0 SOL (~$250)
+Profit Share: 5%
+Expected Monthly Profit Share: ~$5,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
-Best Case Scenario:
+Best Case Scenario (Good months):
 - SOL rewards: $250
 - Profit share: $10,000
 - Total: $10,250/month
 
-Realistic Case (Mixed):
+Realistic Case (Mixed months):
 - SOL rewards: $250
 - Profit share: $5,000
 - Average: $5,250/month
 
-Worst Case Scenario:
+Worst Case Scenario (Bad months):
 - SOL rewards: $250
-- Profit share: $0
+- Profit share: $0 (Cletus loses money)
 - Total: $250/month
 
-Loss Scenario:
+Loss Scenario (Catastrophic):
+- RPC failure, contract bug, AI error
+- Your staked capital: Down to $450,000 (10% loss)
+- Monthly: Negative
+
+⚠️ NEVER stake more than you can afford to lose entirely.
+```
+
+---
+
+### **Tier 5: Platinum (10,000,000 CLETUS)**
+
+```
+Investment (at $0.10/token): ~$1,000,000
+Monthly SOL Reward: 50.0 SOL (~$500)
+Profit Share: 10%
+Expected Monthly Profit Share: ~$10,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
+
+Best Case Scenario (Good months):
+- SOL rewards: $500
+- Profit share: $20,000
+- Total: $20,500/month
+
+Realistic Case (Mixed months):
+- SOL rewards: $500
+- Profit share: $10,000
+- Average: $10,500/month
+
+Worst Case Scenario (Bad months):
+- SOL rewards: $500
+- Profit share: $0 (Cletus loses money)
+- Total: $500/month
+
+Loss Scenario (Catastrophic):
+- RPC failure, contract bug, AI error
+- Your staked capital: Down to $900,000 (10% loss)
+- Monthly: Negative
+
+⚠️ NEVER stake more than you can afford to lose entirely.
+```
+
+---
+
+### **Tier 6: Diamond (25,000,000 CLETUS)**
+
+```
+Investment (at $0.10/token): ~$2,500,000
+Monthly SOL Reward: 125.0 SOL (~$1,250)
+Profit Share: 20%
+Expected Monthly Profit Share: ~$20,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
+
+Best Case Scenario (Good months):
+- SOL rewards: $1,250
+- Profit share: $40,000
+- Total: $41,250/month
+
+Realistic Case (Mixed months):
+- SOL rewards: $1,250
+- Profit share: $20,000
+- Average: $21,250/month
+
+Worst Case Scenario (Bad months):
+- SOL rewards: $1,250
+- Profit share: $0
+- Total: $1,250/month
+
+Loss Scenario (Catastrophic):
 - Cletus suffers catastrophic failure
-- Your staked capital: Down to $480,000+
+- Your staked capital: Down to $2,250,000 (10% loss)
 - Monthly: Significant losses
 
 ⚠️ This is NOT a retirement account.
@@ -250,36 +344,37 @@ Loss Scenario:
 
 ---
 
-### **Tier 7: Founder (10,000,000+ CLETUS)**
+### **Tier 7: Founder (100,000,000+ CLETUS)**
 
 ```
-Investment (at $0.10/token): ~$1,000,000
-Monthly SOL Reward: 50 SOL (~$500)
-Expected Monthly Profit Share: Variable* (*NOT guaranteed)
+Investment (at $0.10/token): ~$10,000,000
+Monthly SOL Reward: 500.0 SOL (~$5,000)
+Profit Share: 35%
+Expected Monthly Profit Share: ~$35,000* (*NOT guaranteed; actual payouts depend on the total number of participants in this tier and the platform profit pool.)
 
-Best Case Scenario:
-- SOL rewards: $500
-- Profit share: $15,000+
+Best Case Scenario (Good months):
+- SOL rewards: $5,000
+- Profit share: $70,000
 - Plus: Revenue share from subscriptions
-- Total: $15,500+/month
+- Total: $75,000+/month
 
-Realistic Case:
-- SOL rewards: $500
-- Profit share: $8,000
-- Revenue share: $2,000
-- Total: $10,500/month
+Realistic Case (Mixed months):
+- SOL rewards: $5,000
+- Profit share: $35,000
+- Revenue share: $5,000
+- Total: $45,000/month
 
-Worst Case:
+Worst Case (Bad months):
 - Cletus has losing month
-- SOL rewards: $500
+- SOL rewards: $5,000
 - Profit share: $0
 - Revenue share: $0
-- Total: $500/month
+- Total: $5,000/month
 
 Catastrophic Loss:
 - Smart contract exploit, AI failure, RPC disaster
-- Staked capital: Down to $900,000
-- You lose $100,000+
+- Your staked capital: Down to $9,000,000 (10% loss)
+- You lose $1,000,000+
 
 ⚠️ Even large stakes are not protected from loss.
 ```

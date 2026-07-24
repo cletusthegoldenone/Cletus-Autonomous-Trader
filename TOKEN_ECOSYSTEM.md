@@ -20,24 +20,30 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 
 #### Staking Rewards Structure
 
-**Stake Your CLETUS Tokens → Earn SOL Weekly**
+**Stake Your CLETUS Tokens → Earn SOL Monthly**
 
-| Staked Amount | Free Usage Tier | Weekly SOL Reward | Reward Rate |
-|---------------|-----------------|-------------------|------------|
-| 1,000 CLETUS | Starter | 0.005 SOL | 0.5% APY |
-| 5,000 CLETUS | Pro | 0.030 SOL | 0.5% APY |
-| 10,000 CLETUS | Elite | 0.070 SOL | 0.5% APY |
-| 50,000 CLETUS | Whale | 0.350 SOL | 0.5% APY |
-| 100,000+ CLETUS | Founder | 0.700+ SOL | 0.5% APY |
+*(Note: While the rewards below are presented as monthly-equivalent values, rewards actually accrue continuously block-by-block (approximately every 400-500ms on Solana). Users can claim their accumulated SOL rewards at any cadence of their choice, such as daily or weekly.)*
+
+| Staked Amount | Free Usage Tier | Monthly SOL Reward | Reward Rate |
+|---------------|-----------------|--------------------|------------|
+| 100,000 CLETUS | Starter | 0.5 SOL | 0.5% APY |
+| 500,000 CLETUS | Bronze | 2.5 SOL | 0.5% APY |
+| 1,000,000 CLETUS | Silver | 5.0 SOL | 0.5% APY |
+| 5,000,000 CLETUS | Gold | 25.0 SOL | 0.5% APY |
+| 10,000,000 CLETUS | Platinum | 50.0 SOL | 0.5% APY |
+| 25,000,000 CLETUS | Diamond | 125.0 SOL | 0.5% APY |
+| 100,000,000+ CLETUS | Founder | 500.0+ SOL | 0.5% APY |
 
 #### Free Usage by Tier
 
 | Tier | Max Position | Open Positions | Daily Target | API Access |
 |------|-------------|----------------|--------------|-----------|
 | Starter | $5K | 3 | $1K | No |
-| Pro | $15K | 10 | $5K | Read-only |
-| Elite | $50K | 20 | $20K | Full |
-| Whale | $100K | 50 | Unlimited | Full + Priority |
+| Bronze | $15K | 5 | $2.5K | No |
+| Silver | $50K | 10 | $5K | Read-only |
+| Gold | $100K | 15 | $10K | Read-only |
+| Platinum | $250K | 25 | $25K | Full |
+| Diamond | $500K | 50 | $50K | Full + Priority |
 | Founder | Unlimited | Unlimited | Unlimited | Full + Priority + Custom |
 
 #### How Staking Works
@@ -46,7 +52,7 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 ┌─────────────────────────────────────────────────────────┐
 │ Step 1: Buy CLETUS Tokens                              │
 │ Purchase on DEX or Jupiter (link at launch)             │
-│ Min 1,000 CLETUS (~$100-500 depending on price)        │
+│ Min 100,000 CLETUS (~$10,000 depending on price)        │
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
@@ -57,9 +63,9 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Step 3: Earn Weekly SOL Rewards                        │
-│ Rewards calculated every block (~400ms on Solana)       │
-│ Claim weekly or auto-compound                           │
+│ Step 3: Earn SOL Rewards                                │
+│ Rewards calculated every block (approximately every 400-500ms)│
+│ Claim weekly, monthly, or at any cadence of your choice │
 │ SOL sent directly to your wallet                        │
 └─────────────────────────────────────────────────────────┘
                          ↓
@@ -83,13 +89,22 @@ interface StakingInfo {
   stakingStartDate: number;  // Unix timestamp
   lastRewardClaim: number;   // Last withdrawal timestamp
   accumulatedRewards: number; // Pending SOL rewards
-  tier: 'STARTER' | 'PRO' | 'ELITE' | 'WHALE' | 'FOUNDER';
+  tier: 'STARTER' | 'BRONZE' | 'SILVER' | 'GOLD' | 'PLATINUM' | 'DIAMOND' | 'FOUNDER';
   unlocked: boolean;         // Free usage enabled
 }
 
-// Weekly reward calculation
-weeklyReward = (stakedTokens / 1_000_000_000) * 50_000 * (0.5 / 52);
-// Example: 10,000 CLETUS = ~0.070 SOL per week
+// Monthly reward calculation
+// Constants:
+// - stakedTokens: The amount of CLETUS tokens staked by the user.
+// - 1_000_000_000: Total token supply of CLETUS (used as the denominator for pool share).
+// - 12_000_000: Base annual reward pool scaling factor (in SOL).
+// - 0.005: APY Coefficient
+//   - Represents 0.5% APY expressed as a decimal
+//   - Yields 60,000 SOL annually at 100% capacity (12,000,000 * 0.005)
+//   - Yields 5,000 SOL monthly at 100% capacity (60,000 / 12)
+// - 12: Months in a year.
+monthlyReward = (stakedTokens / 1_000_000_000) * 12_000_000 * (0.005 / 12);
+// Example: 1,000,000 CLETUS = ~5.0 SOL per month
 ```
 
 #### Gas-Free Staking
@@ -219,7 +234,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 **A:** Yes! Unstaking is instant with no lockup period. No penalties, no delays.
 
 ### Q: How often are staking rewards distributed?
-**A:** Rewards accrue every Solana block (~400ms) but are typically claimed weekly. You can claim anytime.
+**A:** Rewards accrue every Solana block (approximately every 400-500ms) but are typically claimed weekly. You can claim anytime.
 
 ### Q: What if Cletus stops being profitable?
 **A:** The staking rewards are guaranteed by the protocol, separate from trading performance. Even if trading stops, staking continues generating SOL.
