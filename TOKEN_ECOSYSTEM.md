@@ -22,6 +22,8 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 
 **Stake Your CLETUS Tokens → Earn SOL Monthly**
 
+*(Note: While the rewards below are presented as monthly-equivalent values, rewards actually accrue continuously block-by-block (approximately every 400-500ms on Solana). Users can claim their accumulated SOL rewards at any cadence of their choice, such as daily or weekly.)*
+
 | Staked Amount | Free Usage Tier | Monthly SOL Reward | Reward Rate |
 |---------------|-----------------|--------------------|------------|
 | 100,000 CLETUS | Starter | 0.5 SOL | 0.5% APY |
@@ -61,9 +63,9 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 └─────────────────────────────────────────────────────────┘
                          ↓
 ┌─────────────────────────────────────────────────────────┐
-│ Step 3: Earn Weekly SOL Rewards                        │
-│ Rewards calculated every block (~400ms on Solana)       │
-│ Claim weekly or auto-compound                           │
+│ Step 3: Earn SOL Rewards                                │
+│ Rewards calculated every block (approximately every 400-500ms)│
+│ Claim weekly, monthly, or at any cadence of your choice │
 │ SOL sent directly to your wallet                        │
 └─────────────────────────────────────────────────────────┘
                          ↓
@@ -95,11 +97,13 @@ interface StakingInfo {
 // Constants:
 // - stakedTokens: The amount of CLETUS tokens staked by the user.
 // - 1_000_000_000: Total token supply of CLETUS (used as the denominator for pool share).
-// - 120_000: Base annual reward pool scaling factor (in SOL).
-// - 0.5: The APY reward coefficient (0.5%), yielding an annual pool of 60,000 SOL (120,000 * 0.5) at 100% staking capacity.
-// - 12: Months in a year (converts the 60,000 SOL annual pool allocation to a 5,000 SOL monthly reward payout at 100% staking capacity).
-// (Note: This formula assumes that rewards are distributed proportionally based on the share of total supply (1B CLETUS) that is currently staked, resulting in a maximum distribution of 5,000 SOL per month if 100% of supply is staked, corresponding to a maximum annual distribution of 60,000 SOL.)
-monthlyReward = (stakedTokens / 1_000_000_000) * 120_000 * (0.5 / 12);
+// - 12_000_000: Base annual reward pool scaling factor (in SOL).
+// - 0.005: APY Coefficient
+//   - Represents 0.5% APY expressed as a decimal
+//   - Yields 60,000 SOL annually at 100% capacity (12,000,000 * 0.005)
+//   - Yields 5,000 SOL monthly at 100% capacity (60,000 / 12)
+// - 12: Months in a year.
+monthlyReward = (stakedTokens / 1_000_000_000) * 12_000_000 * (0.005 / 12);
 // Example: 1,000,000 CLETUS = ~5.0 SOL per month
 ```
 
@@ -230,7 +234,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 **A:** Yes! Unstaking is instant with no lockup period. No penalties, no delays.
 
 ### Q: How often are staking rewards distributed?
-**A:** Rewards accrue every Solana block (~400ms) but are typically claimed weekly. You can claim anytime.
+**A:** Rewards accrue every Solana block (approximately every 400-500ms) but are typically claimed weekly. You can claim anytime.
 
 ### Q: What if Cletus stops being profitable?
 **A:** The staking rewards are guaranteed by the protocol, separate from trading performance. Even if trading stops, staking continues generating SOL.
