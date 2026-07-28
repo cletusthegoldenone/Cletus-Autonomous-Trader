@@ -83,7 +83,7 @@ function mockResponse(question: string): string {
     return `**Cletus Signal Engine** scans 500+ Solana micro-cap tokens every 15 seconds.\n\n**Top signal types:**\n- 🔥 Volume spike: 5m volume >5% of market cap\n- 📈 Momentum breakout: >5% price increase in 5m\n- 💧 Liquidity build: growing LP depth\n- 🐋 Buy pressure: buys >70% of 5m txns\n\nHigh-score tokens (80+) are worth investigating. Always DYOR before entering.`;
   }
   if (q.includes('stake') || q.includes('staking')) {
-    return `**Cletus Staking Tiers:**\n\n- **Starter** (100K CLETUS): Core access + 0.5% APY in SOL\n- **Gold** (5M CLETUS): 0.5% APY + 5% monthly profit share\n- **Diamond** (25M CLETUS): 0.5% APY + 20% profit share + priority signals\n\nA 1% trade fee applies on every close: 20% developer, 25% staking rewards, 30% platform upgrades, 25% digital bank fund.`;
+    return `**Cletus Staking Tiers:**\n\n- **Starter** (100K CLETUS): Core access + 0.5% APY in SOL\n- **Gold** (5M CLETUS): 0.5% APY + 5% monthly profit share\n- **Diamond** (25M CLETUS): 0.5% APY + 20% profit share + priority signals\n\nStaking CLETUS tokens gives **full platform access** — all features, unlimited AI chat, dev wallet inspector. A 1% trade fee applies on every trade close, distributed as follows: 20% to developer, 25% to staking rewards, 30% to platform upgrades, and 25% to digital bank fund. Staking unlocks profit sharing on top of everything.`;
   }
   if (q.includes('rug') || q.includes('scam')) {
     return `**Rug Detection Checklist:**\n\n- ✅ Check rugcheck.xyz for risk score\n- ✅ Verify LP is locked (>6 months ideal)\n- ✅ Dev wallet <5% of supply\n- ✅ No honeypot in contract\n- ✅ Cletus rug database: known bad devs flagged automatically`;
