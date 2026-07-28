@@ -135,6 +135,15 @@ async function initDb(): Promise<void> {
       );
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS free_trials (
+        wallet_address VARCHAR(100) PRIMARY KEY,
+        started_at BIGINT NOT NULL,
+        expires_at BIGINT NOT NULL,
+        active BOOLEAN NOT NULL
+      );
+    `);
+
     dbInitialized = true;
   } catch (err) {
     console.error('Failed to initialize PostgreSQL database for position-store:', err);
@@ -515,3 +524,125 @@ export async function getStats() {
     worstTrade,
   };
 }
+
+// ── Free Trials Store ─────────────────────────────────────────────────────────
+
+export interface FreeTrial {
+  walletAddress: string;
+  startedAt: number;
+  expiresAt: number;
+  active: boolean;
+}
+
+const freeTrialsMemory = new Map<string, FreeTrial>();
+
+export async function getTrial(walletAddress: string): Promise<FreeTrial | null> {
+  const addr = walletAddress.trim();
+  if (pool) {
+    await initDb();
+    if (pool) {
+      try {
+        const res = await pool.query('SELECT * FROM free_trials WHERE wallet_address = $1', [addr]);
+        if (res.rows.length > 0) {
+          const row = res.rows[0];
+          return {
+            walletAddress: row.wallet_address,
+            startedAt: Number(row.started_at),
+            expiresAt: Number(row.expires_at),
+            active: Boolean(row.active),
+          };
+        }
+        return null;
+      } catch (err) {
+        console.error('Failed to get trial from database, falling back to memory:', err);
+      }
+    }
+  }
+  const mem = freeTrialsMemory.get(addr);
+  return mem || null;
+}
+
+export async function saveTrial(trial: FreeTrial): Promise<FreeTrial> {
+  const addr = trial.walletAddress.trim();
+  if (pool) {
+    await initDb();
+    if (pool) {
+      try {
+        await pool.query(
+          `INSERT INTO free_trials (wallet_address, started_at, expires_at, active)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (wallet_address)
+           DO UPDATE SET started_at = EXCLUDED.started_at, expires_at = EXCLUDED.expires_at, active = EXCLUDED.active`,
+          [addr, trial.startedAt, trial.expiresAt, trial.active]
+        );
+        return trial;
+      } catch (err) {
+        console.error('Failed to save trial to database, falling back to memory:', err);
+      }
+    }
+  }
+  freeTrialsMemory.set(addr, trial);
+  return trial;
+}
+
+
+// ── Free Trials Storage ───────────────────────────────────────────────────────
+
+export interface FreeTrial {
+  walletAddress: string;
+  startedAt: number;
+  expiresAt: number;
+  active: boolean;
+}
+
+const freeTrialsMemory = new Map<string, FreeTrial>();
+
+export async function getTrial(walletAddress: string): Promise<FreeTrial | null> {
+  const addr = walletAddress.trim();
+  if (pool) {
+    await initDb();
+    if (pool) {
+      try {
+        const res = await pool.query('SELECT * FROM free_trials WHERE wallet_address = $1', [addr]);
+        if (res.rows.length > 0) {
+          const row = res.rows[0];
+          return {
+            walletAddress: row.wallet_address,
+            startedAt: Number(row.started_at),
+            expiresAt: Number(row.expires_at),
+            active: Boolean(row.active),
+          };
+        }
+        return null;
+      } catch (err) {
+        console.error('Failed to get trial from database, falling back to memory:', err);
+      }
+    }
+  }
+  const mem = freeTrialsMemory.get(addr);
+  return mem || null;
+}
+
+export async function saveTrial(trial: FreeTrial): Promise<FreeTrial> {
+  const addr = trial.walletAddress.trim();
+  if (pool) {
+    await initDb();
+    if (pool) {
+      try {
+        await pool.query(
+          `INSERT INTO free_trials (wallet_address, started_at, expires_at, active)
+           VALUES ($1, $2, $3, $4)
+           ON CONFLICT (wallet_address)
+           DO UPDATE SET started_at = EXCLUDED.started_at, expires_at = EXCLUDED.expires_at, active = EXCLUDED.active`,
+          [addr, trial.startedAt, trial.expiresAt, trial.active]
+        );
+        return trial;
+      } catch (err) {
+        console.error('Failed to save trial to database, falling back to memory:', err);
+      }
+    }
+  }
+  freeTrialsMemory.set(addr, trial);
+  return trial;
+}
+
