@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useWallet } from '@solana/wallet-adapter-react';
 import Link from 'next/link';
 import Dashboard from '@/components/Dashboard';
 import CandlestickChart from '@/components/CandlestickChart';
@@ -12,6 +13,7 @@ import DevWalletInspector from '@/components/DevWalletInspector';
 import TradingConfig from '@/components/TradingConfig';
 import SimulationDashboard from '@/components/SimulationDashboard';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
+import TrialModal from '@/components/TrialModal';
 
 type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'community' | 'inspect' | 'config' | 'simulate';
 
@@ -36,6 +38,10 @@ function TraderInner() {
   const tabParam = searchParams.get('tab') as Tab | null;
   const initialTab: Tab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'dashboard';
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const [trialActive, setTrialActive] = useState<boolean | null>(null);
+  const [trialModalOpen, setTrialModalOpen] = useState(false);
+
+  const { publicKey, connected } = useWallet();
 
   useEffect(() => {
     const tab = searchParams.get('tab') as Tab | null;
@@ -43,6 +49,44 @@ function TraderInner() {
       setActiveTab(tab);
     }
   }, [searchParams]);
+
+  // Check trial status
+  useEffect(() => {
+    if (!connected || !publicKey) {
+      setTrialActive(null);
+      return;
+    }
+
+    const checkTrial = async () => {
+      try {
+        const res = await fetch(`/api/trial/status?wallet=${publicKey.toBase58()}`);
+        if (res.ok) {
+          const data = await res.json();
+          setTrialActive(data.active);
+        } else {
+          setTrialActive(false);
+        }
+      } catch (err) {
+        console.error('Failed to check trial status:', err);
+        setTrialActive(false);
+      }
+    };
+
+    checkTrial();
+  }, [connected, publicKey]);
+
+  // Handle gated tab navigation
+  const handleTabChange = (tab: Tab) => {
+    const gatedTabs: Tab[] = ['chart', 'signals', 'ai', 'simulate', 'config'];
+    if (gatedTabs.includes(tab)) {
+      if (connected && trialActive === false) {
+        setTrialModalOpen(true);
+        setActiveTab('dashboard');
+        return;
+      }
+    }
+    setActiveTab(tab);
+  };
 
   return (
     <div className="min-h-screen bg-trading-bg text-white">
@@ -96,7 +140,7 @@ function TraderInner() {
             {TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`flex items-center gap-x-1.5 px-4 sm:px-5 py-3.5 text-sm font-medium whitespace-nowrap border-b-2 transition-all duration-150 ${
                   activeTab === tab.id
                     ? 'border-trading-green text-trading-green'
@@ -123,7 +167,7 @@ function TraderInner() {
       {/* Main Content */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6">
         {activeTab === 'dashboard' && (
-          <Dashboard onNavigate={(tab) => setActiveTab(tab as Tab)} />
+          <Dashboard onNavigate={(tab) => handleTabChange(tab as Tab)} />
         )}
         {activeTab === 'chart' && <CandlestickChart />}
         {activeTab === 'signals' && <TradingSignals />}
@@ -140,7 +184,7 @@ function TraderInner() {
           {TABS.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               className={`flex-1 flex flex-col items-center gap-y-0.5 py-2 text-[10px] transition-colors min-w-[48px] ${
                 activeTab === tab.id ? 'text-trading-green' : 'text-gray-600'
               }`}
@@ -154,6 +198,15 @@ function TraderInner() {
 
       {/* Mobile bottom padding */}
       <div className="md:hidden h-16" />
+
+      {/* Free Trial Modal */}
+      <TrialModal
+        open={trialModalOpen}
+        onClose={() => setTrialModalOpen(false)}
+        onActivated={() => {
+          setTrialActive(true);
+        }}
+      />
     </div>
   );
 }
