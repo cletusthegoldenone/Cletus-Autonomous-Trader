@@ -75,11 +75,21 @@ function TraderInner() {
     checkTrial();
   }, [connected, publicKey]);
 
+  // Redirect to dashboard if disconnected or trial becomes inactive while on a gated tab
+  useEffect(() => {
+    const gatedTabs: Tab[] = ['chart', 'signals', 'ai', 'simulate', 'config'];
+    if (gatedTabs.includes(activeTab)) {
+      if (!connected || trialActive === false) {
+        setActiveTab('dashboard');
+      }
+    }
+  }, [connected, trialActive, activeTab]);
+
   // Handle gated tab navigation
   const handleTabChange = (tab: Tab) => {
     const gatedTabs: Tab[] = ['chart', 'signals', 'ai', 'simulate', 'config'];
     if (gatedTabs.includes(tab)) {
-      if (connected && trialActive === false) {
+      if (!connected || trialActive !== true) {
         setTrialModalOpen(true);
         setActiveTab('dashboard');
         return;
@@ -167,7 +177,11 @@ function TraderInner() {
       {/* Main Content */}
       <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-6">
         {activeTab === 'dashboard' && (
-          <Dashboard onNavigate={(tab) => handleTabChange(tab as Tab)} />
+          <Dashboard
+            onNavigate={(tab) => handleTabChange(tab as Tab)}
+            trialActive={trialActive}
+            onOpenTrialModal={() => setTrialModalOpen(true)}
+          />
         )}
         {activeTab === 'chart' && <CandlestickChart />}
         {activeTab === 'signals' && <TradingSignals />}
