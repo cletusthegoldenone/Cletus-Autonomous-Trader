@@ -1,11 +1,10 @@
 'use client';
-
+ 
 import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import TrialModal from '@/components/TrialModal';
-
+ 
 const DEFAULT_STATS: DashboardStats = {
   pnl24h: 0,
   pnl24hPercent: 0,
@@ -79,15 +78,15 @@ function QuickAction({ icon, label, description, color, onClick }: QuickActionPr
 
 interface DashboardProps {
   onNavigate: (tab: string) => void;
+  trialActive: boolean | null;
+  onOpenTrialModal: () => void;
 }
 
-export default function Dashboard({ onNavigate }: DashboardProps) {
+export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }: DashboardProps) {
   const [stats, setStats] = useState<DashboardStats>(DEFAULT_STATS);
   const [walletInfo, setWalletInfo] = useState<WalletInfo>(DEFAULT_WALLET);
   const [isLive, setIsLive] = useState(true);
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [trialStatus, setTrialStatus] = useState<{ active: boolean; exists: boolean; expiresAt?: number } | null>(null);
-  const [trialModalOpen, setTrialModalOpen] = useState(false);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -165,39 +164,13 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Check trial status
-  useEffect(() => {
-    if (!connected || !publicKey) {
-      setTrialStatus(null);
-      return;
-    }
-
-    const checkTrial = async () => {
-      try {
-        const res = await fetch(`/api/trial/status?wallet=${publicKey.toBase58()}`);
-        if (res.ok) {
-          const data = await res.json();
-          setTrialStatus({
-            active: data.active,
-            exists: data.exists,
-            expiresAt: data.trial?.expiresAt,
-          });
-        }
-      } catch (err) {
-        console.error('Failed to check trial status:', err);
-      }
-    };
-
-    checkTrial();
-  }, [connected, publicKey]);
-
   const formatUsd = (n: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Free Trial CTA Banner */}
-      {connected && (!trialStatus || !trialStatus.active) && (
+      {connected && trialActive === false && (
         <div className="bg-trading-green/10 border border-trading-green/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
           <div>
             <div className="font-bold text-trading-green text-sm flex items-center gap-1.5">
@@ -209,7 +182,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             </p>
           </div>
           <button
-            onClick={() => setTrialModalOpen(true)}
+            onClick={onOpenTrialModal}
             className="px-4 py-2 bg-trading-green text-black font-bold text-xs rounded-xl hover:bg-trading-green/90 transition-all active:scale-[0.97] shrink-0"
           >
             Activate Free Trial
@@ -228,7 +201,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 {isLive ? 'LIVE TRADING' : 'PAUSED'}
               </span>
               <span className="text-xs text-gray-600 font-mono">{currentTime} UTC</span>
-              {connected && trialStatus?.active && (
+              {connected && trialActive === true && (
                 <span className="text-xs px-2 py-0.5 rounded-full bg-trading-green/20 text-trading-green border border-trading-green/30 font-semibold font-mono">
                   ⏱ 30-DAY TRIAL ACTIVE
                 </span>
@@ -403,15 +376,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           financial advice.
         </p>
       </div>
-
-      {/* Trial Activation Modal */}
-      <TrialModal
-        open={trialModalOpen}
-        onClose={() => setTrialModalOpen(false)}
-        onActivated={() => {
-          setTrialStatus({ active: true, exists: true, expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000 });
-        }}
-      />
     </div>
   );
 }
