@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
+import TrialModal from '@/components/TrialModal';
 
 // Slight upward bias to simulate realistic trending PnL in demo mode
 const UPWARD_BIAS_FACTOR = 0.48;
@@ -88,6 +89,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const [walletInfo, setWalletInfo] = useState<WalletInfo>(MOCK_WALLET);
   const [isLive, setIsLive] = useState(true);
   const [currentTime, setCurrentTime] = useState<string>('');
+  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -205,6 +207,24 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Free Trial Banner */}
+      <div className="trading-card p-4 bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider font-mono">
+            🎁 Limited Time Offer
+          </h3>
+          <p className="text-xs text-gray-300 mt-1">
+            Unlock premium features with our 30-Day Free Trial. No CLETUS staking required during the trial.
+          </p>
+        </div>
+        <button
+          onClick={() => setIsTrialModalOpen(true)}
+          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 transition-colors text-black text-xs font-semibold rounded-xl shrink-0"
+        >
+          Claim Trial
+        </button>
       </div>
 
       {/* Stats Grid */}
@@ -338,6 +358,8 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           financial advice.
         </p>
       </div>
+
+      <TrialModal open={isTrialModalOpen} onClose={() => setIsTrialModalOpen(false)} />
     </div>
   );
 }
