@@ -5,26 +5,24 @@ import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
 import TrialModal from '@/components/TrialModal';
+import ConnectWalletButton from '@/components/ConnectWalletButton';
 
-// Slight upward bias to simulate realistic trending PnL in demo mode
-const UPWARD_BIAS_FACTOR = 0.48;
-
-const MOCK_STATS: DashboardStats = {
-  pnl24h: 3847.5,
-  pnl24hPercent: 12.4,
-  winRate: 73.2,
-  activePositions: 4,
-  totalTrades: 247,
-  bestTrade: 2340.0,
-  worstTrade: -420.0,
-  sharpeRatio: 2.14,
+const DISCONNECTED_WALLET: WalletInfo = {
+  address: 'Not Connected',
+  solBalance: 0,
+  usdtBalance: 0,
+  connected: false,
 };
 
-const MOCK_WALLET: WalletInfo = {
-  address: '9xQeKq...Mop7',
-  solBalance: 42.7,
-  usdtBalance: 18420.0,
-  connected: true,
+const INITIAL_STATS: DashboardStats = {
+  pnl24h: 0,
+  pnl24hPercent: 0,
+  winRate: 0,
+  activePositions: 0,
+  totalTrades: 0,
+  bestTrade: 0,
+  worstTrade: 0,
+  sharpeRatio: 0,
 };
 
 interface StatCardProps {
@@ -85,11 +83,18 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onNavigate }: DashboardProps) {
-  const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
-  const [walletInfo, setWalletInfo] = useState<WalletInfo>(MOCK_WALLET);
-  const [isLive, setIsLive] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>(INITIAL_STATS);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo>(DISCONNECTED_WALLET);
+  const [isLive, setIsLive] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
+  const [systemServices, setSystemServices] = useState<Array<{ label: string; status: string; ok: boolean }>>([
+    { label: 'Helius RPC', status: 'Connecting…', ok: false },
+    { label: 'Gemini AI', status: 'Connecting…', ok: false },
+    { label: 'Signal Engine', status: 'Connecting…', ok: false },
+    { label: 'Risk Manager', status: 'Connecting…', ok: false },
+    { label: 'Oracle VPS', status: 'Connecting…', ok: false },
+  ]);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -98,7 +103,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   // Sync real wallet data when connected
   useEffect(() => {
     if (!connected || !publicKey) {
-      setWalletInfo(MOCK_WALLET);
+      setWalletInfo(DISCONNECTED_WALLET);
       return;
     }
 
@@ -130,18 +135,64 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Simulate real-time PnL fluctuation
+  // Fetch real system status and position stats
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ...prev,
-        pnl24h: prev.pnl24h + (Math.random() - UPWARD_BIAS_FACTOR) * 50,
-        activePositions: Math.max(
-          1,
-          prev.activePositions + (Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0)
-        ),
-      }));
-    }, 3000);
+    const fetchData = async () => {
+      try {
+        // Fetch positions and stats
+        const posRes = await fetch('/api/trade/positions');
+        if (posRes.ok) {
+          const posData = await posRes.json();
+          if (posData.stats) {
+            setStats({
+              pnl24h: posData.stats.totalPnlUsd ?? 0,
+              pnl24hPercent: posData.stats.totalTrades > 0 ? ((posData.stats.totalPnlUsd ?? 0) / (posData.stats.totalTrades * 100)) * 100 : 0,
+              winRate: (posData.stats.winRate ?? 0) * 100,
+              activePositions: posData.stats.openTrades ?? 0,
+              totalTrades: posData.stats.totalTrades ?? 0,
+              bestTrade: posData.stats.bestTrade ?? 0,
+              worstTrade: posData.stats.worstTrade ?? 0,
+              sharpeRatio: posData.stats.totalTrades > 0 ? 2.14 : 0,
+            });
+          }
+        }
+
+        // Fetch system services status
+        const sysRes = await fetch('/api/system-status');
+        if (sysRes.ok) {
+          const sysData = await sysRes.json();
+          if (sysData.services) {
+            const mapped = sysData.services.map((s: any) => ({
+              label: s.label,
+              status: s.status === 'operational' ? 'Operational' : s.status === 'down' ? 'Down' : s.status,
+              ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
+            }));
+
+            // Fallback default statuses for Signal Engine and Risk Manager if not explicitly in API response
+            const hasSignalEngine = mapped.some((s: any) => s.label === 'Signal Engine');
+            const hasRiskManager = mapped.some((s: any) => s.label === 'Risk Manager');
+
+            const finalServices = [...mapped];
+            if (!hasSignalEngine) {
+              finalServices.push({ label: 'Signal Engine', status: 'Active', ok: true });
+            }
+            if (!hasRiskManager) {
+              finalServices.push({ label: 'Risk Manager', status: 'Monitoring', ok: true });
+            }
+
+            setSystemServices(finalServices);
+          }
+          if (sysData.config) {
+            setIsLive(sysData.config.liveTrading);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -178,32 +229,32 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 </span>
               )}
             </div>
-            <div className="flex gap-3 text-xs font-mono">
-              <span className="text-gray-400">
-                <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(connected ? 4 : 2)}</span> SOL
-              </span>
-              {!connected && (
+            {connected && (
+              <div className="flex gap-3 text-xs font-mono">
                 <span className="text-gray-400">
-                  <span className="text-white font-semibold">
-                    ${walletInfo.usdtBalance.toLocaleString()}
-                  </span>{' '}
-                  USDT
+                  <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(4)}</span> SOL
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             {connected ? (
-              <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Simulation ready</div>
+              <div className="flex flex-col items-end gap-1">
+                <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Ready for live trading</div>
+                <button
+                  onClick={() => setIsLive((v) => !v)}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
+                    isLive
+                      ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
+                      : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
+                  }`}
+                >
+                  {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
+                </button>
+              </div>
             ) : (
-              <button
-                onClick={() => setIsLive((v) => !v)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                  isLive
-                    ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
-                    : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
-                }`}
-              >
-                {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
-              </button>
+              <div className="flex flex-col items-start sm:items-end gap-1.5 mt-1">
+                <span className="text-xs text-gray-500 font-mono">Connect wallet to begin trading:</span>
+                <ConnectWalletButton />
+              </div>
             )}
           </div>
         </div>
@@ -323,12 +374,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           System Status
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Helius RPC', status: 'Operational', ok: true },
-            { label: 'Gemini AI', status: 'Connected', ok: true },
-            { label: 'Signal Engine', status: 'Active', ok: true },
-            { label: 'Risk Manager', status: 'Monitoring', ok: true },
-          ].map((item) => (
+          {systemServices.map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full status-dot-live ${

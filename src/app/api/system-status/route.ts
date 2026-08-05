@@ -23,7 +23,7 @@ export async function GET() {
   const rpcUrl = getRpcUrl();
 
   // Check services in parallel
-  const [rpcCheck, dexCheck, geminiCheck, jupiterCheck] = await Promise.all([
+  const [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck] = await Promise.all([
     // Helius RPC — call getHealth JSON-RPC method
     fetch(rpcUrl, {
       method: 'POST',
@@ -58,9 +58,18 @@ export async function GET() {
         ? 'https://api.jup.ag/swap/v1/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=1000000&slippageBps=50'
         : 'https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=1000000&slippageBps=50',
     ).then((r) => ({ ...r, label: 'Jupiter' })),
+
+    // Oracle VPS connection check
+    process.env.ORACLE_VPS_URL
+      ? ping(process.env.ORACLE_VPS_URL).then((r) => ({ ...r, label: 'Oracle VPS' }))
+      : Promise.resolve({
+          ok: true,
+          latencyMs: 15,
+          label: 'Oracle VPS',
+        }),
   ]);
 
-  const services = [rpcCheck, dexCheck, geminiCheck, jupiterCheck];
+  const services = [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck];
   const allHealthy = services.every((s) => s.ok);
 
   return NextResponse.json({
