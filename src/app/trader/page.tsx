@@ -12,10 +12,12 @@ import DevWalletInspector from '@/components/DevWalletInspector';
 import TradingConfig from '@/components/TradingConfig';
 import SimulationDashboard from '@/components/SimulationDashboard';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
+import GeminiLiveChat from '@/components/GeminiLiveChat';
+import InvestorRelations from '@/components/InvestorRelations';
 
-type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'community' | 'inspect' | 'config' | 'simulate';
+type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'gemini' | 'simulate' | 'config' | 'community' | 'investor' | 'inspect';
 
-const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'community', 'inspect', 'config', 'simulate'];
+const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'gemini', 'simulate', 'config', 'community', 'investor', 'inspect'];
 
 const AI_MODEL_LABEL = process.env.NEXT_PUBLIC_AI_MODEL_LABEL ?? 'Gemini AI';
 
@@ -24,9 +26,11 @@ const TABS: { id: Tab; label: string; icon: string; badge?: string }[] = [
   { id: 'chart', label: 'Chart', icon: '📈' },
   { id: 'signals', label: 'Signals', icon: '⚡', badge: 'LIVE' },
   { id: 'ai', label: 'Cletus AI', icon: '🤖' },
+  { id: 'gemini', label: 'Gemini Live', icon: '💬', badge: 'NEW' },
   { id: 'simulate', label: 'Simulate', icon: '🎮', badge: 'BETA' },
   { id: 'config', label: 'Config', icon: '⚙️' },
   { id: 'community', label: 'Community', icon: '🪿' },
+  { id: 'investor', label: 'Investor', icon: '💼' },
   { id: 'inspect', label: 'Dev Wallet', icon: '🔍' },
 ];
 
@@ -128,9 +132,11 @@ function TraderInner() {
         {activeTab === 'chart' && <CandlestickChart />}
         {activeTab === 'signals' && <TradingSignals />}
         {activeTab === 'ai' && <AIBrainChat />}
+        {activeTab === 'gemini' && <GeminiLiveChat />}
         {activeTab === 'simulate' && <SimulationDashboard />}
         {activeTab === 'config' && <TradingConfig />}
         {activeTab === 'community' && <CommunityChat />}
+        {activeTab === 'investor' && <InvestorRelations />}
         {activeTab === 'inspect' && <DevWalletInspector />}
       </main>
 
