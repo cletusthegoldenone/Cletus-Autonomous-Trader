@@ -87,9 +87,9 @@ PRIORITY_FEE_LAMPORTS=100000
 # ============================================================================
 # FEATURE FLAGS
 # ============================================================================
-ENABLE_LIVE_TRADING=false
+ENABLE_LIVE_TRADING=true
 ENABLE_24_7_TRADING=false
-SIMULATION_MODE=true
+SIMULATION_MODE=false
 LOG_LEVEL=debug
 
 # ============================================================================
