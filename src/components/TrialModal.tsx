@@ -79,7 +79,7 @@ export default function TrialModal({ open, onClose, onActivated }: TrialModalPro
               onClick={onClose}
               className="mt-6 w-full py-3 bg-trading-green text-black rounded-xl font-bold text-sm hover:bg-trading-green/90 transition-all active:scale-[0.98]"
             >
-              Let's Trade!
+              Let&apos;s Trade!
             </button>
           </div>
         ) : (

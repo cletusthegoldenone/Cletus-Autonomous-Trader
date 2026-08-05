@@ -245,6 +245,7 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
         </div>
       </div>
 
+
       {/* Stats Grid */}
       <div>
         <h2 className="text-xs text-gray-500 uppercase tracking-wider font-medium mb-3">
