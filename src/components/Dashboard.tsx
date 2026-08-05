@@ -7,6 +7,8 @@ import type { DashboardStats, WalletInfo } from '@/types';
 import TrialModal from '@/components/TrialModal';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
 
+const REFERENCE_CAPITAL_USD = 10000;
+
 const DISCONNECTED_WALLET: WalletInfo = {
   address: 'Not Connected',
   solBalance: 0,
@@ -152,7 +154,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           if (posData.stats) {
             setStats({
               pnl24h: posData.stats.totalPnlUsd ?? 0,
-              pnl24hPercent: ((posData.stats.totalPnlUsd ?? 0) / 10000) * 100,
+              pnl24hPercent: ((posData.stats.totalPnlUsd ?? 0) / REFERENCE_CAPITAL_USD) * 100,
               winRate: (posData.stats.winRate ?? 0) * 100,
               activePositions: posData.stats.openTrades ?? 0,
               totalTrades: posData.stats.totalTrades ?? 0,
