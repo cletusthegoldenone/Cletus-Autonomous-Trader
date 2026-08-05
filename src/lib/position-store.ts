@@ -511,9 +511,9 @@ export async function getStats() {
   const worstTrade = losses.length > 0 ? Math.min(...losses.map((p) => p.realisedPnlUsd)) : 0;
 
   let sharpeRatio = 0;
-  if (closed.length > 0) {
+  if (closed.length >= 2) {
     const avgPnl = totalPnl / closed.length;
-    const varianceDenominator = closed.length > 1 ? closed.length - 1 : 1;
+    const varianceDenominator = closed.length - 1;
     const variance = closed.reduce((sum, p) => sum + Math.pow(p.realisedPnlUsd - avgPnl, 2), 0) / varianceDenominator;
     const stdDev = Math.sqrt(variance);
     sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;

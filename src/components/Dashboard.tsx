@@ -3,13 +3,19 @@
 import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import type { DashboardStats, WalletInfo } from '@/types';
+import type { DashboardStats, WalletInfo, SystemStatusService } from '@/types';
 import TrialModal from '@/components/TrialModal';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
 
 // Reference base capital of $10,000 used to calculate a standardized 24h PnL performance percentage 
 // when the actual total absolute pool/trading deposit size fluctuates or is not directly queried.
 const REFERENCE_CAPITAL_USD = 10000;
+
+const STATUS_LABELS: Record<string, string> = {
+  operational: 'Operational',
+  down: 'Down',
+  unconfigured: 'Unconfigured',
+};
 
 const DISCONNECTED_WALLET: WalletInfo = {
   address: 'Not Connected',
@@ -82,12 +88,6 @@ function QuickAction({ icon, label, description, color, onClick }: QuickActionPr
   );
 }
 
-interface SystemStatusService {
-  label: string;
-  status: string;
-  latencyMs: number | null;
-}
-
 interface DashboardProps {
   onNavigate: (tab: string) => void;
 }
@@ -98,7 +98,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   const [isLive, setIsLive] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
   const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
-  const [systemServices, setSystemServices] = useState<Array<{ label: string; status: string; ok: boolean }>>([
+  const [systemServices, setSystemServices] = useState<SystemStatusService[]>([
     { label: 'Helius RPC', status: 'Connecting…', ok: false },
     { label: 'Gemini AI', status: 'Connecting…', ok: false },
     { label: 'Signal Engine', status: 'Connecting…', ok: false },
@@ -174,7 +174,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           if (sysData.services) {
             const mapped = sysData.services.map((s: SystemStatusService) => ({
               label: s.label,
-              status: s.status === 'operational' ? 'Operational' : s.status === 'down' ? 'Down' : s.status === 'unconfigured' ? 'Unconfigured' : s.status,
+              status: STATUS_LABELS[s.status] ?? s.status,
               ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
             }));
 
