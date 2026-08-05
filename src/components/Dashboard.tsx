@@ -78,6 +78,12 @@ function QuickAction({ icon, label, description, color, onClick }: QuickActionPr
   );
 }
 
+interface SystemStatusService {
+  label: string;
+  status: string;
+  latencyMs: number | null;
+}
+
 interface DashboardProps {
   onNavigate: (tab: string) => void;
 }
@@ -146,7 +152,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           if (posData.stats) {
             setStats({
               pnl24h: posData.stats.totalPnlUsd ?? 0,
-              pnl24hPercent: posData.stats.totalTrades > 0 ? ((posData.stats.totalPnlUsd ?? 0) / (posData.stats.totalTrades * 100)) * 100 : 0,
+              pnl24hPercent: ((posData.stats.totalPnlUsd ?? 0) / 10000) * 100,
               winRate: (posData.stats.winRate ?? 0) * 100,
               activePositions: posData.stats.openTrades ?? 0,
               totalTrades: posData.stats.totalTrades ?? 0,
@@ -162,15 +168,15 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
         if (sysRes.ok) {
           const sysData = await sysRes.json();
           if (sysData.services) {
-            const mapped = sysData.services.map((s: any) => ({
+            const mapped = sysData.services.map((s: SystemStatusService) => ({
               label: s.label,
               status: s.status === 'operational' ? 'Operational' : s.status === 'down' ? 'Down' : s.status,
               ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
             }));
 
             // Fallback default statuses for Signal Engine and Risk Manager if not explicitly in API response
-            const hasSignalEngine = mapped.some((s: any) => s.label === 'Signal Engine');
-            const hasRiskManager = mapped.some((s: any) => s.label === 'Risk Manager');
+            const hasSignalEngine = mapped.some((s: { label: string }) => s.label === 'Signal Engine');
+            const hasRiskManager = mapped.some((s: { label: string }) => s.label === 'Risk Manager');
 
             const finalServices = [...mapped];
             if (!hasSignalEngine) {

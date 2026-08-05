@@ -65,7 +65,7 @@ export async function GET() {
       : Promise.resolve({
           ok: false,
           latencyMs: 0,
-          label: 'Oracle VPS (unconfigured)',
+          label: 'Oracle VPS',
         }),
   ]);
 
