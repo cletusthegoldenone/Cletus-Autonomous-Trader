@@ -174,7 +174,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           if (sysData.services) {
             const mapped = sysData.services.map((s: SystemStatusService) => ({
               label: s.label,
-              status: s.status === 'operational' ? 'Operational' : s.status === 'down' ? 'Down' : s.status,
+              status: s.status === 'operational' ? 'Operational' : s.status === 'down' ? 'Down' : s.status === 'unconfigured' ? 'Unconfigured' : s.status,
               ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
             }));
 

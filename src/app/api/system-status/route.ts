@@ -64,6 +64,7 @@ export async function GET() {
       ? ping(process.env.ORACLE_VPS_URL).then((r) => ({ ...r, label: 'Oracle VPS' }))
       : Promise.resolve({
           ok: false,
+          status: 'unconfigured',
           latencyMs: null,
           label: 'Oracle VPS',
         }),
@@ -78,7 +79,7 @@ export async function GET() {
 
     services: services.map((s) => ({
       label: s.label,
-      status: s.ok ? 'operational' : 'down',
+      status: (s as any).status || (s.ok ? 'operational' : 'down'),
       latencyMs: s.latencyMs || null,
     })),
 
