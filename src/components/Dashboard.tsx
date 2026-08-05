@@ -152,7 +152,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               totalTrades: posData.stats.totalTrades ?? 0,
               bestTrade: posData.stats.bestTrade ?? 0,
               worstTrade: posData.stats.worstTrade ?? 0,
-              sharpeRatio: posData.stats.totalTrades > 0 ? 2.14 : 0,
+              sharpeRatio: posData.stats.sharpeRatio ?? 0,
             });
           }
         }
@@ -238,17 +238,14 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             )}
             {connected ? (
               <div className="flex flex-col items-end gap-1">
-                <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Ready for live trading</div>
-                <button
-                  onClick={() => setIsLive((v) => !v)}
-                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
-                    isLive
-                      ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
-                      : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
-                  }`}
-                >
-                  {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
-                </button>
+                <div className="text-xs text-trading-green/70 font-mono mb-1">Wallet connected · Ready for live trading</div>
+                <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold font-mono ${
+                  isLive
+                    ? 'bg-trading-green/20 text-trading-green border border-trading-green/30'
+                    : 'bg-trading-red/20 text-trading-red border border-trading-red/30'
+                }`}>
+                  {isLive ? '● Trading Engine Active' : '○ Trading Engine Paused'}
+                </span>
               </div>
             ) : (
               <div className="flex flex-col items-start sm:items-end gap-1.5 mt-1">

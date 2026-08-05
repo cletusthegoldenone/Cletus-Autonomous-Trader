@@ -479,10 +479,20 @@ export async function getStats() {
             COALESCE(MIN(CASE WHEN realised_pnl_usd <= 0 THEN realised_pnl_usd END), 0)::double precision as worst_trade
           FROM closed_positions
         `);
+        const allPnlsRes = await pool.query('SELECT realised_pnl_usd::double precision as pnl FROM closed_positions');
 
         const openTrades = openCountRes.rows[0].count;
         const s = closedStatsRes.rows[0];
         const winRate = s.total_trades > 0 ? s.wins / s.total_trades : 0;
+
+        const pnls: number[] = allPnlsRes.rows.map((r) => r.pnl);
+        let sharpeRatio = 0;
+        if (pnls.length > 0) {
+          const avgPnl = pnls.reduce((sum, v) => sum + v, 0) / pnls.length;
+          const variance = pnls.reduce((sum, v) => sum + Math.pow(v - avgPnl, 2), 0) / pnls.length;
+          const stdDev = Math.sqrt(variance);
+          sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
+        }
 
         return {
           totalTrades: s.total_trades,
@@ -491,6 +501,7 @@ export async function getStats() {
           totalPnlUsd: s.total_pnl,
           bestTrade: s.best_trade,
           worstTrade: s.worst_trade,
+          sharpeRatio,
         };
       } catch (err) {
         console.error('Failed to get stats from database, falling back to memory:', err);
@@ -506,6 +517,14 @@ export async function getStats() {
   const bestTrade = wins.length > 0 ? Math.max(...wins.map((p) => p.realisedPnlUsd)) : 0;
   const worstTrade = losses.length > 0 ? Math.min(...losses.map((p) => p.realisedPnlUsd)) : 0;
 
+  let sharpeRatio = 0;
+  if (closed.length > 0) {
+    const avgPnl = totalPnl / closed.length;
+    const variance = closed.reduce((sum, p) => sum + Math.pow(p.realisedPnlUsd - avgPnl, 2), 0) / closed.length;
+    const stdDev = Math.sqrt(variance);
+    sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
+  }
+
   return {
     totalTrades: closed.length,
     openTrades: openPositions.size,
@@ -513,5 +532,6 @@ export async function getStats() {
     totalPnlUsd: totalPnl,
     bestTrade,
     worstTrade,
+    sharpeRatio,
   };
 }

@@ -63,9 +63,9 @@ export async function GET() {
     process.env.ORACLE_VPS_URL
       ? ping(process.env.ORACLE_VPS_URL).then((r) => ({ ...r, label: 'Oracle VPS' }))
       : Promise.resolve({
-          ok: true,
-          latencyMs: 15,
-          label: 'Oracle VPS',
+          ok: false,
+          latencyMs: 0,
+          label: 'Oracle VPS (unconfigured)',
         }),
   ]);
 
