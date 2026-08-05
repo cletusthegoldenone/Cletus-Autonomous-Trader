@@ -1,21 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getTrial, saveTrial } from '@/lib/position-store';
 
-export async function POST(request: NextRequest) {
+function isValidSolanaAddress(addr: string): boolean {
+  return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(addr);
+}
+
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const wallet = body.wallet;
-    
-    // Simulate trial activation and persist / return success
-    return NextResponse.json({
-      success: true,
-      wallet,
-      message: '30-day free trial activated successfully',
-      timestamp: new Date().toISOString(),
-    });
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to activate trial' },
-      { status: 500 }
-    );
+    const body = await req.json();
+    const wallet = body?.wallet?.trim();
+
+    if (!wallet || !isValidSolanaAddress(wallet)) {
+      return NextResponse.json({ error: 'Invalid or missing Solana wallet address' }, { status: 400 });
+    }
+
+    const existing = await getTrial(wallet);
+    if (existing) {
+      return NextResponse.json({ success: true, trial: existing });
+    }
+
+    const now = Date.now();
+    const duration = 30 * 24 * 60 * 60 * 1000; // 30 days
+    const trial = {
+      walletAddress: wallet,
+      startedAt: now,
+      expiresAt: now + duration,
+      active: true,
+    };
+
+    const saved = await saveTrial(trial);
+    return NextResponse.json({ success: true, trial: saved });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: `Failed to start trial: ${msg}` }, { status: 500 });
   }
 }

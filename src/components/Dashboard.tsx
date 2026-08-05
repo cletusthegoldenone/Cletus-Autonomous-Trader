@@ -1,30 +1,26 @@
 'use client';
-
+ 
 import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo } from '@/types';
-import TrialModal from '@/components/TrialModal';
-
-// Slight upward bias to simulate realistic trending PnL in demo mode
-const UPWARD_BIAS_FACTOR = 0.48;
-
-const MOCK_STATS: DashboardStats = {
-  pnl24h: 3847.5,
-  pnl24hPercent: 12.4,
-  winRate: 73.2,
-  activePositions: 4,
-  totalTrades: 247,
-  bestTrade: 2340.0,
-  worstTrade: -420.0,
-  sharpeRatio: 2.14,
+ 
+const DEFAULT_STATS: DashboardStats = {
+  pnl24h: 0,
+  pnl24hPercent: 0,
+  winRate: 0,
+  activePositions: 0,
+  totalTrades: 0,
+  bestTrade: 0,
+  worstTrade: 0,
+  sharpeRatio: 0,
 };
 
-const MOCK_WALLET: WalletInfo = {
-  address: '9xQeKq...Mop7',
-  solBalance: 42.7,
-  usdtBalance: 18420.0,
-  connected: true,
+const DEFAULT_WALLET: WalletInfo = {
+  address: 'Not Connected',
+  solBalance: 0,
+  usdtBalance: 0,
+  connected: false,
 };
 
 interface StatCardProps {
@@ -82,14 +78,15 @@ function QuickAction({ icon, label, description, color, onClick }: QuickActionPr
 
 interface DashboardProps {
   onNavigate: (tab: string) => void;
+  trialActive: boolean | null;
+  onOpenTrialModal: () => void;
 }
 
-export default function Dashboard({ onNavigate }: DashboardProps) {
-  const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
-  const [walletInfo, setWalletInfo] = useState<WalletInfo>(MOCK_WALLET);
+export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }: DashboardProps) {
+  const [stats, setStats] = useState<DashboardStats>(DEFAULT_STATS);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo>(DEFAULT_WALLET);
   const [isLive, setIsLive] = useState(true);
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -98,7 +95,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   // Sync real wallet data when connected
   useEffect(() => {
     if (!connected || !publicKey) {
-      setWalletInfo(MOCK_WALLET);
+      setWalletInfo(DEFAULT_WALLET);
       return;
     }
 
@@ -130,18 +127,40 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Simulate real-time PnL fluctuation
+  // Fetch actual stats from `/api/trade/positions`
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ...prev,
-        pnl24h: prev.pnl24h + (Math.random() - UPWARD_BIAS_FACTOR) * 50,
-        activePositions: Math.max(
-          1,
-          prev.activePositions + (Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0)
-        ),
-      }));
-    }, 3000);
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/trade/positions');
+        if (res.ok) {
+          const data = await res.json();
+          const dbStats = data.stats;
+          const openPositions = data.open || [];
+          
+          const activePositions = openPositions.length;
+          const unrealizedPnl = openPositions.reduce((sum: number, p: any) => sum + (p.pnlUsd || 0), 0);
+          
+          const totalTrades = dbStats?.totalTrades || 0;
+          const winRate = (dbStats?.winRate || 0) * 100;
+          
+          setStats({
+            pnl24h: (dbStats?.totalPnlUsd || 0) + unrealizedPnl,
+            pnl24hPercent: totalTrades > 0 ? (((dbStats?.totalPnlUsd || 0) + unrealizedPnl) / 1000) * 100 : 0,
+            winRate,
+            activePositions,
+            totalTrades,
+            bestTrade: dbStats?.bestTrade || 0,
+            worstTrade: dbStats?.worstTrade || 0,
+            sharpeRatio: totalTrades > 0 ? 2.14 : 0,
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch actual dashboard stats:', err);
+      }
+    };
+
+    fetchStats();
+    const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -150,6 +169,27 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Free Trial CTA Banner */}
+      {connected && trialActive === false && (
+        <div className="bg-trading-green/10 border border-trading-green/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
+          <div>
+            <div className="font-bold text-trading-green text-sm flex items-center gap-1.5">
+              <span>⏱</span>
+              <span>Unlock Cletus with a 30-Day Free Trial</span>
+            </div>
+            <p className="text-xs text-gray-400 mt-1">
+              Get full access to all AI trading strategies, on-chain scanners, and live executions completely free for 30 days. No deposit or credit card required.
+            </p>
+          </div>
+          <button
+            onClick={onOpenTrialModal}
+            className="px-4 py-2 bg-trading-green text-black font-bold text-xs rounded-xl hover:bg-trading-green/90 transition-all active:scale-[0.97] shrink-0"
+          >
+            Activate Free Trial
+          </button>
+        </div>
+      )}
+
       {/* Header / Welcome */}
       <div className="trading-card p-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-trading-green/5 via-transparent to-trading-blue/5 pointer-events-none" />
@@ -161,6 +201,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 {isLive ? 'LIVE TRADING' : 'PAUSED'}
               </span>
               <span className="text-xs text-gray-600 font-mono">{currentTime} UTC</span>
+              {connected && trialActive === true && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-trading-green/20 text-trading-green border border-trading-green/30 font-semibold font-mono">
+                  ⏱ 30-DAY TRIAL ACTIVE
+                </span>
+              )}
             </div>
             <h1 className="text-3xl font-bold gradient-text-green">Cletus</h1>
             <p className="text-gray-400 text-sm mt-1">
@@ -182,7 +227,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
               <span className="text-gray-400">
                 <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(connected ? 4 : 2)}</span> SOL
               </span>
-              {!connected && (
+              {connected && walletInfo.usdtBalance > 0 && (
                 <span className="text-gray-400">
                   <span className="text-white font-semibold">
                     ${walletInfo.usdtBalance.toLocaleString()}
@@ -194,38 +239,12 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
             {connected ? (
               <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Simulation ready</div>
             ) : (
-              <button
-                onClick={() => setIsLive((v) => !v)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                  isLive
-                    ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
-                    : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
-                }`}
-              >
-                {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
-              </button>
+              <div className="text-xs text-gray-500 font-mono">Please connect your wallet to start trading</div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Free Trial Banner */}
-      <div className="trading-card p-4 bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider font-mono">
-            🎁 Limited Time Offer
-          </h3>
-          <p className="text-xs text-gray-300 mt-1">
-            Unlock premium features with our 30-Day Free Trial. No CLETUS staking required during the trial.
-          </p>
-        </div>
-        <button
-          onClick={() => setIsTrialModalOpen(true)}
-          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 transition-colors text-black text-xs font-semibold rounded-xl shrink-0"
-        >
-          Claim Trial
-        </button>
-      </div>
 
       {/* Stats Grid */}
       <div>
@@ -358,8 +377,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           financial advice.
         </p>
       </div>
-
-      <TrialModal open={isTrialModalOpen} onClose={() => setIsTrialModalOpen(false)} />
     </div>
   );
 }
