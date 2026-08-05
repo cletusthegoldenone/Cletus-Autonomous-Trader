@@ -476,24 +476,16 @@ export async function getStats() {
             COALESCE(SUM(realised_pnl_usd), 0)::double precision as total_pnl,
             COUNT(CASE WHEN realised_pnl_usd > 0 THEN 1 END)::int as wins,
             COALESCE(MAX(CASE WHEN realised_pnl_usd > 0 THEN realised_pnl_usd END), 0)::double precision as best_trade,
-            COALESCE(MIN(CASE WHEN realised_pnl_usd <= 0 THEN realised_pnl_usd END), 0)::double precision as worst_trade
+            COALESCE(MIN(CASE WHEN realised_pnl_usd <= 0 THEN realised_pnl_usd END), 0)::double precision as worst_trade,
+            COALESCE(AVG(realised_pnl_usd), 0)::double precision as avg_pnl,
+            COALESCE(STDDEV_SAMP(realised_pnl_usd), 0)::double precision as stddev_pnl
           FROM closed_positions
         `);
-        const allPnlsRes = await pool.query('SELECT realised_pnl_usd::double precision as pnl FROM closed_positions');
 
         const openTrades = openCountRes.rows[0].count;
         const s = closedStatsRes.rows[0];
         const winRate = s.total_trades > 0 ? s.wins / s.total_trades : 0;
-
-        const pnls: number[] = allPnlsRes.rows.map((r) => r.pnl);
-        let sharpeRatio = 0;
-        if (pnls.length > 0) {
-          const avgPnl = pnls.reduce((sum, v) => sum + v, 0) / pnls.length;
-          const varianceDenominator = pnls.length > 1 ? pnls.length - 1 : 1;
-          const variance = pnls.reduce((sum, v) => sum + Math.pow(v - avgPnl, 2), 0) / varianceDenominator;
-          const stdDev = Math.sqrt(variance);
-          sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
-        }
+        const sharpeRatio = s.stddev_pnl > 0 ? s.avg_pnl / s.stddev_pnl : 0;
 
         return {
           totalTrades: s.total_trades,

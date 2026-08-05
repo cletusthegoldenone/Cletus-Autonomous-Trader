@@ -13,6 +13,13 @@ async function ping(url: string, timeoutMs = 4_000): Promise<{ ok: boolean; late
   }
 }
 
+interface ServiceCheckResult {
+  ok: boolean;
+  latencyMs: number | null;
+  label: string;
+  status?: string;
+}
+
 /**
  * GET /api/system-status
  *
@@ -70,7 +77,7 @@ export async function GET() {
         }),
   ]);
 
-  const services = [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck];
+  const services: ServiceCheckResult[] = [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck];
   const allHealthy = services.every((s) => s.ok);
 
   return NextResponse.json({
@@ -79,8 +86,8 @@ export async function GET() {
 
     services: services.map((s) => ({
       label: s.label,
-      status: (s as any).status || (s.ok ? 'operational' : 'down'),
-      latencyMs: s.latencyMs || null,
+      status: s.status ?? (s.ok ? 'operational' : 'down'),
+      latencyMs: s.latencyMs,
     })),
 
     config: {
