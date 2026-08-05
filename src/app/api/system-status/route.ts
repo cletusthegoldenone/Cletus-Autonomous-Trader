@@ -54,7 +54,9 @@ export async function GET() {
     // We avoid a live ping to prevent burning quota on health checks.
     // The response labels this as "key configured" to make the scope clear.
     Promise.resolve({
-      ok: !!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      ok: !!(process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY) && 
+          process.env.GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' && 
+          process.env.NEXT_PUBLIC_GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       latencyMs: 0,
       label: 'Gemini AI (key configured)',
     }),
