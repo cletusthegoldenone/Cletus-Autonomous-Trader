@@ -7,6 +7,8 @@ import type { DashboardStats, WalletInfo } from '@/types';
 import TrialModal from '@/components/TrialModal';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
 
+// Reference base capital of $10,000 used to calculate a standardized 24h PnL performance percentage 
+// when the actual total absolute pool/trading deposit size fluctuates or is not directly queried.
 const REFERENCE_CAPITAL_USD = 10000;
 
 const DISCONNECTED_WALLET: WalletInfo = {
@@ -182,10 +184,10 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
             const finalServices = [...mapped];
             if (!hasSignalEngine) {
-              finalServices.push({ label: 'Signal Engine', status: 'Active', ok: true });
+              finalServices.push({ label: 'Signal Engine', status: 'Unknown', ok: false });
             }
             if (!hasRiskManager) {
-              finalServices.push({ label: 'Risk Manager', status: 'Monitoring', ok: true });
+              finalServices.push({ label: 'Risk Manager', status: 'Unknown', ok: false });
             }
 
             setSystemServices(finalServices);

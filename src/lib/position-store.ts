@@ -489,7 +489,8 @@ export async function getStats() {
         let sharpeRatio = 0;
         if (pnls.length > 0) {
           const avgPnl = pnls.reduce((sum, v) => sum + v, 0) / pnls.length;
-          const variance = pnls.reduce((sum, v) => sum + Math.pow(v - avgPnl, 2), 0) / pnls.length;
+          const varianceDenominator = pnls.length > 1 ? pnls.length - 1 : 1;
+          const variance = pnls.reduce((sum, v) => sum + Math.pow(v - avgPnl, 2), 0) / varianceDenominator;
           const stdDev = Math.sqrt(variance);
           sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
         }
@@ -520,7 +521,8 @@ export async function getStats() {
   let sharpeRatio = 0;
   if (closed.length > 0) {
     const avgPnl = totalPnl / closed.length;
-    const variance = closed.reduce((sum, p) => sum + Math.pow(p.realisedPnlUsd - avgPnl, 2), 0) / closed.length;
+    const varianceDenominator = closed.length > 1 ? closed.length - 1 : 1;
+    const variance = closed.reduce((sum, p) => sum + Math.pow(p.realisedPnlUsd - avgPnl, 2), 0) / varianceDenominator;
     const stdDev = Math.sqrt(variance);
     sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
   }
