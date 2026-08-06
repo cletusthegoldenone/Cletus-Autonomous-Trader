@@ -485,13 +485,16 @@ export async function getStats() {
             COALESCE(SUM(realised_pnl_usd), 0)::double precision as total_pnl,
             COUNT(CASE WHEN realised_pnl_usd > 0 THEN 1 END)::int as wins,
             COALESCE(MAX(CASE WHEN realised_pnl_usd > 0 THEN realised_pnl_usd END), 0)::double precision as best_trade,
-            COALESCE(MIN(CASE WHEN realised_pnl_usd <= 0 THEN realised_pnl_usd END), 0)::double precision as worst_trade
+            COALESCE(MIN(CASE WHEN realised_pnl_usd <= 0 THEN realised_pnl_usd END), 0)::double precision as worst_trade,
+            COALESCE(AVG(realised_pnl_usd), 0)::double precision as avg_pnl,
+            COALESCE(STDDEV_SAMP(realised_pnl_usd), 0)::double precision as stddev_pnl
           FROM closed_positions
         `);
 
         const openTrades = openCountRes.rows[0].count;
         const s = closedStatsRes.rows[0];
         const winRate = s.total_trades > 0 ? s.wins / s.total_trades : 0;
+        const sharpeRatio = s.stddev_pnl > 0 ? s.avg_pnl / s.stddev_pnl : 0;
 
         return {
           totalTrades: s.total_trades,
@@ -500,6 +503,7 @@ export async function getStats() {
           totalPnlUsd: s.total_pnl,
           bestTrade: s.best_trade,
           worstTrade: s.worst_trade,
+          sharpeRatio,
         };
       } catch (err) {
         console.error('Failed to get stats from database, falling back to memory:', err);
@@ -515,6 +519,15 @@ export async function getStats() {
   const bestTrade = wins.length > 0 ? Math.max(...wins.map((p) => p.realisedPnlUsd)) : 0;
   const worstTrade = losses.length > 0 ? Math.min(...losses.map((p) => p.realisedPnlUsd)) : 0;
 
+  let sharpeRatio = 0;
+  if (closed.length >= 2) {
+    const avgPnl = totalPnl / closed.length;
+    const varianceDenominator = closed.length - 1;
+    const variance = closed.reduce((sum, p) => sum + Math.pow(p.realisedPnlUsd - avgPnl, 2), 0) / varianceDenominator;
+    const stdDev = Math.sqrt(variance);
+    sharpeRatio = stdDev > 0 ? avgPnl / stdDev : 0;
+  }
+
   return {
     totalTrades: closed.length,
     openTrades: openPositions.size,
@@ -522,6 +535,7 @@ export async function getStats() {
     totalPnlUsd: totalPnl,
     bestTrade,
     worstTrade,
+    sharpeRatio,
   };
 }
 

@@ -226,3 +226,10 @@ export interface ClosedLivePosition extends LivePosition {
   realisedPnlUsd: number;
   closeReason: 'MANUAL' | 'STOP_LOSS' | 'TAKE_PROFIT' | 'KILL_SWITCH';
 }
+
+export interface SystemStatusService {
+  label: string;
+  status: string;
+  ok: boolean;
+  latencyMs?: number | null;
+}

@@ -13,6 +13,13 @@ async function ping(url: string, timeoutMs = 4_000): Promise<{ ok: boolean; late
   }
 }
 
+interface ServiceCheckResult {
+  ok: boolean;
+  latencyMs: number | null;
+  label: string;
+  status?: string;
+}
+
 /**
  * GET /api/system-status
  *
@@ -23,7 +30,7 @@ export async function GET() {
   const rpcUrl = getRpcUrl();
 
   // Check services in parallel
-  const [rpcCheck, dexCheck, geminiCheck, jupiterCheck] = await Promise.all([
+  const [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck] = await Promise.all([
     // Helius RPC — call getHealth JSON-RPC method
     fetch(rpcUrl, {
       method: 'POST',
@@ -47,7 +54,9 @@ export async function GET() {
     // We avoid a live ping to prevent burning quota on health checks.
     // The response labels this as "key configured" to make the scope clear.
     Promise.resolve({
-      ok: !!process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      ok: !!(process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY) && 
+          process.env.GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' && 
+          process.env.NEXT_PUBLIC_GEMINI_API_KEY !== 'AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       latencyMs: 0,
       label: 'Gemini AI (key configured)',
     }),
@@ -58,9 +67,19 @@ export async function GET() {
         ? 'https://api.jup.ag/swap/v1/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=1000000&slippageBps=50'
         : 'https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=1000000&slippageBps=50',
     ).then((r) => ({ ...r, label: 'Jupiter' })),
+
+    // Oracle VPS connection check
+    process.env.ORACLE_VPS_URL
+      ? ping(process.env.ORACLE_VPS_URL).then((r) => ({ ...r, label: 'Oracle VPS' }))
+      : Promise.resolve({
+          ok: false,
+          status: 'unconfigured',
+          latencyMs: null,
+          label: 'Oracle VPS',
+        }),
   ]);
 
-  const services = [rpcCheck, dexCheck, geminiCheck, jupiterCheck];
+  const services: ServiceCheckResult[] = [rpcCheck, dexCheck, geminiCheck, jupiterCheck, oracleVpsCheck];
   const allHealthy = services.every((s) => s.ok);
 
   return NextResponse.json({
@@ -69,8 +88,8 @@ export async function GET() {
 
     services: services.map((s) => ({
       label: s.label,
-      status: s.ok ? 'operational' : 'down',
-      latencyMs: s.latencyMs || null,
+      status: s.status ?? (s.ok ? 'operational' : 'down'),
+      latencyMs: s.latencyMs,
     })),
 
     config: {

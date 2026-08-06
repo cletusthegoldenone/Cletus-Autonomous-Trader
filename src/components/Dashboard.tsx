@@ -1,11 +1,29 @@
 'use client';
- 
+
 import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import type { DashboardStats, WalletInfo } from '@/types';
- 
-const DEFAULT_STATS: DashboardStats = {
+import type { DashboardStats, WalletInfo, SystemStatusService } from '@/types';
+import ConnectWalletButton from '@/components/ConnectWalletButton';
+
+// Reference base capital of $10,000 used to calculate a standardized 24h PnL performance percentage 
+// when the actual total absolute pool/trading deposit size fluctuates or is not directly queried.
+const REFERENCE_CAPITAL_USD = 10000;
+
+const STATUS_LABELS: Record<string, string> = {
+  operational: 'Operational',
+  down: 'Down',
+  unconfigured: 'Unconfigured',
+};
+
+const DISCONNECTED_WALLET: WalletInfo = {
+  address: 'Not Connected',
+  solBalance: 0,
+  usdtBalance: 0,
+  connected: false,
+};
+
+const INITIAL_STATS: DashboardStats = {
   pnl24h: 0,
   pnl24hPercent: 0,
   winRate: 0,
@@ -14,13 +32,6 @@ const DEFAULT_STATS: DashboardStats = {
   bestTrade: 0,
   worstTrade: 0,
   sharpeRatio: 0,
-};
-
-const DEFAULT_WALLET: WalletInfo = {
-  address: 'Not Connected',
-  solBalance: 0,
-  usdtBalance: 0,
-  connected: false,
 };
 
 interface StatCardProps {
@@ -83,10 +94,17 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }: DashboardProps) {
-  const [stats, setStats] = useState<DashboardStats>(DEFAULT_STATS);
-  const [walletInfo, setWalletInfo] = useState<WalletInfo>(DEFAULT_WALLET);
-  const [isLive, setIsLive] = useState(true);
+  const [stats, setStats] = useState<DashboardStats>(INITIAL_STATS);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo>(DISCONNECTED_WALLET);
+  const [isLive, setIsLive] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
+  const [systemServices, setSystemServices] = useState<SystemStatusService[]>([
+    { label: 'Helius RPC', status: 'Connecting…', ok: false },
+    { label: 'Gemini AI', status: 'Connecting…', ok: false },
+    { label: 'Signal Engine', status: 'Connecting…', ok: false },
+    { label: 'Risk Manager', status: 'Connecting…', ok: false },
+    { label: 'Oracle VPS', status: 'Connecting…', ok: false },
+  ]);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -95,7 +113,7 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
   // Sync real wallet data when connected
   useEffect(() => {
     if (!connected || !publicKey) {
-      setWalletInfo(DEFAULT_WALLET);
+      setWalletInfo(DISCONNECTED_WALLET);
       return;
     }
 
@@ -127,40 +145,64 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
     return () => clearInterval(timer);
   }, []);
 
-  // Fetch actual stats from `/api/trade/positions`
+  // Fetch real system status and position stats
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/trade/positions');
-        if (res.ok) {
-          const data = await res.json();
-          const dbStats = data.stats;
-          const openPositions = data.open || [];
-          
-          const activePositions = openPositions.length;
-          const unrealizedPnl = openPositions.reduce((sum: number, p: any) => sum + (p.pnlUsd || 0), 0);
-          
-          const totalTrades = dbStats?.totalTrades || 0;
-          const winRate = (dbStats?.winRate || 0) * 100;
-          
-          setStats({
-            pnl24h: (dbStats?.totalPnlUsd || 0) + unrealizedPnl,
-            pnl24hPercent: totalTrades > 0 ? (((dbStats?.totalPnlUsd || 0) + unrealizedPnl) / 1000) * 100 : 0,
-            winRate,
-            activePositions,
-            totalTrades,
-            bestTrade: dbStats?.bestTrade || 0,
-            worstTrade: dbStats?.worstTrade || 0,
-            sharpeRatio: totalTrades > 0 ? 2.14 : 0,
-          });
+        // Fetch positions and stats
+        const posRes = await fetch('/api/trade/positions');
+        if (posRes.ok) {
+          const posData = await posRes.json();
+          if (posData.stats) {
+            setStats({
+              pnl24h: posData.stats.totalPnlUsd ?? 0,
+              pnl24hPercent: ((posData.stats.totalPnlUsd ?? 0) / REFERENCE_CAPITAL_USD) * 100,
+              winRate: (posData.stats.winRate ?? 0) * 100,
+              activePositions: posData.stats.openTrades ?? 0,
+              totalTrades: posData.stats.totalTrades ?? 0,
+              bestTrade: posData.stats.bestTrade ?? 0,
+              worstTrade: posData.stats.worstTrade ?? 0,
+              sharpeRatio: posData.stats.sharpeRatio ?? 0,
+            });
+          }
+        }
+
+        // Fetch system services status
+        const sysRes = await fetch('/api/system-status');
+        if (sysRes.ok) {
+          const sysData = await sysRes.json();
+          if (sysData.services) {
+            const mapped = sysData.services.map((s: SystemStatusService) => ({
+              label: s.label,
+              status: STATUS_LABELS[s.status] ?? s.status,
+              ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
+            }));
+
+            // Fallback default statuses for Signal Engine and Risk Manager if not explicitly in API response
+            const hasSignalEngine = mapped.some((s: { label: string }) => s.label === 'Signal Engine');
+            const hasRiskManager = mapped.some((s: { label: string }) => s.label === 'Risk Manager');
+
+            const finalServices = [...mapped];
+            if (!hasSignalEngine) {
+              finalServices.push({ label: 'Signal Engine', status: 'Unknown', ok: false });
+            }
+            if (!hasRiskManager) {
+              finalServices.push({ label: 'Risk Manager', status: 'Unknown', ok: false });
+            }
+
+            setSystemServices(finalServices);
+          }
+          if (sysData.config) {
+            setIsLive(sysData.config.liveTrading);
+          }
         }
       } catch (err) {
-        console.error('Failed to fetch actual dashboard stats:', err);
+        console.error('Error fetching dashboard data:', err);
       }
     };
 
-    fetchStats();
-    const interval = setInterval(fetchStats, 10000);
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -223,28 +265,33 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
                 </span>
               )}
             </div>
-            <div className="flex gap-3 text-xs font-mono">
-              <span className="text-gray-400">
-                <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(connected ? 4 : 2)}</span> SOL
-              </span>
-              {connected && walletInfo.usdtBalance > 0 && (
+            {connected && (
+              <div className="flex gap-3 text-xs font-mono">
                 <span className="text-gray-400">
-                  <span className="text-white font-semibold">
-                    ${walletInfo.usdtBalance.toLocaleString()}
-                  </span>{' '}
-                  USDT
+                  <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(4)}</span> SOL
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             {connected ? (
-              <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Simulation ready</div>
+              <div className="flex flex-col items-end gap-1">
+                <div className="text-xs text-trading-green/70 font-mono mb-1">Wallet connected · Ready for live trading</div>
+                <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold font-mono ${
+                  isLive
+                    ? 'bg-trading-green/20 text-trading-green border border-trading-green/30'
+                    : 'bg-trading-red/20 text-trading-red border border-trading-red/30'
+                }`}>
+                  {isLive ? '● Trading Engine Active' : '○ Trading Engine Paused'}
+                </span>
+              </div>
             ) : (
-              <div className="text-xs text-gray-500 font-mono">Please connect your wallet to start trading</div>
+              <div className="flex flex-col items-start sm:items-end gap-1.5 mt-1">
+                <span className="text-xs text-gray-500 font-mono">Connect wallet to begin trading:</span>
+                <ConnectWalletButton />
+              </div>
             )}
           </div>
         </div>
       </div>
-
 
       {/* Stats Grid */}
       <div>
@@ -342,12 +389,7 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
           System Status
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Helius RPC', status: 'Operational', ok: true },
-            { label: 'Gemini AI', status: 'Connected', ok: true },
-            { label: 'Signal Engine', status: 'Active', ok: true },
-            { label: 'Risk Manager', status: 'Monitoring', ok: true },
-          ].map((item) => (
+          {systemServices.map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full status-dot-live ${
