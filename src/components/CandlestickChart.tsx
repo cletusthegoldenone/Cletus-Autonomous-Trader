@@ -208,16 +208,30 @@ export default function CandlestickChart() {
   }, []);
 
   // Load candle data when pair or timeframe changes
-  const loadCandles = useCallback(() => {
-    const tfInfo = TIMEFRAMES.find((t) => t.value === timeframe)!;
-    const count = 200;
-    const newCandles = generateCandles(count, selectedPair.base, selectedPair.vol);
+  const loadCandles = useCallback(async () => {
+    let newCandles: CandleData[] = [];
+    let change24h: number | null = null;
+
+    try {
+      const res = await fetch(`/api/prices?pair=${encodeURIComponent(selectedPair.symbol)}&timeframe=${encodeURIComponent(timeframe)}&count=200`);
+      if (!res.ok) throw new Error('Failed to fetch candles');
+      const data = await res.json();
+      newCandles = data.candles;
+      change24h = data.change24h;
+    } catch (e) {
+      console.error('Error fetching live candles, falling back to mock:', e);
+      const count = 200;
+      newCandles = generateCandles(count, selectedPair.base, selectedPair.vol);
+    }
+
+    if (!newCandles || newCandles.length === 0) return;
+
     setCandles(newCandles);
 
     const lastCandle = newCandles[newCandles.length - 1];
     const firstCandle = newCandles[0];
     setCurrentPrice(lastCandle.close);
-    setPriceChange(((lastCandle.close - firstCandle.open) / firstCandle.open) * 100);
+    setPriceChange(change24h !== null ? change24h : ((lastCandle.close - firstCandle.open) / firstCandle.open) * 100);
     setRsi(calcRSI(newCandles));
 
     if (candleSeriesRef.current && volumeSeriesRef.current) {

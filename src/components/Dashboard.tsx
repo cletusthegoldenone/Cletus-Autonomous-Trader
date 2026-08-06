@@ -3,28 +3,36 @@
 import { useState, useEffect } from 'react';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import type { DashboardStats, WalletInfo } from '@/types';
-import TrialModal from '@/components/TrialModal';
+import type { DashboardStats, WalletInfo, SystemStatusService } from '@/types';
+import ConnectWalletButton from '@/components/ConnectWalletButton';
+import { useSimulation, STAKING_REQUIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
-// Slight upward bias to simulate realistic trending PnL in demo mode
-const UPWARD_BIAS_FACTOR = 0.48;
+// Reference base capital of $10,000 used to calculate a standardized 24h PnL performance percentage 
+// when the actual total absolute pool/trading deposit size fluctuates or is not directly queried.
+const REFERENCE_CAPITAL_USD = 10000;
 
-const MOCK_STATS: DashboardStats = {
-  pnl24h: 3847.5,
-  pnl24hPercent: 12.4,
-  winRate: 73.2,
-  activePositions: 4,
-  totalTrades: 247,
-  bestTrade: 2340.0,
-  worstTrade: -420.0,
-  sharpeRatio: 2.14,
+const STATUS_LABELS: Record<string, string> = {
+  operational: 'Operational',
+  down: 'Down',
+  unconfigured: 'Unconfigured',
 };
 
-const MOCK_WALLET: WalletInfo = {
-  address: '9xQeKq...Mop7',
-  solBalance: 42.7,
-  usdtBalance: 18420.0,
-  connected: true,
+const DISCONNECTED_WALLET: WalletInfo = {
+  address: 'Not Connected',
+  solBalance: 0,
+  usdtBalance: 0,
+  connected: false,
+};
+
+const INITIAL_STATS: DashboardStats = {
+  pnl24h: 0,
+  pnl24hPercent: 0,
+  winRate: 0,
+  activePositions: 0,
+  totalTrades: 0,
+  bestTrade: 0,
+  worstTrade: 0,
+  sharpeRatio: 0,
 };
 
 interface StatCardProps {
@@ -82,14 +90,34 @@ function QuickAction({ icon, label, description, color, onClick }: QuickActionPr
 
 interface DashboardProps {
   onNavigate: (tab: string) => void;
+  trialActive: boolean | null;
+  onOpenTrialModal: () => void;
 }
 
-export default function Dashboard({ onNavigate }: DashboardProps) {
-  const [stats, setStats] = useState<DashboardStats>(MOCK_STATS);
-  const [walletInfo, setWalletInfo] = useState<WalletInfo>(MOCK_WALLET);
-  const [isLive, setIsLive] = useState(true);
+export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }: DashboardProps) {
+  const {
+    stakedAmount,
+    hasLiveAccess,
+  } = useSimulation();
+
+  const [stats, setStats] = useState<DashboardStats>(INITIAL_STATS);
+  const [walletInfo, setWalletInfo] = useState<WalletInfo>(DISCONNECTED_WALLET);
+  const [isLive, setIsLive] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
-  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
+  const [systemServices, setSystemServices] = useState<SystemStatusService[]>([
+    { label: 'Helius RPC', status: 'Connecting…', ok: false },
+    { label: 'Gemini AI', status: 'Connecting…', ok: false },
+    { label: 'Signal Engine', status: 'Connecting…', ok: false },
+    { label: 'Risk Manager', status: 'Connecting…', ok: false },
+    { label: 'Oracle VPS', status: 'Connecting…', ok: false },
+  ]);
+
+  // Auto-pause trading if access is lost
+  useEffect(() => {
+    if (!hasLiveAccess) {
+      setIsLive(false);
+    }
+  }, [hasLiveAccess]);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -98,7 +126,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
   // Sync real wallet data when connected
   useEffect(() => {
     if (!connected || !publicKey) {
-      setWalletInfo(MOCK_WALLET);
+      setWalletInfo(DISCONNECTED_WALLET);
       return;
     }
 
@@ -130,18 +158,64 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
     return () => clearInterval(timer);
   }, []);
 
-  // Simulate real-time PnL fluctuation
+  // Fetch real system status and position stats
   useEffect(() => {
-    const interval = setInterval(() => {
-      setStats((prev) => ({
-        ...prev,
-        pnl24h: prev.pnl24h + (Math.random() - UPWARD_BIAS_FACTOR) * 50,
-        activePositions: Math.max(
-          1,
-          prev.activePositions + (Math.random() > 0.8 ? (Math.random() > 0.5 ? 1 : -1) : 0)
-        ),
-      }));
-    }, 3000);
+    const fetchData = async () => {
+      try {
+        // Fetch positions and stats
+        const posRes = await fetch('/api/trade/positions');
+        if (posRes.ok) {
+          const posData = await posRes.json();
+          if (posData.stats) {
+            setStats({
+              pnl24h: posData.stats.totalPnlUsd ?? 0,
+              pnl24hPercent: ((posData.stats.totalPnlUsd ?? 0) / REFERENCE_CAPITAL_USD) * 100,
+              winRate: (posData.stats.winRate ?? 0) * 100,
+              activePositions: posData.stats.openTrades ?? 0,
+              totalTrades: posData.stats.totalTrades ?? 0,
+              bestTrade: posData.stats.bestTrade ?? 0,
+              worstTrade: posData.stats.worstTrade ?? 0,
+              sharpeRatio: posData.stats.sharpeRatio ?? 0,
+            });
+          }
+        }
+
+        // Fetch system services status
+        const sysRes = await fetch('/api/system-status');
+        if (sysRes.ok) {
+          const sysData = await sysRes.json();
+          if (sysData.services) {
+            const mapped = sysData.services.map((s: SystemStatusService) => ({
+              label: s.label,
+              status: STATUS_LABELS[s.status] ?? s.status,
+              ok: s.status === 'operational' || s.status === 'connected' || s.status === 'active' || s.status === 'monitoring',
+            }));
+
+            // Fallback default statuses for Signal Engine and Risk Manager if not explicitly in API response
+            const hasSignalEngine = mapped.some((s: { label: string }) => s.label === 'Signal Engine');
+            const hasRiskManager = mapped.some((s: { label: string }) => s.label === 'Risk Manager');
+
+            const finalServices = [...mapped];
+            if (!hasSignalEngine) {
+              finalServices.push({ label: 'Signal Engine', status: 'Unknown', ok: false });
+            }
+            if (!hasRiskManager) {
+              finalServices.push({ label: 'Risk Manager', status: 'Unknown', ok: false });
+            }
+
+            setSystemServices(finalServices);
+          }
+          if (sysData.config) {
+            setIsLive(sysData.config.liveTrading);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -150,6 +224,27 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
 
   return (
     <div className="space-y-6 animate-fade-in">
+      {/* Free Trial CTA Banner */}
+      {connected && trialActive === false && (
+        <div className="bg-trading-green/10 border border-trading-green/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-fade-in">
+          <div>
+            <div className="font-bold text-trading-green text-sm flex items-center gap-1.5">
+              <span>⏱</span>
+              <span>Unlock Cletus with a 30-Day Free Trial</span>
+            </div>
+            <p className="text-xs text-gray-400 mt-1">
+              Get full access to all AI trading strategies, on-chain scanners, and live executions completely free for 30 days. No deposit or credit card required.
+            </p>
+          </div>
+          <button
+            onClick={onOpenTrialModal}
+            className="px-4 py-2 bg-trading-green text-black font-bold text-xs rounded-xl hover:bg-trading-green/90 transition-all active:scale-[0.97] shrink-0"
+          >
+            Activate Free Trial
+          </button>
+        </div>
+      )}
+
       {/* Header / Welcome */}
       <div className="trading-card p-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-trading-green/5 via-transparent to-trading-blue/5 pointer-events-none" />
@@ -161,6 +256,11 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 {isLive ? 'LIVE TRADING' : 'PAUSED'}
               </span>
               <span className="text-xs text-gray-600 font-mono">{currentTime} UTC</span>
+              {connected && trialActive === true && (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-trading-green/20 text-trading-green border border-trading-green/30 font-semibold font-mono">
+                  ⏱ 30-DAY TRIAL ACTIVE
+                </span>
+              )}
             </div>
             <h1 className="text-3xl font-bold gradient-text-green">Cletus</h1>
             <p className="text-gray-400 text-sm mt-1">
@@ -178,53 +278,94 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
                 </span>
               )}
             </div>
-            <div className="flex gap-3 text-xs font-mono">
-              <span className="text-gray-400">
-                <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(connected ? 4 : 2)}</span> SOL
-              </span>
-              {!connected && (
+            {connected && (
+              <div className="flex gap-3 text-xs font-mono">
                 <span className="text-gray-400">
-                  <span className="text-white font-semibold">
-                    ${walletInfo.usdtBalance.toLocaleString()}
-                  </span>{' '}
-                  USDT
+                  <span className="text-white font-semibold">{walletInfo.solBalance.toFixed(4)}</span> SOL
                 </span>
-              )}
-            </div>
+              </div>
+            )}
             {connected ? (
-              <div className="text-xs text-trading-green/70 font-mono">Wallet connected · Simulation ready</div>
+              <div className="flex flex-col items-end gap-1">
+                <div className="text-xs text-trading-green/70 font-mono mb-1">Wallet connected · Ready for live trading</div>
+                <button
+                  onClick={() => {
+                    if (!hasLiveAccess) {
+                      alert(STAKING_REQUIRED_ALERT_MSG);
+                      onNavigate('staking');
+                      return;
+                    }
+                    setIsLive((v) => !v);
+                  }}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold font-mono transition-all duration-200 ${
+                    isLive
+                      ? 'bg-trading-green/20 text-trading-green border border-trading-green/30'
+                      : 'bg-trading-red/20 text-trading-red border border-trading-red/30'
+                  }`}
+                >
+                  {isLive ? '● Trading Engine Active' : '○ Trading Engine Paused'}
+                </button>
+              </div>
             ) : (
-              <button
-                onClick={() => setIsLive((v) => !v)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
-                  isLive
-                    ? 'bg-trading-red/20 text-trading-red border border-trading-red/40 hover:bg-trading-red/30'
-                    : 'bg-trading-green/20 text-trading-green border border-trading-green/40 hover:bg-trading-green/30'
-                }`}
-              >
-                {isLive ? '⏸ Pause Trading' : '▶ Resume Trading'}
-              </button>
+              <div className="flex flex-col items-start sm:items-end gap-1.5 mt-1">
+                <span className="text-xs text-gray-500 font-mono">Connect wallet to begin trading:</span>
+                <ConnectWalletButton />
+              </div>
             )}
           </div>
         </div>
       </div>
 
-      {/* Free Trial Banner */}
-      <div className="trading-card p-4 bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider font-mono">
-            🎁 Limited Time Offer
-          </h3>
-          <p className="text-xs text-gray-300 mt-1">
-            Unlock premium features with our 30-Day Free Trial. No CLETUS staking required during the trial.
-          </p>
+      {/* Live Trading Access & Staking Status Panel */}
+      <div className="trading-card p-5 relative overflow-hidden border border-trading-border/60 bg-trading-surface/40">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="text-3xl shrink-0 mt-1">
+              {hasLiveAccess ? '🔓' : '🔒'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="font-bold text-base text-white">Live Trading Access Status</span>
+                {hasLiveAccess ? (
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-purple/20 text-trading-purple border border-trading-purple/30">
+                    STAKED ACCESS ACTIVE
+                  </span>
+                ) : (
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-red/20 text-trading-red border border-trading-red/30">
+                    LOCKED - STAKING REQUIRED
+                  </span>
+                )}
+              </div>
+              
+              <p className="text-sm text-gray-400 mt-1.5 max-w-2xl">
+                {hasLiveAccess ? (
+                  `Your live trading access is active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
+                ) : (
+                  `To unlock autonomous live trading and premium on-chain signals, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
+                )}
+              </p>
+
+              {/* Staked Info */}
+              <div className="mt-3 flex items-center gap-4 text-xs font-mono">
+                <div className="text-gray-400">
+                  Staked: <span className="text-white font-bold">{stakedAmount.toLocaleString()} CLETUS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto shrink-0 md:items-end">
+            {!hasLiveAccess && (
+              <button
+                onClick={() => onNavigate('staking')}
+                className="px-4 py-2 rounded-lg text-xs font-bold bg-trading-green text-black hover:bg-trading-green/90 transition-all text-center w-full"
+              >
+                🥩 Go Stake CLETUS
+              </button>
+            )}
+          </div>
         </div>
-        <button
-          onClick={() => setIsTrialModalOpen(true)}
-          className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 transition-colors text-black text-xs font-semibold rounded-xl shrink-0"
-        >
-          Claim Trial
-        </button>
       </div>
 
       {/* Stats Grid */}
@@ -323,12 +464,7 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           System Status
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Helius RPC', status: 'Operational', ok: true },
-            { label: 'Gemini AI', status: 'Connected', ok: true },
-            { label: 'Signal Engine', status: 'Active', ok: true },
-            { label: 'Risk Manager', status: 'Monitoring', ok: true },
-          ].map((item) => (
+          {systemServices.map((item) => (
             <div key={item.label} className="flex items-center gap-2">
               <div
                 className={`w-2 h-2 rounded-full status-dot-live ${
@@ -358,8 +494,6 @@ export default function Dashboard({ onNavigate }: DashboardProps) {
           financial advice.
         </p>
       </div>
-
-      <TrialModal open={isTrialModalOpen} onClose={() => setIsTrialModalOpen(false)} />
     </div>
   );
 }
