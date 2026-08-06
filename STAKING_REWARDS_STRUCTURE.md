@@ -61,13 +61,13 @@ Crypto markets are adversarial, zero-sum, and frequently irrational. Even the be
 
 | Staked Amount | Tier Name | Expected Monthly Profit* | Staking APY | Features |
 |---------------|-----------|-------------------------|------------|----------|
-| 1,000 CLETUS | Starter | None | 0.5% SOL | Trial access |
-| 5,000 CLETUS | Pro | None | 0.5% SOL | Limited features |
-| 10,000 CLETUS | Elite | None | 0.5% SOL | Full access |
-| 50,000 CLETUS | Whale | None | 0.5% SOL | Priority support |
-| **2,500,000 CLETUS** | **Profit Sharer Tier 1** | **~$5,000* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
-| **5,000,000 CLETUS** | **Profit Sharer Tier 2** | **~$10,000* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
-| **10,000,000+ CLETUS** | **Founder** | **Variable* (NOT guaranteed)** | **0.5% SOL** | **Profit share eligibility** |
+| 100,000 CLETUS | Starter | None | 0.5% SOL | Core access |
+| 500,000 CLETUS | Bronze | None | 0.5% SOL | Limited features |
+| 1,000,000 CLETUS | Silver | None | 0.5% SOL | Full access |
+| 5,000,000 CLETUS | Gold | None | 0.5% SOL | Priority support |
+| 10,000,000 CLETUS | Platinum | None | 0.5% SOL | Premium insights |
+| 25,000,000 CLETUS | Diamond | None | 0.5% SOL | Profit share eligibility |
+| 100,000,000+ CLETUS | Founder | Variable* | 0.5% SOL | Profit share eligibility |
 
 **\*These are ESTIMATES based on historical performance. They are NOT guaranteed. Actual profits could be significantly higher or lower (including negative/loss months).**
 

@@ -6,37 +6,11 @@ Cletus operates on a hybrid freemium + token-based reward system. This document 
 
 ---
 
-## Access Models
+## Access Model
 
-### 1. **30-Day Free Trial (No Credit Card Required)**
+### Cletus Token Staking (Ongoing Rewards)
 
-**Perfect for:** New users wanting to test Cletus risk-free
-
-**What's Included:**
-- Full access to all trading features
-- Unlimited trade executions
-- Access to AI Brain (Gemini integration)
-- Performance tracking & analytics
-- Kill switch & security features
-- Support via Discord/GitHub
-
-**Restrictions:**
-- Max position size: $5,000
-- Max 3 concurrent open positions
-- Max daily PnL target: $1,000
-- No access to API integrations
-
-**How to Start:**
-1. Clone repository: `git clone https://github.com/cletusthegoldenone/Cletus-Autonomous-Trader.git`
-2. Follow setup in README.md
-3. Set `ENABLE_24_7_TRADING=false` and start with CONSERVATIVE aggression
-4. No payment required for 30 days
-
----
-
-### 2. **Cletus Token Staking (Ongoing Rewards)**
-
-**Perfect for:** Long-term believers who want free usage + SOL rewards
+**Perfect for:** Anyone who wants platform access + SOL rewards
 
 #### Token Details
 - **Token Name:** Cletus (CLETUS)
@@ -212,7 +186,6 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 ## Token Launch Timeline
 
 ### Phase 1: Beta Launch (Q2 2026)
-- 30-day free trial available
 - Staking contract deployed
 - Initial token distribution: 10% of supply
 - Community airdrop: Eligible for early testers
@@ -234,7 +207,7 @@ Cletus operates as a decentralized project. Donations are **not tax-deductible**
 ## FAQ
 
 ### Q: Do I need to buy CLETUS tokens to use Cletus?
-**A:** No! The 30-day free trial and premium subscription are available without tokens. However, staking CLETUS is the most cost-effective way to get ongoing free usage while earning SOL rewards.
+**A:** Yes, staking CLETUS is the primary way to get active live trading access while earning SOL rewards.
 
 ### Q: What if I lose my staked tokens?
 **A:** Tokens in the staking contract are in a smart contract you control. If the contract is hacked, it's a systemic risk (not specific to Cletus). We strongly recommend:

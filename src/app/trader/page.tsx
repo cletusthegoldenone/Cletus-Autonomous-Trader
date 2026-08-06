@@ -16,10 +16,11 @@ import ConnectWalletButton from '@/components/ConnectWalletButton';
 import TrialModal from '@/components/TrialModal';
 import GeminiLiveChat from '@/components/GeminiLiveChat';
 import InvestorRelations from '@/components/InvestorRelations';
+import StakingDashboard from '@/components/StakingDashboard';
 
-type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'gemini' | 'simulate' | 'config' | 'community' | 'investor' | 'inspect';
+type Tab = 'dashboard' | 'chart' | 'signals' | 'ai' | 'gemini' | 'staking' | 'simulate' | 'config' | 'community' | 'investor' | 'inspect';
 
-const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'gemini', 'simulate', 'config', 'community', 'investor', 'inspect'];
+const VALID_TABS: Tab[] = ['dashboard', 'chart', 'signals', 'ai', 'gemini', 'staking', 'simulate', 'config', 'community', 'investor', 'inspect'];
 
 const AI_MODEL_LABEL = process.env.NEXT_PUBLIC_AI_MODEL_LABEL ?? 'Gemini AI';
 
@@ -29,6 +30,7 @@ const TABS: { id: Tab; label: string; icon: string; badge?: string }[] = [
   { id: 'signals', label: 'Signals', icon: '⚡', badge: 'LIVE' },
   { id: 'ai', label: 'Cletus AI', icon: '🤖' },
   { id: 'gemini', label: 'Gemini Live', icon: '💬', badge: 'NEW' },
+  { id: 'staking', label: 'Staking', icon: '🥩', badge: 'STAKE' },
   { id: 'simulate', label: 'Simulate', icon: '🎮', badge: 'BETA' },
   { id: 'config', label: 'Config', icon: '⚙️' },
   { id: 'community', label: 'Community', icon: '🪿' },
@@ -191,6 +193,7 @@ function TraderInner() {
         {activeTab === 'signals' && <TradingSignals />}
         {activeTab === 'ai' && <AIBrainChat />}
         {activeTab === 'gemini' && <GeminiLiveChat />}
+        {activeTab === 'staking' && <StakingDashboard />}
         {activeTab === 'simulate' && <SimulationDashboard />}
         {activeTab === 'config' && <TradingConfig />}
         {activeTab === 'community' && <CommunityChat />}
@@ -238,4 +241,3 @@ export default function TraderPage() {
     </Suspense>
   );
 }
-

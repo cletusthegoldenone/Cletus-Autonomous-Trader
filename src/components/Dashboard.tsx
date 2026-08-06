@@ -5,6 +5,7 @@ import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import type { DashboardStats, WalletInfo, SystemStatusService } from '@/types';
 import ConnectWalletButton from '@/components/ConnectWalletButton';
+import { useSimulation, STAKING_REQUIRED_ALERT_MSG, MIN_STARTER_TIER_STAKE } from '@/context/SimulationContext';
 
 // Reference base capital of $10,000 used to calculate a standardized 24h PnL performance percentage 
 // when the actual total absolute pool/trading deposit size fluctuates or is not directly queried.
@@ -94,6 +95,11 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }: DashboardProps) {
+  const {
+    stakedAmount,
+    hasLiveAccess,
+  } = useSimulation();
+
   const [stats, setStats] = useState<DashboardStats>(INITIAL_STATS);
   const [walletInfo, setWalletInfo] = useState<WalletInfo>(DISCONNECTED_WALLET);
   const [isLive, setIsLive] = useState(false);
@@ -105,6 +111,13 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
     { label: 'Risk Manager', status: 'Connecting…', ok: false },
     { label: 'Oracle VPS', status: 'Connecting…', ok: false },
   ]);
+
+  // Auto-pause trading if access is lost
+  useEffect(() => {
+    if (!hasLiveAccess) {
+      setIsLive(false);
+    }
+  }, [hasLiveAccess]);
 
   // Real wallet integration
   const { publicKey, connected } = useWallet();
@@ -275,19 +288,81 @@ export default function Dashboard({ onNavigate, trialActive, onOpenTrialModal }:
             {connected ? (
               <div className="flex flex-col items-end gap-1">
                 <div className="text-xs text-trading-green/70 font-mono mb-1">Wallet connected · Ready for live trading</div>
-                <span className={`px-3 py-1 rounded-lg text-[11px] font-semibold font-mono ${
-                  isLive
-                    ? 'bg-trading-green/20 text-trading-green border border-trading-green/30'
-                    : 'bg-trading-red/20 text-trading-red border border-trading-red/30'
-                }`}>
+                <button
+                  onClick={() => {
+                    if (!hasLiveAccess) {
+                      alert(STAKING_REQUIRED_ALERT_MSG);
+                      onNavigate('staking');
+                      return;
+                    }
+                    setIsLive((v) => !v);
+                  }}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-semibold font-mono transition-all duration-200 ${
+                    isLive
+                      ? 'bg-trading-green/20 text-trading-green border border-trading-green/30'
+                      : 'bg-trading-red/20 text-trading-red border border-trading-red/30'
+                  }`}
+                >
                   {isLive ? '● Trading Engine Active' : '○ Trading Engine Paused'}
-                </span>
+                </button>
               </div>
             ) : (
               <div className="flex flex-col items-start sm:items-end gap-1.5 mt-1">
                 <span className="text-xs text-gray-500 font-mono">Connect wallet to begin trading:</span>
                 <ConnectWalletButton />
               </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Live Trading Access & Staking Status Panel */}
+      <div className="trading-card p-5 relative overflow-hidden border border-trading-border/60 bg-trading-surface/40">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="text-3xl shrink-0 mt-1">
+              {hasLiveAccess ? '🔓' : '🔒'}
+            </div>
+            <div>
+              <div className="flex items-center gap-2.5">
+                <span className="font-bold text-base text-white">Live Trading Access Status</span>
+                {hasLiveAccess ? (
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-purple/20 text-trading-purple border border-trading-purple/30">
+                    STAKED ACCESS ACTIVE
+                  </span>
+                ) : (
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-bold bg-trading-red/20 text-trading-red border border-trading-red/30">
+                    LOCKED - STAKING REQUIRED
+                  </span>
+                )}
+              </div>
+              
+              <p className="text-sm text-gray-400 mt-1.5 max-w-2xl">
+                {hasLiveAccess ? (
+                  `Your live trading access is active because you have staked ${stakedAmount.toLocaleString()} $CLETUS tokens. Thank you for supporting the Cletus ecosystem!`
+                ) : (
+                  `To unlock autonomous live trading and premium on-chain signals, you must stake a minimum of ${MIN_STARTER_TIER_STAKE.toLocaleString()} $CLETUS (Starter Tier) in the Staking tab.`
+                )}
+              </p>
+
+              {/* Staked Info */}
+              <div className="mt-3 flex items-center gap-4 text-xs font-mono">
+                <div className="text-gray-400">
+                  Staked: <span className="text-white font-bold">{stakedAmount.toLocaleString()} CLETUS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-auto shrink-0 md:items-end">
+            {!hasLiveAccess && (
+              <button
+                onClick={() => onNavigate('staking')}
+                className="px-4 py-2 rounded-lg text-xs font-bold bg-trading-green text-black hover:bg-trading-green/90 transition-all text-center w-full"
+              >
+                🥩 Go Stake CLETUS
+              </button>
             )}
           </div>
         </div>
