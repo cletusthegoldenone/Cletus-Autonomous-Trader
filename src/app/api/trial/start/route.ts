@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const existing = await getTrial(wallet);
-    if (existing) {
+    if (existing && existing.active && Date.now() < existing.expiresAt) {
       return NextResponse.json({ success: true, trial: existing });
     }
 
