@@ -18,7 +18,6 @@
     "@solana/wallet-adapter-wallets": "^0.19.38",
     "@solana/web3.js": "^1.98.4",
     "@types/pg": "^8.20.0",
-    "@vercel/speed-insights": "^2.0.0",
     "autoprefixer": "^10.4.19",
     "lightweight-charts": "^4.2.0",
     "next": "^16.2.10",

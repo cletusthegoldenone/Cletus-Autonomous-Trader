@@ -179,7 +179,7 @@ We accept: ETH, USDC, USDT, other major assets
 #### What Your Donation Funds
 
 1. **Infrastructure & Hosting** (30%)
-   - Vercel deployment & scaling
+   - Server hosting & scaling
    - RPC nodes (Helius, QuickNode)
    - PostgreSQL database hosting
    - Monitoring & alerting

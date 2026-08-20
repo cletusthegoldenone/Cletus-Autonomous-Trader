@@ -339,7 +339,7 @@ Lint time:  ~5 seconds
 - [x] Smart contract ready
 - [x] Environment variables documented
 
-### Vercel Deployment
+### Deployment
 - [x] Next.js app deployable
 - [x] API routes ready
 - [x] Environment variables configured
@@ -414,10 +414,9 @@ Lint time:  ~5 seconds
    # Visit http://localhost:3000
    ```
 
-2. **Deploy to Vercel:**
+2. **Deploy:**
    ```bash
-   git push origin main
-   # Vercel auto-deploys
+   npm run build && npm run start
    ```
 
 3. **Deploy Smart Contract:**

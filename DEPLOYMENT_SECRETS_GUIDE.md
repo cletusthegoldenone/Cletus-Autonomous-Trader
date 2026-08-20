@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide walks you through creating the **secrets file** needed to deploy Cletus-Autonomous-Trader to production (Vercel). Secrets are sensitive credentials that should NEVER be committed to Git.
+This guide walks you through creating the **secrets file** needed to deploy Cletus-Autonomous-Trader to production. Secrets are sensitive credentials that should NEVER be committed to Git.
 
 ---
 
@@ -47,10 +47,10 @@ SOLANA_NETWORK=mainnet-beta
 # ============================================================================
 # WALLET & TRADING (CRITICAL - KEEP SECRET)
 # ============================================================================
-# Your PUBLIC address (safe to expos
+# Your PUBLIC address (safe to expose)
 
 # Your PRIVATE key (NEVER expose, server-side only)
-# Format: Base58 encoded Solana 
+# Format: Base58 encoded Solana
 
 # ============================================================================
 # API KEYS & CREDENTIALS
@@ -68,7 +68,7 @@ JUPITER_API_KEY=your_jupiter_api_key_optional
 # DATABASE CONFIGURATION
 # ============================================================================
 # PostgreSQL connection string
-DATABASE_URL=postgresql://username:password@db.example.com:5432/cletus_trader
+DATABASE_URL=******db.example.com:5432/cletus_trader
 DATABASE_POOL_SIZE=20
 DATABASE_SSL=true
 DATABASE_LOG_QUERIES=false
@@ -97,7 +97,6 @@ LOG_LEVEL=debug
 # ============================================================================
 PORT=3000
 NODE_ENV=development
-VERCEL_ENV=preview
 ```
 
 ---
@@ -126,94 +125,39 @@ npm run dev
 
 ---
 
-## Step 3: Create Vercel Secrets
+## Step 3: Set Production Secrets
 
-Do NOT copy `.env.local` to Vercel. Instead, add secrets one by one through the dashboard.
+Add your secrets to your production environment one by one. **Never copy `.env.local` directly to production.**
 
-### Option A: Via Vercel Dashboard (Recommended)
+The following secrets must be configured in your hosting environment:
 
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Select your Cletus-Autonomous-Trader project
-3. Click **Settings** → **Environment Variables**
-4. Add each secret individually:
-
-```
-Key: SOLANA_RPC_URL
-Value: https://mainnet.helius-rpc.com/?api-key=YOUR_KEY_HERE
-Environments: Production, Preview, Development
-```
-
-```
-Key: TRADING_WALLET_ADDRESS
-Value: 9xQeKq6isj8Xu26Ku2b3FqxZsEaq5XfVhJ5dNon9Mop7
-Environments: Production, Preview, Development
-```
-
-```
-Key: TRADING_WALLET_PRIVATE_KEY
-Value: 4Zp3eCSbW8VsemnGQbgvWQK3E3T5ai2BVmxLkPhtzrj2KTzq8mjKDfXjjXVkq5zJ8qJXRK7kQ7jZNYs7Y6xK3nXj
-Environments: Production only (CRITICAL)
-```
-
-```
-Key: HELIUS_API_KEY
-Value: helius_rpc_key_xxxxxxxxxxxxx
-Environments: Production only
-```
-
-```
-Key: GEMINI_API_KEY
-Value: AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Environments: Production only
-```
-
-```
-Key: DATABASE_URL
-Value: postgresql://username:password@db.example.com:5432/cletus_trader
-Environments: Production only
-```
-
-### Option B: Via Vercel CLI
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Login to Vercel
-vercel login
-
-# Add secrets
-vercel env add TRADING_WALLET_PRIVATE_KEY
-# Paste your private key when prompted
-
-vercel env add HELIUS_API_KEY
-# Paste your Helius API key when prompted
-
-# ... repeat for other secrets
-```
+| Key | Environment | Notes |
+|-----|------------|-------|
+| `SOLANA_RPC_URL` | All | Helius RPC endpoint |
+| `TRADING_WALLET_ADDRESS` | All | Public address (safe to expose) |
+| `TRADING_WALLET_PRIVATE_KEY` | Production only | **CRITICAL** |
+| `HELIUS_API_KEY` | Production only | From dev.helius.xyz |
+| `GEMINI_API_KEY` | Production only | From makersuite.google.com |
+| `DATABASE_URL` | Production only | PostgreSQL connection string |
 
 ---
 
 ## Step 4: Create Secrets Script (Optional)
 
-You can also create a script to manage secrets programmatically:
+You can create a script to audit which secrets are present locally:
 
 ```bash
 #!/bin/bash
-# scripts/setup-secrets.sh
+# scripts/check-secrets.sh
+# Usage: bash scripts/check-secrets.sh
 
-# This script helps you set up Vercel secrets
-# Usage: bash scripts/setup-secrets.sh
+echo "Checking Cletus Secrets..."
 
-echo "Setting up Cletus Secrets..."
-
-# Check if .env.local exists
 if [ ! -f .env.local ]; then
   echo "Error: .env.local not found. Run: cp .env.example .env.local"
   exit 1
 fi
 
-# Array of sensitive keys to add to Vercel
 SECRETS=(
   "TRADING_WALLET_PRIVATE_KEY"
   "HELIUS_API_KEY"
@@ -222,23 +166,14 @@ SECRETS=(
   "JUPITER_API_KEY"
 )
 
-# Read each secret from .env.local and prompt for Vercel addition
 for SECRET in "${SECRETS[@]}"; do
   VALUE=$(grep "^$SECRET=" .env.local | cut -d '=' -f 2-)
-  
   if [ -z "$VALUE" ]; then
     echo "⚠️  $SECRET not found in .env.local"
   else
     echo "✓ Found $SECRET in .env.local"
-    echo "  Run: vercel env add $SECRET"
   fi
 done
-
-echo ""
-echo "Next steps:"
-echo "1. vercel login"
-echo "2. For each secret above, run: vercel env add SECRET_NAME"
-echo "3. Paste the value from .env.local when prompted"
 ```
 
 ---
@@ -264,17 +199,13 @@ echo "3. Paste the value from .env.local when prompted"
 
 ### Public Variables (Safe to Commit)
 
-These can be in `vercel.json` or GitHub:
-
 ```json
 {
-  "env": {
-    "SOLANA_NETWORK": "mainnet-beta",
-    "MIN_MARKET_CAP": "25000",
-    "MAX_MARKET_CAP": "1000000000",
-    "LOG_LEVEL": "info",
-    "NODE_ENV": "production"
-  }
+  "SOLANA_NETWORK": "mainnet-beta",
+  "MIN_MARKET_CAP": "25000",
+  "MAX_MARKET_CAP": "1000000000",
+  "LOG_LEVEL": "info",
+  "NODE_ENV": "production"
 }
 ```
 
@@ -282,17 +213,13 @@ These can be in `vercel.json` or GitHub:
 
 ## Step 6: Verify Secrets Are Set
 
-After deploying to Vercel, verify secrets are working:
+After deploying, verify secrets are working by checking your server logs:
 
-```bash
-# Check which secrets are set in Vercel
-vercel env list
-
-# Output:
-# TRADING_WALLET_PRIVATE_KEY    [value hidden]    Production
-# HELIUS_API_KEY                [value hidden]    Production
-# GEMINI_API_KEY                [value hidden]    Production
-# DATABASE_URL                  [value hidden]    Production
+```
+✓ Connected to Solana RPC
+✓ Wallet initialized
+✓ Database connected
+✓ Gemini API ready
 ```
 
 ---
@@ -314,11 +241,9 @@ vercel env list
 1. Log into Helius dashboard
 2. Generate a new API key
 3. Copy new key
-4. Go to Vercel → Settings → Environment Variables
-5. Click "Edit" on `HELIUS_API_KEY`
-6. Paste new key
-7. Redeploy Vercel (automatic)
-8. Delete old key from Helius
+4. Update `HELIUS_API_KEY` in your production environment
+5. Restart/redeploy the application
+6. Delete old key from Helius
 
 ---
 
@@ -327,11 +252,11 @@ vercel env list
 Before going live, verify:
 
 - [ ] `.env.local` is in `.gitignore` (NEVER commit)
-- [ ] Private key is ONLY in Vercel Secrets (not in code)
-- [ ] Database URL is ONLY in Vercel Secrets
-- [ ] All API keys are in Vercel Secrets
+- [ ] Private key is ONLY in production secrets (not in code)
+- [ ] Database URL is ONLY in production secrets
+- [ ] All API keys are in production secrets
 - [ ] Public address (wallet) is safe to commit (if needed)
-- [ ] Secrets are set to "Production" environment only
+- [ ] Secrets are scoped to production environment only
 - [ ] No secrets are logged to console
 - [ ] No secrets appear in error messages
 - [ ] Database has SSL enabled (`DATABASE_SSL=true`)
@@ -343,20 +268,15 @@ Before going live, verify:
 
 ### "Error: TRADING_WALLET_PRIVATE_KEY not found"
 
-**Solution:** Add the secret to Vercel environment variables
-
-```bash
-vercel env add TRADING_WALLET_PRIVATE_KEY
-# Paste your private key
-```
+**Solution:** Add the secret to your production environment variables.
 
 ### "Database connection failed"
 
 **Solution:** Verify DATABASE_URL format and credentials
 
 ```
-Correct: postgresql://user:password@host:5432/dbname
-Wrong:   postgresql://user:password@host:dbname
+Correct: ******host:5432/dbname
+Wrong:   ******host:dbname
 ```
 
 ### "Invalid private key format"
@@ -366,7 +286,6 @@ Wrong:   postgresql://user:password@host:dbname
 ```bash
 # Test key locally
 npm run dev
-
 # Check logs for key validation error
 ```
 
@@ -377,7 +296,7 @@ npm run dev
 1. Go to https://dev.helius.xyz
 2. Check API key status
 3. Regenerate if needed
-4. Update in Vercel
+4. Update in your production environment
 
 ---
 
@@ -402,23 +321,20 @@ git add -A
 git commit -m "Configure Cletus for deployment"
 git push origin main
 
-# Step 5: Add secrets to Vercel
-vercel login
-vercel env add TRADING_WALLET_PRIVATE_KEY
-vercel env add HELIUS_API_KEY
-vercel env add GEMINI_API_KEY
-vercel env add DATABASE_URL
+# Step 5: Add secrets to your production environment
+# (set TRADING_WALLET_PRIVATE_KEY, HELIUS_API_KEY, GEMINI_API_KEY, DATABASE_URL)
 
-# Step 6: Deploy
-vercel --prod
+# Step 6: Build and start
+npm run build
+npm run start
 
 # Step 7: Verify
-# Visit your Vercel deployment URL
+# Visit your deployment URL
 # Check logs for errors
 # Test trading endpoints
 
 # Step 8: Monitor
-# Watch Vercel logs in dashboard
+# Watch server logs
 # Monitor PnL on staking dashboard
 ```
 
@@ -449,7 +365,7 @@ vercel --prod
 - ❌ Commit `.env.production.local`
 - ❌ Pass secrets in URL query parameters
 - ❌ Store secrets in client-side code
-- ❌ Leave old keys in Vercel when rotating
+- ❌ Leave old keys active when rotating
 - ❌ Share deployment credentials with unnecessary people
 
 ---
@@ -458,11 +374,10 @@ vercel --prod
 
 If you encounter issues:
 
-1. **Check logs:** `vercel logs`
-2. **Test locally first:** `npm run dev`
-3. **Verify secrets:** `vercel env list`
-4. **Review SECURITY.md:** Detailed security architecture
-5. **GitHub Issues:** [Report problems](https://github.com/cletusthegoldenone/Cletus-Autonomous-Trader/issues)
+1. **Test locally first:** `npm run dev`
+2. **Check server logs** for error messages
+3. **Review SECURITY.md:** Detailed security architecture
+4. **GitHub Issues:** [Report problems](https://github.com/cletusthegoldenone/Cletus-Autonomous-Trader/issues)
 
 ---
 

@@ -239,7 +239,7 @@ SELECT * FROM test;
 If you don't have PostgreSQL:
 - You can skip this for local testing
 - Database features won't work, but API will
-- For production, use PostgreSQL on Vercel or RDS
+- For production, use PostgreSQL on a managed provider (e.g., AWS RDS, Supabase, Railway)
 
 ---
 
@@ -468,7 +468,7 @@ Composite Score: 0.67 (ABOVE 0.65 threshold - WOULD TRADE)
 2. Verify RPC connection
 3. Check Gemini AI responses
 4. Confirm trading signals
-5. Ready to deploy to Vercel!
+5. Ready to deploy to production!
 
 ### ⚠️ If Something Fails:
 1. Check `.env.local` for missing values
@@ -481,7 +481,7 @@ Composite Score: 0.67 (ABOVE 0.65 threshold - WOULD TRADE)
 
 ## Production Deployment
 
-Once local testing passes, deploy to Vercel:
+Once local testing passes, build and deploy:
 
 ```bash
 # Push to GitHub
@@ -489,11 +489,9 @@ git add .
 git commit -m "Cletus ready for production"
 git push origin main
 
-# Deploy to Vercel
-vercel --prod
-
-# Monitor logs
-vercel logs --tail
+# Build and start
+npm run build
+npm run start
 ```
 
 ---

@@ -184,7 +184,7 @@ All compound over time toward greater autonomy.
 - **AI Model**: Google Gemini 2.5 Flash API
 - **DEX Integration**: Raydium, Jupiter Aggregator
 - **Database**: PostgreSQL (for trade history, pattern memory, audit logs)
-- **Deployment**: Vercel
+- **Deployment**: Node.js / Self-hosted
 
 ---
 
@@ -249,7 +249,7 @@ SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=YOUR_HELIUS_API_KEY
 SOLANA_RPC_FALLBACK=https://api.mainnet-beta.solana.com
 ```
 
-### Private Variables (Server-side only, Vercel Secrets)
+### Private Variables (Server-side only)
 ```env
 TRADING_WALLET_PRIVATE_KEY=your_base58_private_key_here
 HELIUS_API_KEY=your_helius_api_key
@@ -270,13 +270,13 @@ See `.env.example` for the complete list of all configuration options.
 
 **⚠️ SECURITY NOTES:**
 - Never commit `.env.local` to Git (already in `.gitignore`)
-- Store all private variables in Vercel Secrets in production
+- Store all private variables in environment variables / secrets manager in production
 - Public address (`TRADING_WALLET_ADDRESS`) is safe to log and display
 - Private key (`TRADING_WALLET_PRIVATE_KEY`) is never exposed to clients
 
 ---
 
-## Deployment to Vercel
+## Deployment
 
 ### 1. Push Your Code to GitHub
 ```bash
@@ -285,39 +285,20 @@ git commit -m "Initial Cletus setup"
 git push origin main
 ```
 
-### 2. Connect Repository to Vercel
-- Go to [Vercel Dashboard](https://vercel.com)
-- Click "Add New..." → "Project"
-- Import your GitHub repository
-- Select "Next.js" as the framework
+### 2. Configure Environment Variables
+Set the required secrets in your hosting environment:
+- `TRADING_WALLET_PRIVATE_KEY` (Production only)
+- `HELIUS_API_KEY`
+- `GEMINI_API_KEY`
+- `DATABASE_URL`
+- `TRADING_WALLET_ADDRESS`
+- `SOLANA_RPC_URL`
 
-### 3. Configure Environment Variables in Vercel
-In the Vercel dashboard:
-1. Go to **Settings** → **Environment Variables**
-2. Add secrets for production:
-   - `TRADING_WALLET_PRIVATE_KEY` (Production only)
-   - `HELIUS_API_KEY`
-   - `GEMINI_API_KEY`
-   - `DATABASE_URL`
-3. Add public variables for all environments:
-   - `TRADING_WALLET_ADDRESS`
-   - `SOLANA_RPC_URL`
-   - Other public config
-
-### 4. Configure for Production
-In `vercel.json`, environment variables reference Vercel Secrets with `@` prefix:
-```json
-{
-  "env": {
-    "TRADING_WALLET_PRIVATE_KEY": "@trading_wallet_private_key",
-    "HELIUS_API_KEY": "@helius_api_key",
-    "GEMINI_API_KEY": "@gemini_api_key"
-  }
-}
+### 3. Deploy
+```bash
+npm run build
+npm run start
 ```
-
-### 5. Deploy
-Push to `main` branch or manually trigger deployment in Vercel dashboard.
 
 ---
 
@@ -440,7 +421,7 @@ Cletus maintains comprehensive logs for:
 - AI Brain reasoning outputs
 - Security audit results
 
-Access logs in production via Vercel Logs or connect to PostgreSQL audit tables.
+Access logs in production via your server logs or connect to PostgreSQL audit tables.
 
 ---
 
